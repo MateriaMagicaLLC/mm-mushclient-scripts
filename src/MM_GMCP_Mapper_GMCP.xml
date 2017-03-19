@@ -1,0 +1,4878 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE muclient [
+  <!ENTITY show_vnums "true" >
+  <!ENTITY show_timing "false" >
+  <!ENTITY show_completed "false" >
+  <!ENTITY show_other_areas "true" >
+  <!ENTITY show_area_exits "false" >
+  <!ENTITY show_up_down "true" >
+  <!ENTITY speedwalk_prefix "" >
+  <!ENTITY verbose_mode "true" >
+]>
+
+<muclient>
+
+<plugin
+   name="MM_GMCP_Mapper_GMCP"
+   author="Nick Gammon, Ruthgul"
+   id="f973af093e715dece34dc25f"
+   language="Lua"
+   purpose="GMCP Mapper for Materia Magica"
+   save_state="y"
+   date_written="2012-02-03 20:26:09"
+   date_modified="2017-01-21 23:20:21"
+   requires="4.71"
+   version="1.0"
+   >
+
+<description trim="y">
+
+<![CDATA[
+
+.-----------------------.
+ | MM_GMCP_Mapper_GMCP |
+`-----------------------'
+
+Materia Magica GMCP mapper.
+Original plugin by Nick Gammon. (http://www.gammon.com.au/forum/?id=10667)
+Modified to work with GMCP by Ruthgul. (Please report bugs to Ruthgul.)
+
+
+** REQUIRES **
+
+- The file mm_mapper.lua must be placed in the MUSHclient/lua directory.
+- MUSHclient _must_ have write access to its folder.
+- MM_GMCP_Handler (plugin id="f67c4339ed0591a5b010d05b") must be installed and enabled.
+- Client setting: Game, Configure, Output > [x] Convert IAC EOR/GA to new line (must be checked).
+- Game settings: SHOW-EXITS must be ON (to show room numbers, road exits and unmapped exits).
+
+
+Notes:
+
+* The window can be dragged to a new location by dragging the room name.
+* Your current room is always in the center with a bolder border.
+* LH-click on a room to speed-walk to it. RH-click on a room for options.
+* LH-click on the "*" button on the bottom-left corner to configure it.
+
+
+Syntax:
+
+> Interface:
+
+* mapper zoom out  - zoom out
+* mapper zoom in  - zoom in
+
+* mapper hide  - hide map
+* mapper show  - show map
+
+* mapper color terrain [on|off]  - toggle PK vs terrain coloring (off by default)
+* mapper show flags [on|off]  - toggle showing room flags on/off (off by default)
+* mapper show numbers [on|off]  - toggle showing/logging room numbers on/off (off by default)
+* mapper show road exits [on|off]  - toggle showing on-road exits on/off (off by default)
+* mapper show unmapped exits [on|off]  - toggle showing unmapped exits on/off (off by default)
+* mapper draw other floors [on|off]  - toggle drawing other floors on/off (on by default)
+
+* mapper auto-open [on|off]  - toggle auto-open doors on/off (on by default)
+* mapper safewalk [on|off]  - toggle avoid PK rooms and DTs on/off (off by default, only works for mapper goto, not for clicking on a room in the map, not for mapper path)
+
+* mapper peek [<room#>]  - redraw the map centered on any room, by its room number
+
+> Queries:
+
+* mapper where <room_name>  - show room# and area for an existing room, by its room name (Note that the % symbol can be used as a wildcard.)
+* mapper find <text>  - search by keywords (eg, courtyard OR lobby)
+* mapper bookmarks  - show nearby rooms that you bookmarked ('nearby' is determined by your mapper's depth setting)
+* mapper findbm <text>  - search by bookmark
+* mapper flags <flags>  - search by room flags
+* mapper notflags <flags>  - search by negated room flags
+* mapper adjacent <full_room_name>  - show adjacent rooms with different names
+
+* mapper safes  - show nearby safe rooms
+* mapper cpks  - show nearby CPK rooms
+
+* mapper dts - show nearby death traps
+* mapper shops  - show nearby shops
+* mapper trainers  - show nearby trainers
+
+> Movement:
+
+* mapper path <room#>  - show directions to a room, by its room number
+* mapper path <room1#> <room2#> - show directions from room1 to room2, by room number
+
+* mapper goto <room#>  - walk to a room, by its room number (partial)
+* mapper stop  - cancel any current speedwalk
+* mapper resume  - resume last speedwalk or hyperlinked speedwalk
+* mapper speedwalk next  - show (or SAPI say) next direction of the speedwalk (to flee, etc.)
+
+> Special areas:
+
+* mapper map wilds [on|off] - toggle mapping the wilds on/off (off by default)
+
+> Maintanence:
+
+* mapper purge area <full_area_name>  - delete an entire area from the database
+* mapper purge wilds <full_plane_name>  - deletes rooms in the vmap except for roads
+* mapper purge pursuer  - delete changing orc pursuer maze info from the database
+* mapper purge sandbox  - delete housing sandbox info from the database
+* mapper purge molehill  - delete changing labyrinthine molehill info from the database
+
+* mapper maintenance  - show a list of advanced maintenance & privacy aliases
+
+
+Authors: Nick Gammon, Ruthgul (maintained by Ruthgul)
+
+Latest version:
+http://sites.google.com/site/mscriptsmm
+
+]]>
+
+</description>
+
+</plugin>
+
+
+
+<!--  Aliases  -->
+
+<aliases>
+
+<!-- interface -->
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+reset[ ]+defaults$"
+    regexp="y"
+    sequence="100"
+    omit_from_command_history="y"
+    omit_from_output="y"
+    script="reset_defaults"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+show[ ]+database[ ]+mods(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>toggle_show_database_mods_to("%&lt;status&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+zoom[ ]+out$"
+    regexp="y"
+    sequence="100"
+    omit_from_command_history="y"
+    omit_from_output="y"
+    script="mapper.zoom_out"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+zoom[ ]+in$"
+    regexp="y"
+    sequence="100"
+    omit_from_command_history="y"
+    omit_from_output="y"
+    script="mapper.zoom_in"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+hide$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>mapper_hide(true)
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+show$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>mapper_show(true)
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+colo(|u)r[ ]+terrain(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>toggle_terrain_to("%&lt;status&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+show[ ]+flags(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>toggle_vis_flags_to("%&lt;status&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+show[ ]+numbers(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>toggle_vis_number_to("%&lt;status&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+show[ ]+road[ ]+exits(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>toggle_vis_road_exits_to("%&lt;status&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+show[ ]+unmapped[ ]+exits(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>toggle_vis_unmapped_to("%&lt;status&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+draw[ ]+other[ ]+floors(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>toggle_draw_other_floors_to("%&lt;status&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+auto\-open(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>toggle_auto_open_to("%&lt;status&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+safewalk(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>toggle_safewalk_to("%&lt;status&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+peek[ ]+(?P&lt;id&gt;[0-9]+)$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>peek_room("%&lt;id&gt;")
+</send>
+  </alias>
+
+
+<!-- queries -->
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+where[ ]+(?P&lt;name&gt;[^\:]+)$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_where("%&lt;name&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+wheree[ ]+(?P&lt;name&gt;[^\:]+)(| a\:(?P&lt;area&gt;[^\:]+))$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_wheree("%&lt;name&gt;", "%&lt;area&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+find[ ]+(?P&lt;what&gt;[a-zA-Z0-9 \,\.\'\-]+)$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_find("%&lt;what&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+(bm|book(|mark(|s)))$"
+    regexp="y"
+    sequence="100"
+    script="map_bookmarks"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+findbm[ ]+(?P&lt;bm&gt;[a-zA-Z0-9 \,\.\'\-]+)$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_find_bookmark("%&lt;bm&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+flags[ ]+(?P&lt;flags&gt;[a-z \-]+)$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_list_by_flags("%&lt;flags&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+notflags[ ]+(?P&lt;flags&gt;[a-z \-]+)$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_list_by_not_flags("%&lt;flags&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+adjacent[ ]+(?P&lt;name&gt;[^\:]+)$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_show_adjacent_rooms("%&lt;name&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+safes$"
+    regexp="y"
+    sequence="100"
+    script="map_safe"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+cpks$"
+    regexp="y"
+    sequence="100"
+    script="map_cpk"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+dts$"
+    regexp="y"
+    sequence="100"
+    script="map_dts"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+shops$"
+    regexp="y"
+    sequence="100"
+    script="map_shops"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+trainers$"
+    regexp="y"
+    sequence="100"
+    script="map_trainers"
+  >
+  </alias>
+
+
+<!-- movement -->
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+path[ ]+(?P&lt;id&gt;[0-9]+)$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_path("%&lt;id&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+path[ ]+(?P&lt;id1&gt;[0-9]+)[ ]+(?P&lt;id2&gt;[0-9]+)$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_path2("%&lt;id1&gt;", "%&lt;id2&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+goto[ ]+(?P&lt;id&gt;[0-9]+)$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_goto("%&lt;id&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+stop$"
+    regexp="y"
+    sequence="100"
+    script="mapper.cancel_speedwalk"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+resume$"
+    regexp="y"
+    sequence="100"
+    script="map_resume"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+speed(|walk)[ ]+next$"
+    regexp="y"
+    sequence="100"
+    script="map_speedwalk_next"
+  >
+  </alias>
+
+
+<!-- special areas -->
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+map[ ]+wilds(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>toggle_wilds_mapping("%&lt;status&gt;")
+</send>
+  </alias>
+
+
+<!-- maintenance -->
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+purge[ ]+area[ ]+(?P&lt;areaid&gt;[a-zA-Z0-9 \,\.\'\-]+)$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>purge_entire_area("%&lt;areaid&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+purge[ ]+wilds[ ]+(?P&lt;planeid&gt;[a-zA-Z ]+)$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>purge_wilds("%&lt;planeid&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+purge[ ]+pursuer$"
+    regexp="y"
+    sequence="100"
+    script="purge_pursuer"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+purge[ ]+sandbox$"
+    regexp="y"
+    sequence="100"
+    script="purge_sandbox"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+purge[ ]+molehill$"
+    regexp="y"
+    sequence="100"
+    script="purge_molehill"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+maintenance$"
+    regexp="y"
+    sequence="100"
+    script="help_maintenance"
+  >
+  </alias>
+
+
+<!-- maintenance - queries -->
+
+  <alias
+    match="^mapper[ ]+roominfo(|[ ]+(?P&lt;id&gt;[0-9]+))$"
+    enabled="y"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>show_room_info("%&lt;id&gt;")
+</send>
+  </alias>
+
+  <alias
+    match="^mapper[ ]+export[ ]+rooms[ ]+(?P&lt;name&gt;.+)$"
+    enabled="y"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>export_rooms("%&lt;name&gt;")
+</send>
+  </alias>
+
+  <alias
+    match="^mapper[ ]+export[ ]+area[ ]+(?P&lt;name&gt;.+)$"
+    enabled="y"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>export_area("%&lt;name&gt;")
+</send>
+  </alias>
+
+
+<!-- maintenance - additions -->
+
+  <alias
+    match="^mapper[ ]+addroom[ ]+(?P&lt;id&gt;[0-9]+)[ ]+n\:(?P&lt;name&gt;.+) a\:(?P&lt;area&gt;.+) f\:(?P&lt;flags&gt;.+) t\:(?P&lt;terrain&gt;.+) ti\:(?P&lt;terraininfo&gt;.+)$"
+    enabled="y"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_add_room("%&lt;id&gt;", "%&lt;name&gt;", "%&lt;area&gt;", "%&lt;flags&gt;", "%&lt;terrain&gt;", "%&lt;terraininfo&gt;")
+</send>
+  </alias>
+
+  <alias
+    match="^mapper[ ]+addexit[ ]+(?P&lt;dir&gt;[a-z]+)(|[ ]+f\:(?P&lt;fromid&gt;[0-9]+)) t\:(?P&lt;toid&gt;[0-9]+)$"
+    enabled="y"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_add_exit("%&lt;dir&gt;", "%&lt;fromid&gt;", "%&lt;toid&gt;")
+</send>
+  </alias>
+
+  <alias
+    match="^mapper[ ]+addbm(|[ ]+(?P&lt;roomid&gt;[0-9]+))(|[ ]+b\:(?P&lt;book&gt;.+))$"
+    enabled="y"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_add_bookmark("%&lt;roomid&gt;", "%&lt;book&gt;")
+</send>
+  </alias>
+
+
+<!-- maintenance - deletions -->
+
+  <alias
+    match="^mapper[ ]+delroom[ ]+(?P&lt;id&gt;[0-9]+)$"
+    enabled="y"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_del_room("%&lt;id&gt;")
+</send>
+  </alias>
+
+  <alias
+    match="^mapper[ ]+delexit[ ]+(?P&lt;dir&gt;[a-z]+)(|[ ]+f\:(?P&lt;fromid&gt;[0-9]+))$"
+    enabled="y"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_del_exit("%&lt;dir&gt;", "%&lt;fromid&gt;")
+</send>
+  </alias>
+
+  <alias
+    match="^mapper[ ]+delexits[ ]+(?P&lt;fromid&gt;[0-9]+)$"
+    enabled="y"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_del_exits("%&lt;fromid&gt;")
+</send>
+  </alias>
+
+  <alias
+    match="^mapper[ ]+delbm(|[ ]+(?P&lt;roomid&gt;[0-9]+))$"
+    regexp="y"
+    enabled="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_del_bookmark("%&lt;roomid&gt;")
+</send>
+  </alias>
+
+
+<!-- maintenance - tags -->
+
+  <alias
+    match="^mapper[ ]+dt(|[ ]+(?P&lt;id&gt;[0-9]+))$"
+    enabled="y"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_toggle_tag("%&lt;id&gt;", "dt")
+</send>
+  </alias>
+
+  <alias
+    match="^mapper[ ]+trap(|[ ]+(?P&lt;id&gt;[0-9]+))$"
+    enabled="y"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_toggle_tag("%&lt;id&gt;", "trap")
+</send>
+  </alias>
+
+  <alias
+    match="^mapper[ ]+no(|\-)speed(|[ ]+(?P&lt;id&gt;[0-9]+))$"
+    enabled="y"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_toggle_tag("%&lt;id&gt;", "no-speed")
+</send>
+  </alias>
+
+  <alias
+    match="^mapper[ ]+shop(|[ ]+(?P&lt;id&gt;[0-9]+))$"
+    enabled="y"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_toggle_tag("%&lt;id&gt;", "shop")
+</send>
+  </alias>
+
+  <alias
+    match="^mapper[ ]+train(|er)(|[ ]+(?P&lt;id&gt;[0-9]+))$"
+    enabled="y"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_toggle_tag("%&lt;id&gt;", "trainer")
+</send>
+  </alias>
+
+
+<!-- maintenance - privacy -->
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+purge[ ]+clanhalls$"
+    regexp="y"
+    sequence="100"
+    script="purge_clanhalls"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+purge[ ]+homes$"
+    regexp="y"
+    sequence="100"
+    script="purge_player_homes"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+purge[ ]+bookmarks$"
+    regexp="y"
+    sequence="100"
+    script="purge_notes"
+  >
+  </alias>
+
+
+<!-- maintenance - rebuild data -->
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+(?P&lt;cmd&gt;(recreate|upgrade))[ ]+database$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>recreate_database("%&lt;cmd&gt;")
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+rebuild[ ]+lookup$"
+    regexp="y"
+    sequence="100"
+    script="rebuild_lookup"
+  >
+  </alias>
+
+
+<!-- used by scripts -->
+
+  <alias
+    enabled="y"
+    match="^tprt$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>notify_teleport()
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^prtl$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>notify_portal()
+</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+hyper[ ]+(?P&lt;id&gt;[0-9]+)$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>map_hyperlink("%&lt;id&gt;")
+</send>
+  </alias>
+
+
+<!--  Plugin help  -->
+
+  <alias
+    enabled="y"
+    ignore_case="y"
+    match="^(|MM\_GMCP\_)Mapper(|\_GMCP)(|( |\:)help)$"
+    regexp="y"
+    script="OnHelp"
+  >
+  </alias>
+
+</aliases>
+
+
+
+<!--  Triggers  -->
+
+<triggers>
+
+<!-- visible exits, used by several scripts -->
+
+  <trigger
+    enabled="y"
+    keep_evaluating="y"
+    match="^  Visible Exits\: (?P&lt;exits&gt;.+)$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>visible_exits = "%&lt;exits&gt;"
+check_if_show_room_number("%&lt;exits&gt;")
+check_if_show_road_exits()
+check_if_show_unmapped_exits()
+</send>
+  </trigger>
+
+
+<!-- auto-open doors -->
+
+  <trigger
+    enabled="y"
+    keep_evaluating="y"
+    match="^(The (.+) (is|are) closed|A strange force blocks your passage)\.$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>mapper.auto_open()
+</send>
+  </trigger>
+
+  <trigger
+    enabled="y"
+    keep_evaluating="y"
+    match="^(.+)\: It\'s locked\.$"
+    regexp="y"
+    send_to="12"
+    sequence="100"
+  >
+  <send>mapper.stop_auto_open()
+</send>
+  </trigger>
+
+
+ <!--  various messages that cancel speedwalks -->
+
+  <trigger
+    enabled="y"
+    match="You are too exhausted. Better rest for a bit."
+    keep_evaluating="y"
+    regexp="y"
+    script="mapper.cancel_speedwalk"
+    sequence="100"
+  >
+  </trigger>
+
+</triggers>
+
+
+
+<!--  Scripts  -->
+
+<script>
+
+local show_vnums = &show_vnums;
+local show_timing = &show_timing;
+local show_completed = &show_completed;
+local verbose_mode = &verbose_mode;
+local show_other_areas = &show_other_areas;
+local show_up_down = &show_up_down;
+local show_area_exits = &show_area_exits;
+local speedwalk_prefix = "&speedwalk_prefix;"
+local prefer_shown = true
+
+
+<![CDATA[
+
+require "serialize"
+require "copytable"
+require "wait"
+require "gmcphelper"
+
+
+function file_exists(path)
+  local f = io.open(path, "r")
+
+  if (f) then
+    io.close(f)
+    return true
+  else
+    return false
+  end
+end
+
+
+if (file_exists(GetInfo(66) .. "lua/mm_mapper.lua")) then
+  mapper = require "mm_mapper"
+else
+  require "mapper"
+end
+
+
+rooms = {}
+--areas = {}
+
+local fontcol = "silver"
+local bgcol = "black"
+
+
+
+-- --------------
+-- plugin stuff
+-- --------------
+
+function OnPluginInstall()
+  wait.make(function()
+    config = {}  -- in case not found
+
+    -- get saved configuration
+    assert(loadstring(GetVariable("config") or ""))()
+
+    -- allow for additions to config
+    for k, v in pairs(default_config) do
+      config[k] = config[k] or v
+    end
+
+    -- initialize mapper
+    mapper.init {
+      config = config,
+      get_room = get_room,
+      show_help = OnHelp,                   -- to show help
+      room_click = room_click,              -- called on RH click on room square
+      timing = show_timing,                 -- want to see timing
+      show_completed = show_completed,      -- want to see "Speedwalk completed." message
+      show_other_areas = show_other_areas,  -- want to see areas other than the current one?
+      show_up_down = show_up_down,          -- want to follow up/down exits?
+      show_area_exits = show_area_exits,    -- want to see area exits?
+      speedwalk_prefix = speedwalk_prefix,  -- how to speedwalk
+    }
+
+    mapper.mapprint(string.format("MUSHclient mapper installed, version %0.1f", mapper.VERSION))
+
+    -- open database on disk
+    if (file_exists(GetInfo(66) .. "mm_mapper.db"))
+    or (not file_exists(GetInfo(66) .. Trim(WorldAddress()) .. "_mapper.db")) then
+      db = assert(sqlite3.open(GetInfo(66) .. "mm_mapper.db"))
+      compatibility = false
+
+    elseif (file_exists(GetInfo(66) .. Trim(WorldAddress()) .. "_mapper.db")) then
+      ColourTell("white", "maroon", "GMCP Mapper WARNING: type ")
+      ColourTell("lime", "maroon", "mapper upgrade database")
+      ColourNote("white", "maroon", " to convert your old maps database file to the new structure.")
+      ColourNote("silver", "black", "(This process may take several minutes, during which the client will seem to be 'frozen'.)")
+      ColourNote("white", "maroon", "NOTICE that the mapper might NOT warn you about CPK rooms until you have upgraded the database.")
+      db = assert(sqlite3.open(GetInfo(66) .. Trim(WorldAddress()) .. "_mapper.db"))
+      compatibility = true
+    end
+
+    create_tables()    -- create database structure if necessary
+
+    Tell("-- " .. GetPluginInfo(GetPluginID(), 1) .. ": type ")
+    ColourTell("silver", "black", GetPluginInfo(GetPluginID(), 1) .. " help")
+    Note(" to see info about this plugin --")
+
+    room_not_in_database = {}
+
+    first_room = true
+
+    load_config2()
+
+    -- give the plugins time to initialize
+    wait.time(3)
+
+    detect_plugins()
+  end)
+end
+
+
+function OnPluginSaveState()
+  mapper.save_state()
+  SetVariable("config", "config = " .. serialize.save_simple(config))
+end
+
+
+function OnPluginClose()
+  mapper.hide()
+end
+
+
+function OnPluginDisable()
+  mapper.hide()
+end
+
+
+function OnPluginListChanged()
+  detect_plugins()
+end
+
+
+function detect_plugins()
+  use_events_mini = events_mini_installed()
+  reader_present = detect_reader()
+  sapi_present = sapi_plugin_present()
+end
+
+
+function is_plugin_present(name, id)
+  local res = false
+
+  local plugin_name = GetPluginInfo(id, 1)
+
+  if (plugin_name == name) then
+    -- is it enabled?
+    if (GetPluginInfo(id, 17)) then
+      res = true
+    end
+  end
+
+  return res
+end
+
+
+function plugin_update_url()
+  local t = {
+    "http://dl.dropbox.com/u/65599194/mm-updater/MM_GMCP_Mapper_GMCP.xml",
+  }
+  return (table.concat(t, ";"))
+end
+
+
+function plugin_update_aux_url()
+  local t = {
+    "http://dl.dropbox.com/u/65599194/mm-updater/mm_mapper.lua,MUSH/lua",
+  }
+  return (table.concat(t, ";"))
+end
+
+
+
+---------
+-- help
+---------
+
+function OnHelp()
+  mapper.mapprint(string.format("[MUSHclient mapper, version %0.1f]", mapper.VERSION))
+  ColourNote("silver", "black", world.GetPluginInfo(world.GetPluginID(), 3))
+  Note("")
+  ColourNote("silver", "black", "(this version: " .. os.date("%c", GetPluginInfo(GetPluginID(), 14)) .. ")")
+end
+
+
+function help_maintenance()
+  ColourNote("silver", "black", world.GetPluginInfo(world.GetPluginID(), 3))
+  ColourNote("silver", "black", [[> Advanced Maintenance/Privacy Aliases
+
+> config:
+
+* mapper reset defaults  - use to restore default settings, if necessary
+* mapper show database mods [on|off]  - toggle showing database updates on/off (on by default)
+
+> queries:
+
+* mapper roominfo [<room#>]  -  show info about a room
+
+* mapper export rooms <name>  - exports all rooms matching the name
+* mapper export area <name>  - exports a whole area
+
+> additions:
+
+* mapper addroom <room#> n:<name> a:<area> f:<flags> t:<terrain> ti:<terraininfo>  - add a room
+
+* mapper addexit <dir> [f:<from_room#>] t:<to_room#>  - add an exit to a room
+
+* mapper addbm [<room#>] [b:<text>]  - add a bookmark
+
+> deletions:
+
+* mapper delroom <room#>  - delete a room
+
+* mapper delexit <dir> [f:<from_room#>]  - delete an exit from a room
+* mapper delexits <from_room#>  - delete all exits from a room
+
+* mapper delbm [<room#>]  - delete a bookmark
+
+> tags:
+
+* mapper dt [<room#>]  - tag room as DT
+* mapper trap [<room#>]  - tag room as trap
+* mapper no-speed [<room#>]  - tag room as no-speed
+* mapper shop [<room#>]  - tag room as shop
+* mapper trainer [<room#>]  - tag room as trainer
+
+> privacy:
+
+* mapper purge clanhalls  - purge clanhalls data from the database
+* mapper purge homes  - purge player homes data from the database
+* mapper purge bookmarks  - purge all non-vmap notes from the database
+
+> rebuild data:
+
+* mapper recreate database  - copy data to a new database file
+* mapper rebuild lookup  - rebuild the rooms_lookup table
+
+]])
+
+end
+
+
+
+-- ---------------
+-- GMCP broadcast
+-- ---------------
+
+function OnPluginBroadcast(msg, id, name, text)
+  if (id =="f67c4339ed0591a5b010d05b") then -- GMCP message
+    if (text == "room.info") then -- room.info
+      peeking = false
+      purge_cache_if_area_changed()
+
+      get_gmcp_room()
+      process_room()
+    end
+  end
+end
+
+
+
+---------------
+-- GMCP stuff
+---------------
+
+function get_gmcp_room()
+  local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "room.info")
+  luastmt = "gmcpdata = " .. gmcparg
+  
+  assert(loadstring(luastmt or ""))()
+end
+
+
+
+-- ----------------------
+-- default configuration
+-- ----------------------
+
+function reset_defaults()
+  config = {}
+
+  for k, v in pairs(default_config) do
+    config[k] = v
+  end
+
+  -- initialize mapper
+  mapper.init {
+    config = config,
+    get_room = get_room,
+    show_help = OnHelp,                   -- to show help
+    room_click = room_click,              -- called on RH click on room square
+    timing = show_timing,                 -- want to see timing
+    show_completed = show_completed,      -- want to see "Speedwalk completed." message
+    show_other_areas = show_other_areas,  -- want to see areas other than the current one?
+    show_up_down = show_up_down,          -- want to follow up/down exits?
+    show_area_exits = show_area_exits,    -- want to see area exits?
+    speedwalk_prefix = speedwalk_prefix,  -- how to speedwalk
+  }
+end
+
+
+default_config = {
+  -- assorted colours
+  BACKGROUND_COLOUR = {
+    name = "Background",
+    colour =  ColourNameToRGB "cadetblue",
+  },
+  ROOM_COLOUR = {
+    name = "Room",
+    colour =  ColourNameToRGB "cyan",
+  },
+  EXIT_COLOUR = {
+    name = "Exit",
+    colour =  ColourNameToRGB "darkgreen",
+  },
+  EXIT_COLOUR_UP_DOWN = {
+    name = "Exit up/down",
+    colour =  ColourNameToRGB "darkmagenta",
+  },
+  OUR_ROOM_COLOUR = {
+    name = "Our room",
+    colour =  ColourNameToRGB "black",
+  },
+  UNKNOWN_ROOM_COLOUR = {
+    name = "Unknown room",
+    colour =  ColourNameToRGB "#00CACA",
+  },
+  DIFFERENT_AREA_COLOUR = {
+    name = "Another area",
+    colour =  ColourNameToRGB "gray",
+  },
+  DT_FILL_COLOUR = {
+    name = "DT",
+    colour =  ColourNameToRGB "black",
+  },
+  SAFE_FILL_COLOUR = {
+    name = "Safe",
+    colour =  ColourNameToRGB "white",
+  },
+  SHOP_FILL_COLOUR = {
+    name = "Shop",
+    colour =  ColourNameToRGB "yellow",
+  },
+  TRAINER_FILL_COLOUR = {
+    name = "Trainer",
+    colour =  ColourNameToRGB "mediumpurple"
+  },
+  LPK_FILL_COLOUR = {
+    name = "LPK",
+    colour =  ColourNameToRGB "lightcoral"
+  },
+  NPK_FILL_COLOUR = {
+    name = "NPK",
+    colour =  ColourNameToRGB "tomato"
+  },
+  CPK_FILL_COLOUR = {
+    name = "CPK",
+    colour =  ColourNameToRGB "darkred"
+  },
+  DIZZY_COLOUR = {
+    name = "Dizzy",
+    colour =  ColourNameToRGB "blue"
+  },
+  FEAR_COLOUR = {
+    name = "Fear",
+    colour =  ColourNameToRGB "yellow"
+  },
+  TRAP_COLOUR = {
+    name = "Dizzy",
+    colour =  ColourNameToRGB "red"
+  },
+  DIGGABLE_FILL_COLOUR = {
+    name = "diggable",
+    colour =  ColourNameToRGB "wheat"
+  },
+  WOODED_FILL_COLOUR = {
+    name = "wooded",
+    colour =  ColourNameToRGB "seagreen"
+  },
+  UNDERWATER_FILL_COLOUR = {
+    name = "underwater",
+    colour =  ColourNameToRGB "steelblue"
+  },
+  FREEZING_FILL_COLOUR = {
+    name = "freezing",
+    colour =  ColourNameToRGB "lightcyan"
+  },
+  FIRE_FILL_COLOUR = {
+    name = "fire",
+    colour =  ColourNameToRGB "red"
+  },
+  POISON_FILL_COLOUR = {
+    name = "poison-gas",
+    colour =  ColourNameToRGB "yellowgreen"
+  },
+  ACID_FILL_COLOUR = {
+    name = "acid",
+    colour =  ColourNameToRGB "greenyellow"
+  },
+  NOTHING_FILL_COLOUR = {
+    name = "nothing",
+    colour =  ColourNameToRGB "deepskyblue"
+  },
+
+  ROOM_NAME_TEXT = {
+    name = "Room name text",
+    colour = ColourNameToRGB "#BEF3F1",
+  },
+  ROOM_NAME_FILL = {
+    name = "Room name fill",
+    colour = ColourNameToRGB "#105653",
+  },
+  ROOM_NAME_BORDER = {
+    name = "Room name box",
+    colour = ColourNameToRGB "black",
+  },
+
+  AREA_NAME_TEXT = {
+    name = "Area name text",
+    colour = ColourNameToRGB "#BEF3F1",
+  },
+  AREA_NAME_FILL = {
+    name = "Area name fill",
+    colour = ColourNameToRGB "#105653",
+  },
+  AREA_NAME_BORDER = {
+    name = "Area name box",
+    colour = ColourNameToRGB "black",
+  },
+
+  FONT = {
+    name = get_preferred_font {
+             "Dina",
+             "Lucida Console",
+             "Fixedsys",
+             "Courier",
+             "Sylfaen",
+           },
+    size = 8.
+  },
+
+  -- size of map window
+  WINDOW = {
+    width = 400,
+    height = 261
+  },
+
+  -- how far from where we are standing to draw (rooms)
+  SCAN = {
+    depth = 250
+  },
+
+  -- speedwalk delay
+  DELAY = {
+    time = 0
+  },
+
+  -- how many seconds to show "recent visit" lines (default 3 minutes)
+  LAST_VISIT_TIME = {
+    time = 60 * 3
+  },
+}
+
+
+
+-- -----------------
+-- specific config
+-- -----------------
+
+function load_config2()
+  config2 = {
+    visible = ((GetVariable("mapper_visible") or "true") == "true"),
+    auto_open = ((GetVariable("auto_open") or "true") == "true"),
+    safewalk = ((GetVariable("safewalk") or "false") == "true"),
+    color_terrain = ((GetVariable("color_terrain") or "false") == "true"),
+    do_map_wilds = ((GetVariable("do_map_wilds") or "false") == "true"),
+    show_database_mods = ((GetVariable("show_database_mods") or "true") == "true"),
+    show_flags = ((GetVariable("show_flags") or "false") == "true"),
+    show_numbers = ((GetVariable("show_numbers") or "false") == "true"),
+    vis_road_exits = ((GetVariable("vis_road_exits") or "false") == "true"),
+    vis_unmapped_exits = ((GetVariable("vis_unmapped_exits") or "false") == "true"),
+    draw_other_floors = ((GetVariable("draw_other_floors") or "true") == "true"),
+      -- this last variable overrides config.show_up_down
+  }
+
+  if (not config2.visible) then
+    mapper.hide()
+  end
+end
+
+
+function save_config2()
+  SetVariable("mapper_visible", tostring(config2.visible))
+  SetVariable("auto_open", tostring(config2.auto_open))
+  SetVariable("safewalk", tostring(config2.safewalk))
+  SetVariable("color_terrain", tostring(config2.color_terrain))
+  SetVariable("do_map_wilds", tostring(config2.do_map_wilds))
+  SetVariable("show_database_mods", tostring(config2.show_database_mods))
+  SetVariable("show_flags", tostring(config2.show_flags))
+  SetVariable("show_numbers", tostring(config2.show_numbers))
+  SetVariable("vis_road_exits", tostring(config2.vis_road_exits))
+  SetVariable("vis_unmapped_exits", tostring(config2.vis_unmapped_exits))
+  SetVariable("draw_other_floors", tostring(config2.draw_other_floors))
+
+  SaveState()
+end
+
+
+
+-- ---------------------------
+-- mapper 'get_room' callback
+-- ---------------------------
+
+function get_room(uid)
+  -- check we got room at all
+  if (not uid) then
+    return nil
+  end
+
+  -- look it up
+  local ourroom = rooms[uid]
+
+  -- not cached - see if in database
+  if (not ourroom) then
+    ourroom = load_room_from_database(uid)
+  end -- not in cache
+
+  if (not ourroom) then
+    return nil
+  end
+
+  local room = copytable.deep(ourroom)
+
+  -- build hover message
+
+  local flags = room.flags
+  if (not flags) or (flags == "") then
+    flags = "-"
+  end
+
+  local terrain = room.terrain
+  if (not terrain) or (terrain == "") then
+    terrain = "-"
+  end
+
+  local terraininfo = room.terraininfo
+  if (not terraininfo) or (terraininfo == "") then
+    terraininfo = "-"
+  end
+
+  local notes = room.notes
+  if (not room.notes) or (room.notes == "") then
+    notes = "-"
+  end -- if notes
+
+  local tags = room.tags
+  if (not tags) or (room.tags == "") then
+    tags = "-"
+  end -- if DT
+
+  local texits = {}
+  for dir in pairs(room.exits) do
+    table.insert(texits, dir)
+  end -- for
+  table.sort(texits)
+
+  room.hovermessage = string.format(
+    "%s\tExits: %s\nGMCP #: %s\nFlags: %s\nTerrain: %s (%s)\nTags: %s\nBookmarks: %s",
+    room.name,
+    table.concat(texits, ", "),
+    uid,
+    flags,
+    terrain,
+    terraininfo,
+    tags,
+    notes
+  )
+
+  room.bordercolour = config.ROOM_COLOUR.colour
+  room.borderpen = 0 -- solid
+  room.borderpenwidth = 1
+
+  -- special room fill colours
+
+  if (has_flag(room.flags, "safe")) then
+    room.fillcolour = config.SAFE_FILL_COLOUR.colour
+    room.fillbrush = 8
+
+  elseif (has_flag(room.flags, "player-kill-chaotic")) then
+    room.fillcolour = config.CPK_FILL_COLOUR.colour
+    room.fillbrush = 8
+
+  elseif (has_tag(room.tags, "dt")) then
+    room.fillcolour = config.DT_FILL_COLOUR.colour
+    room.fillbrush = 8
+
+  elseif (has_tag(room.tags, "trainer")) then
+    room.fillcolour = config.TRAINER_FILL_COLOUR.colour
+    room.fillbrush = 8
+
+  elseif (has_tag(room.tags, "shop")) then
+    room.fillcolour = config.SHOP_FILL_COLOUR.colour
+    room.fillbrush = 8
+
+  elseif (has_flag(room.flags, "player-kill-neutral")) then
+    room.fillcolour = config.NPK_FILL_COLOUR.colour
+    room.fillbrush = 8
+
+  elseif (has_flag(room.flags, "player-kill-lawful")) then
+    room.fillcolour = config.LPK_FILL_COLOUR.colour
+    room.fillbrush = 8
+
+  elseif (string.find(terraininfo, "underwater")) then
+    room.fillcolour = config.UNDERWATER_FILL_COLOUR.colour
+    room.fillbrush = 8
+
+  elseif (string.find(terraininfo, "wooded")) then
+    room.fillcolour = config.WOODED_FILL_COLOUR.colour
+    room.fillbrush = 8
+
+  elseif (string.find(terraininfo, "freezing")) then
+    room.fillcolour = config.FREEZING_FILL_COLOUR.colour
+    room.fillbrush = 8
+
+  elseif (string.find(terraininfo, "fire")) then
+    room.fillcolour = config.FIRE_FILL_COLOUR.colour
+    room.fillbrush = 8
+
+  elseif (string.find(terraininfo, "poison")) then
+    room.fillcolour = config.POISON_FILL_COLOUR.colour
+    room.fillbrush = 8
+
+  elseif (string.find(terraininfo, "acid")) then
+    room.fillcolour = config.ACID_FILL_COLOUR.colour
+    room.fillbrush = 8
+
+  elseif (string.find(terraininfo, "diggable")) then
+    room.fillcolour = config.DIGGABLE_FILL_COLOUR.colour
+    room.fillbrush = 8
+
+  elseif (string.find(terraininfo, "nothing")) then
+    room.fillcolour = config.NOTHING_FILL_COLOUR.colour
+    room.fillbrush = 8
+
+  else
+    room.fillcolour = 0xff0000
+    room.fillbrush = 1 -- no fill
+  end
+
+  -- terrain is always shown in non-pk
+  -- however, in all-pk areas, pk colors prevail over terrain colors
+  -- config2.color_terrain toggles terrain coloring for pk areas
+  if (config2.color_terrain) then
+    if (string.find(terraininfo, "underwater")) then
+      room.fillcolour = config.UNDERWATER_FILL_COLOUR.colour
+      room.fillbrush = 8
+
+    elseif (string.find(terraininfo, "wooded")) then
+      room.fillcolour = config.WOODED_FILL_COLOUR.colour
+      room.fillbrush = 8
+
+    elseif (string.find(terraininfo, "freezing")) then
+      room.fillcolour = config.FREEZING_FILL_COLOUR.colour
+      room.fillbrush = 8
+
+    elseif (string.find(terraininfo, "fire")) then
+      room.fillcolour = config.FIRE_FILL_COLOUR.colour
+      room.fillbrush = 8
+
+    elseif (string.find(terraininfo, "poison")) then
+      room.fillcolour = config.POISON_FILL_COLOUR.colour
+      room.fillbrush = 8
+
+    elseif (string.find(terraininfo, "acid")) then
+      room.fillcolour = config.ACID_FILL_COLOUR.colour
+      room.fillbrush = 8
+
+    elseif (string.find(terraininfo, "diggable")) then
+      room.fillcolour = config.DIGGABLE_FILL_COLOUR.colour
+      room.fillbrush = 8
+
+    elseif (string.find(terraininfo, "nothing")) then
+      room.fillcolour = config.NOTHING_FILL_COLOUR.colour
+      room.fillbrush = 8
+
+    else
+      room.fillcolour = 0xff0000
+      room.fillbrush = 1 -- no fill
+    end
+  end -- config2.color_terrain
+
+  if (room.area ~= current_area) then
+    room.bordercolour = config.DIFFERENT_AREA_COLOUR.colour
+
+  elseif (has_tag(room.tags, "trap")) then
+    room.bordercolour = config.TRAP_COLOUR.colour
+
+  elseif (has_flag(room.flags, "disorient")) then
+    room.bordercolour = config.DIZZY_COLOUR.colour
+
+  elseif (has_flag(room.flags, "fear")) then
+    room.bordercolour = config.FEAR_COLOUR.colour
+  end
+
+  if (uid == current_room) then
+    if (not has_flag(room.flags, "disorient"))
+    and (not has_flag(room.flags, "fear")) then
+      room.bordercolour = config.OUR_ROOM_COLOUR.colour
+    end
+    room.borderpenwidth = 2
+  end
+
+  return room
+end
+
+
+
+----------------------
+-- gui main function
+----------------------
+
+function room_click(uid, flags)
+  -- check we got room at all
+  if (not uid) then
+    return nil
+  end
+
+  -- look it up
+  local room = rooms[uid]
+
+  -- not cached - see if in database
+  if (not room) then
+    room = load_room_from_database(uid)
+  end -- not in cache
+
+  if (not room) then
+    return
+  end -- if still not there
+
+  local handlers = {
+      { name = "Edit bookmark", func = room_edit_bookmark} ,
+      { name = "-", } ,
+      { name = "Add Exit", func = room_add_exit} ,
+      { name = "Change Exit", func = room_change_exit} ,
+      { name = "Delete Exit", func = room_delete_exit} ,
+      { name = "-", } ,
+      { name = "Toggle DT", func = room_toggle_tag, tag = "dt" } ,
+      { name = "Toggle No-Speed", func = room_toggle_tag, tag = "no-speed" } ,
+      { name = "Toggle Shop", func = room_toggle_tag, tag = "shop" } ,
+      { name = "Toggle Trainer", func = room_toggle_tag, tag = "trainer" } ,
+      { name = "Toggle Trap", func = room_toggle_tag, tag = "trap" } ,
+  } -- handlers
+
+  local t, tf = {}, {}
+  for _, v in pairs(handlers) do
+    table.insert(t, v.name)
+    tf[v.name] = v
+  end -- for
+
+  local choice = WindowMenu(mapper.win,
+                 WindowInfo(mapper.win, 14),
+                 WindowInfo(mapper.win, 15),
+                 table.concat(t, "|"))
+
+  local f = tf[choice]
+
+  if f then
+    f.func(room, uid, f.tag)
+  end -- if handler found
+end
+
+
+
+--------------------
+-- interface stuff
+--------------------
+
+function mapper_show(prefer)
+  config2.visible = true
+  save_config2()
+
+  if (prefer) then
+    prefer_shown = true
+  end
+
+  if (prefer_shown) then
+    mapper.show()
+  end
+end
+
+
+function mapper_hide(prefer)
+  config2.visible = false
+  save_config2()
+
+  if (prefer) then
+    prefer_shown = false
+  end
+
+  mapper.hide()
+end
+
+
+function toggle_terrain_to(status)
+  config2.color_terrain = do_toggle(config2.color_terrain, status)
+
+  save_config2()
+
+  if (config2.color_terrain) then
+    Note("-- MM_GMCP_Mapper: showing terrain color only --")
+  else
+    Note("-- MM_GMCP_Mapper: PK/shop/trainer color supersedes terrain color --")
+  end
+
+  mapper.draw(current_room)
+end
+
+
+function toggle_vis_flags_to(status)
+  config2.show_flags = do_toggle(config2.show_flags, status)
+
+  save_config2()
+
+  if (config2.show_flags) then
+    Note("-- MM_GMCP_Mapper: showing room flags and terrain ON --")
+  else
+    Note("-- MM_GMCP_Mapper: showing room flags and terrain OFF --")
+  end
+end
+
+
+function toggle_vis_number_to(status)
+  config2.show_numbers = do_toggle(config2.show_numbers, status)
+
+  save_config2()
+
+  if (config2.show_numbers) then
+    Note("-- MM_GMCP_Mapper: showing and logging room numbers ON --")
+  else
+    Note("-- MM_GMCP_Mapper: showing and logging room numbers OFF --")
+  end
+end
+
+
+function toggle_vis_road_exits_to(status)
+  config2.vis_road_exits = do_toggle(config2.vis_road_exits, status)
+
+  save_config2()
+
+  if (config2.vis_road_exits) then
+    Note("-- MM_GMCP_Mapper: showing road exits ON --")
+  else
+    Note("-- MM_GMCP_Mapper: showing road exits OFF --")
+  end
+end
+
+
+function toggle_vis_unmapped_to(status)
+  config2.vis_unmapped_exits = do_toggle(config2.vis_unmapped_exits, status)
+
+  save_config2()
+
+  if (config2.vis_unmapped_exits) then
+    Note("-- MM_GMCP_Mapper: showing unmapped exits ON --")
+  else
+    Note("-- MM_GMCP_Mapper: showing unmapped exits OFF --")
+  end
+end
+
+
+function toggle_draw_other_floors_to(status)
+  config2.draw_other_floors = do_toggle(config2.draw_other_floors, status)
+
+  save_config2()
+
+  if (config2.draw_other_floors) then
+    mapper.toggle_show_up_down(true)
+    Note("-- MM_GMCP_Mapper: drawing other floors ON --")
+  else
+    mapper.toggle_show_up_down(false)
+    Note("-- MM_GMCP_Mapper: drawing other floors OFF --")
+  end
+end
+
+
+function toggle_auto_open_to(status)
+  config2.auto_open = do_toggle(config2.auto_open, status)
+
+  save_config2()
+
+  if (config2.auto_open) then
+    Note("-- MM_GMCP_Mapper: auto-open doors ON --")
+  else
+    Note("-- MM_GMCP_Mapper: auto-open doors OFF --")
+  end
+end
+
+
+function toggle_safewalk_to(status)
+  config2.safewalk = do_toggle(config2.safewalk, status)
+
+  save_config2()
+
+  if (config2.safewalk) then
+    Note("-- MM_GMCP_Mapper: safewalk mode ON --")
+  else
+    Note("-- MM_GMCP_Mapper: safewalk mode OFF --")
+  end
+end
+
+
+function toggle_show_database_mods_to(status)
+  config2.show_database_mods = do_toggle(config2.show_database_mods, status)
+
+  save_config2()
+
+  if (config2.show_database_mods) then
+    Note("-- MM_GMCP_Mapper: showing database mods ON --")
+  else
+    Note("-- MM_GMCP_Mapper: showing database mods OFF --")
+  end
+end
+
+
+function do_toggle(var, status)
+  if (status == "on") then
+    var = true
+  elseif (status == "off") then
+    var = false
+  else
+    var = not var
+  end
+
+  return var
+end
+
+
+function check_if_show_flags_and_terrain(flags, terrain)
+  if (config2.show_flags) then
+    show_flags_and_terrain(flags, terrain)
+  end
+end
+
+
+function show_flags_and_terrain(flags, terrain)
+  local show_flags = flags
+  if (not show_flags) or (show_flags == "") then
+    show_flags = "-"
+  end
+
+  local show_terrain = terrain
+  if (not show_terrain) or (show_terrain == "") then
+    show_terrain = "-"
+  end
+
+  Note("[gmcp: " .. show_flags .. " / " .. show_terrain .. "]")
+end
+
+
+function check_if_show_room_number(exits)
+  local texits = utils.split(Trim(exits), " ")
+
+  if (config2.show_numbers) or (texits[1] == "?") or (texits[1] == "None.") then
+    show_room_number()
+  end
+end
+
+
+function show_room_number()
+  if (uid) then
+    Note("[gmcp #" .. uid .. "]")
+    WriteLog("[gmcp #" .. uid .. "]")
+  end
+end
+
+
+function check_if_show_road_exits()
+  if (config2.vis_road_exits) and (is_vmap()) then
+    show_road_exits()
+  end
+end
+
+
+function show_road_exits()
+  local dest, room, ok_exits
+
+  ok_exits = {}
+
+  for dir in string.gmatch(exits_str, "%a+") do
+    dest = gmcpval("exits." .. dir)
+
+    room = load_room_from_database(dest)
+
+    if (room) then
+      ok_exits[#ok_exits + 1] = capitalize(dir)
+    end
+  end -- for each exit
+
+  ok_exits = Trim(table.concat(ok_exits, " "))
+
+  if (ok_exits ~= "") then
+    Tell("  on-road exits: ")
+    ColourNote("silver", "black", ok_exits)
+  end
+end
+
+
+function check_if_show_unmapped_exits()
+  if (config2.vis_unmapped_exits) and (not is_vmap()) then
+    show_unmapped_exits()
+  end
+end
+
+
+function show_unmapped_exits()
+  local dest, room, ok_exits
+
+  unmapped_exits = {}
+  one_way_exits = {}
+
+  local uid = gmcpval("num")
+
+  for dir in string.gmatch(exits_str, "%a+") do
+    dest = gmcpval("exits." .. dir)
+
+    room = load_room_from_database(dest)
+
+    if (not room) then
+      unmapped_exits[#unmapped_exits + 1] = capitalize(dir)
+
+    else
+      local links_back = false
+
+--      Tell("exits from " .. dest .. ": ")
+--      Note(serialize.save_simple(room.exits))
+
+      for dir, num in pairs(room.exits) do
+        if (num == uid) then
+          links_back = true
+          break
+        end
+      end
+
+      if (not links_back) then
+        one_way_exits[#one_way_exits + 1] = capitalize(dir)
+      end
+    end
+  end -- for each exit
+
+  unmapped_exits = Trim(table.concat(unmapped_exits, " "))
+  if (unmapped_exits ~= "") then
+    Tell("  unmapped exits: ")
+    ColourNote("silver", "black", unmapped_exits)
+  end
+
+  one_way_exits = Trim(table.concat(one_way_exits, " "))
+  if (one_way_exits ~= "") then
+    Tell("  one way exits: ")
+    ColourNote("silver", "black", one_way_exits)
+  end
+end
+
+
+function peek_room(id)
+  local room = load_room_from_database(id)
+
+  if (room) then -- room is in the map
+    peeking = true
+    peeking_from = id
+    Send("rest")
+    mapper.mapprint("Peeking room", id, "... Type 'look' to return to normal view.")
+    if (verbose_mode) then
+      Note("(making you rest so if you click on a room, you won't start a wrong speedwalk)")
+    end
+    mapper.draw(id)
+
+  else
+    mapper.mapprint("The room", id, "isn't in the map.")
+  end
+end
+
+
+function notify_teleport()
+  Note("-- mapper: wait for teleport... --")
+end
+
+
+function notify_portal()
+  Note("-- mapper: enter portal/mirror/gate/etching/... --")
+
+  BroadcastPlugin(1, "portal")
+end
+
+
+
+------------
+-- queries
+------------
+
+function map_where(rname)
+  local sname = fixsql("%" .. string.upper(rname) .. "%")
+  local t = {}
+
+  for row in db:nrows(string.format("SELECT uid, area FROM rooms WHERE UPPER(name) like %s", sname)) do
+    if (not is_vmap(row.area)) then
+      t[#t + 1] = row.uid
+    end
+  end -- finding rooms
+
+  ColourNote("lightgreen", "black", "Results for: '" .. rname .. "':")
+  show_hyperlinks(t)
+  if (verbose_mode) then
+    ColourNote("lightgreen", "black", "Click on a room's name or type 'mapper goto <id>' to speedwalk to the room, if possible.")
+  end
+end
+
+
+function map_wheree(rname, area)
+  local sname = fixsql(string.upper(rname))
+  local t = {}
+
+  area = Trim(area)
+
+  for row in db:nrows(string.format("SELECT uid, area FROM rooms WHERE UPPER(name) = %s", sname)) do
+    if (not is_vmap(row.area)) and (area ~= "") then
+      if (string.lower(row.area) == string.lower(area)) then
+        t[#t + 1] = row.uid
+      end
+    else
+      t[#t + 1] = row.uid
+    end
+  end -- finding rooms
+
+  ColourTell("lightgreen", "black", "Results for: '" .. rname .. "'")
+  if (area ~= "") then
+    ColourNote("lightgreen", "black", " in the area: '" .. area .. "':")
+  else
+    ColourNote("lightgreen", "black", ":")
+  end
+
+  show_hyperlinks(t)
+
+  if (area ~= "") then
+    ColourTell("lightgreen", "black", "Click ")
+    Hyperlink("mapper wheree " .. rname, "[here]", "", "lightgreen", "black", false)
+    ColourNote("lightgreen", "black", " or type 'mapper wheree " .. rname .. "' to repeat the search without area restrictions.")
+  end
+end
+
+
+function get_room_areas(rname)
+  local sname = fixsql(string.upper(rname))
+  local t = {}
+
+  for row in db:nrows(string.format("SELECT area FROM rooms WHERE UPPER(name) = %s", sname)) do
+    t[#t + 1] = row.area
+  end -- finding rooms
+
+  return table.concat(t, ";")
+end
+
+
+function map_find(keywords)
+  if (not peeking) then
+    local rooms = {}
+    local count = 0
+    local snippets = {}
+    local reset = ANSI(0)
+    local bold = ANSI(1)
+    local unbold = ANSI(22)
+    local red = ANSI(31)
+
+    function show_snippet(uid)
+      local room = rooms[uid]
+      if (not room) then
+        room = load_room_from_database(uid)
+      end
+
+      local cpk = ""
+      if (has_flag(room.flags, "player-kill-chaotic")) then
+        cpk = red .. bold .. " [CPK]"
+      end
+
+      if (not reader_present) then
+        AnsiNote(reset .. snippets[uid], cpk, reset .. "  @  " .. room.area)
+      else
+        Note(StripANSI(snippets[uid] .. cpk .. "  @  " .. room.area))
+      end
+    end
+
+    -- find matching rooms using FTS3
+    for row in db:nrows(string.format(
+       [[
+        SELECT uid, name, snippet(rooms_lookup, '%s', '%s', ' ... ', -1, -10) AS snippet
+          FROM rooms_lookup
+          WHERE rooms_lookup MATCH %s]],
+        bold, unbold,
+        fixsql(keywords))) do
+       rooms[row.uid] = true
+       snippets[row.uid] = row.snippet
+       count = count + 1
+    end -- finding room
+
+    -- see if nearby
+    mapper.find(
+      function (uid)
+        local room = rooms[uid]
+        if room then
+          rooms[uid] = nil
+        end
+        return room, next(rooms) == nil
+      end,  -- function
+      show_vnums,  -- show vnum?
+      count,       -- how many to expect
+      false,       -- don't auto-walk
+      config2.safewalk,
+      show_snippet -- show find snippet
+    )
+  end
+end
+
+
+function map_bookmarks(name, line, wildcards)
+  if (compatibility) then
+    ColourNote("tomato", "black", "GMCP Mapper: I can't find bookmarks in compatibility mode. Please upgrade your database.")
+  
+  else
+    local rooms = {}
+    local count = 0
+
+    -- build table of special places (with info in them)
+    for row in db:nrows(string.format("SELECT uid FROM rooms WHERE area = %s", fixsql(zone))) do
+      local anote = load_notes_from_database(row.uid)
+      if (anote) and (anote ~= "") then
+        rooms[row.uid] = capitalize(anote)
+        count = count + 1
+      end
+    end   -- finding room
+
+    -- find such places
+    mapper.find(
+      function (uid)
+        local room = rooms[uid]
+        if room then
+          rooms[uid] = nil
+        end
+        return room, next(rooms) == nil  -- room will be type of info(eg. shop)
+      end,  -- function
+      show_vnums,  -- show vnum?
+      count,       -- how many to expect
+      false,       -- don't auto-walk
+      config2.safewalk
+    )
+  end
+end
+
+
+function map_find_bookmark(book)
+  if (compatibility) then
+    ColourNote("tomato", "black", "GMCP Mapper: I can't find bookmarks in compatibility mode. Please upgrade your database.")
+  
+  else
+    local sbook = "%" .. string.upper(book) .. "%"
+    local t = {}
+
+    for row in db:nrows(string.format('SELECT * FROM bookmarks WHERE UPPER(notes) like "%s"', sbook)) do
+      local room = load_room_from_database(row.uid)
+      if (room.area == current_area) then
+        t[#t + 1] = row.uid
+      end
+    end -- finding rooms
+
+    ColourNote("lightgreen", "black", "Rooms bookmarked as: '" .. sbook .. "':")
+    show_hyperlinks(t)
+
+    if (verbose_mode) then
+      ColourNote("lightgreen", "black", "Click on a room's name or type 'mapper goto <id>' to speedwalk to the room, if possible.")
+    end
+  end
+end
+
+
+function map_list_by_flags(flags)
+  local sflags = utils.split(flags, " ")
+  local rarea = current_area
+  local t = {}
+  local rflags
+
+  local use_column = "flags"
+  if (compatibility) then
+    use_column = "description"
+  end
+
+  for row in db:nrows(string.format('SELECT uid, %s FROM rooms WHERE area = "%s"', use_column, rarea)) do
+    local use_field = row.flags
+    if (compatibility) then
+      use_field = row.description
+    end
+    rflags = string.gsub(use_field or "", " ", "")
+    rflags = utils.split(rflags, ",")
+
+    if (has_all(sflags, rflags)) then
+      t[#t + 1] = row.uid
+    end
+  end -- finding rooms
+
+  mapper.mapprint("Results for flag(s)", flags, "in the area", rarea)
+  show_hyperlinks(t)
+
+  if (verbose_mode) then
+    mapper.mapprint("Click on a room's name or type 'mapper goto <id>' to speedwalk to the room, if possible.")
+  end
+end
+
+
+function has_all(sflags, rflags)
+  local res
+  local tres = {}
+
+  for i = 1, #sflags do
+--    Note(sflags[i])
+    tres[i] = false
+
+    for j = 1, #rflags do
+--    Note(rflags[j])
+      if (sflags[i] == rflags[j]) then
+        tres[i] = true
+      end
+    end
+  end
+
+  res = true
+  for i = 1, #tres do
+    res = res and tres[i]
+  end
+
+  return res
+end
+
+
+function has_none(sflags, rflags)
+  local res
+  local tres = {}
+
+  for i = 1, #sflags do
+--    Note(sflags[i])
+    tres[i] = false
+
+    for j = 1, #rflags do
+--    Note(rflags[j])
+      if (sflags[i] == rflags[j]) then
+        tres[i] = true
+      end
+    end
+  end
+
+  res = true
+  for i = 1, #tres do
+    res = res and (not tres[i])
+  end
+
+  return res
+end
+
+
+function map_list_by_not_flags(flags)
+  local sflags = utils.split(flags, " ")
+  local rarea = current_area
+  local t = {}
+  local rflags
+
+  local use_column = "flags"
+  if (compatibility) then
+    use_column = "description"
+  end
+
+  for row in db:nrows(string.format('SELECT uid, name, %s FROM rooms WHERE area = "%s"', use_column, rarea)) do
+    local use_field = row.flags
+    if (compatibility) then
+      use_field = row.description
+    end
+    rflags = string.gsub(use_field or "", " ", "")
+    rflags = utils.split(rflags, ",")
+
+    if (has_none(sflags, rflags)) then
+      t[#t + 1] = row.uid
+    end
+  end -- finding rooms
+
+  mapper.mapprint("Results for NOT flag(s)", flags, "in the area", rarea)
+  show_hyperlinks(t)
+
+  if (verbose_mode) then
+    mapper.mapprint("Click on a room's name or type 'mapper goto <id>' to speedwalk to the room, if possible.")
+  end
+end
+
+
+function map_hyperlink(id)
+  local t = {id}
+  show_hyperlinks(t)
+end
+
+
+function show_hyperlinks(t)
+  table.sort(t)
+  local rflags
+
+  for i = 1, #t do
+--    Note(t[i])
+    local room = rooms[t[i]]
+    if (not room) then
+      room = load_room_from_database(t[i])
+    end
+
+    Tell("room: ")
+    Hyperlink ("mapper goto " .. t[i], room.name, "", "white", bgcol, false)
+
+    if (has_flag(room.flags, "player-kill-chaotic")) then
+      ColourTell("red", bgcol, " [CPK]")
+    end
+
+    Tell(" - id: ")
+    ColourTell(fontcol, bgcol, t[i])
+
+    if (room.area ~= "-") then
+      Tell(" - area: ")
+      ColourTell(fontcol, bgcol, room.area)
+--      Hyperlink("gate " .. room.area, room.area, "", fontcol, bgcol, false)
+    end
+
+    Note("")
+  end
+end
+
+
+function map_show_adjacent_rooms(name)
+  local sname = fixsql(string.upper(Trim(name)))
+
+  -- find matching rooms
+  local taux = {}
+
+  for row in db:nrows(string.format("SELECT uid FROM rooms WHERE UPPER(name) = %s", sname)) do
+    taux[#taux + 1] = row.uid
+  end
+
+  mapper.mapprint("Adjacent rooms for name =", name)
+
+  if (#taux == 0) then
+    Note("No rooms by that name in my db.")
+    return
+  end
+
+  table.sort(taux)
+
+  -- find adjacent exits with names /= name
+  local tres = {}
+  local thisroom, adjroom
+
+  for i = 1, #taux do
+    thisroom = load_room_from_database(taux[i])
+
+    for _, num in pairs(thisroom.exits) do
+      adjroom = load_room_from_database(num)
+
+      if (adjroom)
+      and (string.upper(Trim(adjroom.name)) ~= string.upper(Trim(name))) then
+        tres[#tres + 1] = "(" .. adjroom.area .. ") " .. adjroom.name
+      end
+    end
+  end
+
+  -- show results, if any
+  if (#tres > 0) then
+    table.sort(tres)
+
+    for i = 1, #tres do
+      ColourNote("silver", "black", tres[i])
+    end
+
+  else
+    Note("No matches.")
+  end
+end
+
+
+function map_safe()
+  if (not peeking) then
+    map_list_by_flags("safe")
+  end
+end
+
+
+function map_cpk()
+  if (not peeking) then
+    map_list_by_flags("player-kill-chaotic")
+  end
+end
+
+
+function map_dts()
+  if (not peeking) then
+    if (not compatibility) then
+      map_list_by_tags("dt")
+    else
+      ColourNote("tomato", "black", "GMCP Mapper: I can't search rooms with the DT tag in compatibility mode. Please upgrade your database.")
+    end
+  end
+end
+
+
+function map_shops()
+  if (not peeking) then
+    if (not compatibility) then
+      map_list_by_tags("shop")
+    else
+      map_list_by_tags_compat("shop")
+    end
+  end
+end
+
+
+function map_trainers()
+  if (not peeking) then
+    if (not compatibility) then
+      map_list_by_tags("trainer")
+    else
+      map_list_by_tags_compat("train")
+    end
+  end
+end
+
+
+function map_list_by_tags(tags)
+  local stags = utils.split(tags, " ")
+  local rarea = current_area
+  local t = {}
+  local room, rtags
+
+  for row in db:nrows(string.format('SELECT * FROM player_tags')) do
+    room = do_load_room(row.uid)
+
+    if (room.area == rarea) then
+      rtags = row.tags
+      rtags = string.gsub(rtags or "", " ", "")
+      rtags = utils.split(rtags, ",")
+
+      if (has_all(stags, rtags)) then
+        t[#t + 1] = row.uid
+      end
+    end
+  end -- finding rooms
+
+  mapper.mapprint("Results for tag(s)", tags, "in the area", rarea)
+  show_hyperlinks(t)
+
+  if (verbose_mode) then
+    mapper.mapprint("Click on a room's name or type 'mapper goto <id>' to speedwalk to the room, if possible.")
+  end
+end
+
+
+function map_list_by_tags_compat(which)
+  local rooms = {}
+  local count = 0
+
+  -- build table of special places (with info in them)
+  for row in db:nrows(string.format("SELECT uid, name FROM rooms WHERE %s = 1", which)) do
+    rooms[row.uid] = true
+    count = count + 1
+  end   -- finding room
+
+  -- find such places
+  mapper.find(
+    function (uid)
+      local room = rooms[uid]
+      if room then
+        rooms[uid] = nil
+      end
+      return room, next(rooms) == nil  -- room will be type of info (eg. shop)
+    end,  -- function
+    show_vnums, -- show vnum?
+    count,      -- how many to expect
+    false,      -- don't auto-walk
+    config2.safewalk
+  )
+end
+
+
+
+-------------
+-- movement
+-------------
+
+function map_path(wanted)
+  return map_path2(current_room, wanted)
+end
+
+
+function map_path2(fromuid, touid)
+  if not mapper.check_we_can_find() then
+    return
+  end
+
+  if fromuid and touid == fromuid then
+    mapper.mapprint("You are already in that room.")
+    return
+  end
+
+  local old_depth = config.SCAN.depth
+  config.SCAN.depth = 2500
+
+  local paths = mapper.find_paths(fromuid,
+           function (uid)
+             return uid == touid,  -- wanted room?
+                    uid == touid   -- stop searching?
+            end)
+
+  local uid, item = next(paths, nil) -- extract first (only) path
+
+  config.SCAN.depth = old_depth
+
+  -- nothing? room not found
+  if not item then
+    mapper.mapprint(string.format("Path from %s to %s not found.", fromuid, touid))
+    return
+  end
+
+  -- turn into speedwalk
+  local path = mapper.build_speedwalk(item.path)
+
+  -- display it
+  path = string.gsub(path, "tprt", "teleport")
+  path = string.gsub(path, "prtl", "portal")
+
+  mapper.mapprint(string.format("Path from %s to %s is: %s", fromuid, touid, path))
+
+  return path
+end
+
+
+function map_goto(wanted)
+--  -- check valid string
+--  if string.match(wanted, "%D") then
+--    mapper.maperror("Room number must be a number, you entered: " .. wanted)
+--    return
+--  end
+
+  -- see if the room is mapped
+  local room = load_room_from_database(wanted)
+  if (not room) then
+    mapper.mapprint("That room is not mapped.")
+    return
+  end
+
+  -- see if already there
+  if current_room and (current_room == wanted) then
+    mapper.mapprint("You are already in that room.")
+    return
+  end
+
+  local old_depth = config.SCAN.depth
+
+  if (is_vmap(zone))
+  or (zone ~= room.area) then
+    config.SCAN.depth = 2500
+  else
+    config.SCAN.depth = 500
+  end
+
+  -- find desired room
+  mapper.find(
+    function (uid)
+      local found = string.match(uid, "^" .. wanted .. "$")
+      return found, found
+    end,  -- function
+    show_vnums,  -- show vnum?
+    1,          -- how many to expect
+    true,       -- just walk there
+    config2.safewalk
+  )
+
+  config.SCAN.depth = old_depth
+end
+
+
+function map_resume(name, line, wildcards)
+  local wanted = mapper.last_hyperlink_uid or mapper.last_speedwalk_uid
+
+  if (wanted) then
+    map_goto(wanted)
+
+  elseif (not wanted) then
+    mapper.mapprint("No outstanding speedwalks or hyperlinks.")
+  end -- if nothing to do
+end
+
+
+function map_speedwalk_next(name, line, wildcards)
+  local next = mapper.get_next_dir()
+
+  if (next) then
+    if (sapi_present) then
+      if (string.lower(next) == "teleport") then
+        sapi_say("wait for teleport")
+      elseif (string.lower(next) == "portal") then
+        sapi_say("enter portal")
+      else
+        sapi_say(next)
+      end
+
+    else
+      Note("* next speedwalk direction: " .. next)
+    end
+  end
+end
+
+
+
+-- ---------------------------------
+-- process room (as we walk, etc.)
+-- ---------------------------------
+
+function process_room()
+  uid = gmcpval("num")
+  zone = gmcpval("zone")
+
+  if (uid ~= "") then
+--    Note(uid)
+
+    if (uid) then
+      roomname = gmcpval("name")
+
+      roomflags = gmcpval("flags")
+      if (roomflags == "_empty") then
+        roomflags = nil
+      end
+
+      exits = {}
+      exits_str = gmcp_get_exits()
+
+      current_area = zone
+
+      terrain = gmcpval("terrain")
+      terraininfo = gmcpval("terraininfo")
+
+      check_if_show_flags_and_terrain(roomflags, terrain)
+
+      current_room = uid
+
+      local room = rooms[current_room]
+      if (not room) then -- not cached
+        room = load_room_from_database(current_room) -- try to load room from db
+      end
+
+      if (not room) then -- room isn't mapped yet
+        if (config2.do_map_wilds) -- we're mapping everything
+        or ((not is_vmap(zone) or (is_road(terrain) and not is_cave(roomname)))) then -- it's not in the wilds
+          db:exec("BEGIN TRANSACTION;")
+
+          save_room_to_database(current_room, roomname, roomflags, zone, terrain, terraininfo)
+          save_exits_to_database(zone, current_room, exits_str)
+
+          db:exec("COMMIT;")
+
+          room = load_room_from_database(current_room) -- get it back now
+
+          -- for fixes to outdated maps, run 'mapper update room'
+        end
+
+      else -- room already mapped, update if needed
+        update_room(uid)
+      end
+    end
+
+    first_room = false
+  end
+
+  if (uid) -- we're not in a maze
+  and ((config2.do_map_wilds) -- we're mapping the wilds
+    or ((not is_vmap(zone) or (is_road(terrain) and not is_cave(roomname))))) then
+  -- or we're in a part of the wilds that we always wanna map
+    mapper.draw(current_room) -- call mapper to draw this rom
+  end
+end
+
+
+
+-------------------
+-- various checks
+-------------------
+
+function purge_cache_if_area_changed()
+  local zone = gmcpval("zone")
+
+  if (zone ~= old_zone) then
+    rooms = {}
+    old_zone = zone
+    room_not_in_database = {}
+  end
+end
+
+
+function has_flag(flags, flag)
+  local aux
+  aux = flags or ""
+  aux = string.gsub(aux, escaped_str("no-" .. flag), "x")
+  return (string.find(aux, escaped_str(flag)) ~= nil)
+end
+
+
+function escaped_str(s)
+  s = string.gsub(s, "%-", "%%-")
+  return s
+end
+
+
+function has_tag(tags, tag)
+  return (string.find(tags or "", escaped_str(tag)) ~= nil)
+end
+
+
+function is_true(x)
+  local res
+
+  x = fixbool(x)
+  if (x == 1) then
+    res = true
+  end
+
+  return res
+end
+
+
+function is_vmap(zone)
+  local vmap_zones = {
+    ["alyria"] = true,
+    ["chat rooms wilderness"] = true,
+    ["faerie plane wilderness"] = true,
+    ["great alyrian underground"] = true,
+    ["lasler valley"] = true,
+    ["sigil underground"] = true,
+    ["verity isle"] = true,
+  }
+
+  local res
+
+  if (not zone) then
+    local code = gmcpval("coord.code")
+    res = (code ~= "")
+
+  else
+    res = vmap_zones[string.lower(Trim(zone))]
+  end
+
+  return res
+end
+
+
+function is_cave(name)
+  local cave_names = {
+    ["subterranean cave"] = true,
+    ["subterranean caves"] = true,
+    ["caves of darkness and shadow"] = true,
+  }
+
+  return cave_names[string.lower(name)]
+end
+
+
+function is_road(terrain)
+  local road_terrains = {
+    ["bridge"] = true,
+    ["city street"] = true,
+    ["dusty road"] = true,
+    ["gravel road"] = true,
+    ["mountain-road"] = true,
+    ["paved road"] = true,
+    ["trail"] = true,
+  }
+
+  return road_terrains[string.lower(terrain)]
+end
+
+
+function is_valid_direction(dir)
+  local dirs = {
+    ["ne"] = true,
+    ["e"] = true,
+    ["se"] = true,
+    ["s"] = true,
+    ["sw"] = true,
+    ["w"] = true,
+    ["nw"] = true,
+    ["n"] = true,
+    ["u"] = true,
+    ["d"] = true,
+    ["tprt"] = true,
+    ["prtl"] = true,
+  }
+  return(dirs[dir] ~= nil)
+end
+
+
+function is_volatile(uid)
+  local volatile = {
+    ["10328"] = "Feral Wolverine Mother", -- Mandrake Woods
+    ["12242"] = "A Dark Alcove", -- Rune Forest
+    ["12258"] = "A Frozen Passage", -- Rune Forest
+    ["16334"] = "A Small, Nondescript Cave", -- Limbo Maze
+    ["17835"] = "Broad Corridor [chemwalker]", -- Deceit
+    ["22434"] = "The Wandering Sidhe",
+    ["25835"] = "The Wicker Undercarriage of the Airship Inconvenience",
+    ["28637"] = "A Cramped Room [illusionist]", -- Sigil
+--    ["49837"] = "Spiral Staircase", -- Riga
+    ["67734"] = "A Concealed Spiral Stair [Idolatry]", -- Catacombs of Shame
+    ["68323"] = "A Quartz Cave [tourmaline dragon]", -- Maldra Keep
+    ["68263"] = "Preacher Dan's House of Vandynity", -- Maldra Keep
+    ["78413"] = "Maze Passageway [angel]", --  HH
+    ["107527"] = "A Hidden Torture Room", -- Hellbent
+  }
+
+  local x = volatile[tostring(uid)]
+
+  if (x) then
+    add_to_events_mini("room #" .. current_room .. ": " .. x)
+  end
+
+  return (x ~= nil)
+end
+
+
+function add_to_events_mini(txt)
+  function add_style_to_events_mini(fgcol, bgcol, txt)
+    CallPlugin("9ced43d0a7b4a60116794096", "add_to_mini", fgcol, bgcol, txt)
+  end
+
+  -- OnPluginListChanged() should keep 'use_events_mini' updated
+
+  if (use_events_mini) then
+    add_style_to_events_mini("dodgerblue", "black", txt)
+    add_style_to_events_mini("silver", "black", "\r\n")
+  end
+end
+
+
+function events_mini_installed()
+  return is_plugin_present("events_mini", "9ced43d0a7b4a60116794096")
+end
+
+
+
+------------------------
+-- specific GMCP stuff
+------------------------
+
+function gmcp_get_exits()
+  local shortdir = {"n", "nw", "w", "sw", "s", "se", "e", "ne", "u", "d"}
+
+  local exits, i, res, touid, doort
+
+  doort = gmcpval("exits")
+
+  if (string.find(serialize.save_simple(doort) or "", "hidden")) then
+    ColourNote("blueviolet", "black", "[gmcp: hidden exit!]")
+  end
+
+  if (string.find(serialize.save_simple(doort) or "", "buried")) then
+    ColourNote("blueviolet", "black", "[gmcp: buried exit!]")
+  end
+
+  if (string.find(serialize.save_simple(doort) or "", "illusion%-disguised")) then
+    ColourNote("blueviolet", "black", "[gmcp: illus exit!]")
+  end
+
+  exits = ""
+  for i = 1, #shortdir do
+    touid = gmcpval("exits." .. shortdir[i])
+
+    if (touid ~= "") then
+      if (exits == "") then
+        exits = shortdir[i]
+      else
+        exits = exits .. " " .. shortdir[i]
+      end
+    end
+  end
+
+  return exits
+end
+
+
+
+------------------------
+-- database management
+------------------------
+
+function dbcheck(code)
+ if code ~= sqlite3.OK and    -- no error
+    code ~= sqlite3.ROW and   -- completed OK with another row of data
+    code ~= sqlite3.DONE then -- completed OK, no more rows
+    local err = db:errmsg()   -- the rollback will change the error message
+    db:exec("ROLLBACK")       -- rollback any transaction to unlock the database
+    error(err, 2)             -- show error in caller's context
+  end
+end
+
+
+function fixsql(s)
+  if s then
+    return "'" .. (string.gsub(s, "'", "''")) .. "'" -- replace single quotes with two lots of single quotes
+  else
+    return "NULL"
+  end
+end
+
+
+function fixbool(b)
+  if ((b == true) or (b == "yes") or (b == 1) or (b == "1")) then
+    b = 1
+  elseif ((b == false) or (b == "no") or (b == 0) or (b == "0")  or (not b)) then -- fix for old maps that used different values
+    b = 0
+  end
+  return b
+end
+
+
+function create_tables()
+  -- create rooms table
+  -- and create rooms_lookup table, if it doesn't exist
+  if (not compatibility) then
+    create_tables_new(db)
+    create_rooms_lookup_new(db)
+  else
+    create_tables_compatibility(db)
+    create_rooms_lookup_compatibility(db)
+  end
+end
+
+
+function create_tables_new(use_db)
+  dbcheck(use_db:execute[[
+
+    PRAGMA foreign_keys = ON;
+    PRAGMA journal_mode = WAL;
+
+    CREATE TABLE IF NOT EXISTS rooms(
+      uid           TEXT NOT NULL,    -- vnum or how the MUD identifies the room
+      name          TEXT,             -- name of room
+      flags         TEXT,             -- room flags
+      area          TEXT,             -- which area it is in
+      terrain       TEXT,             -- terrain
+      terraininfo   TEXT,             -- terrain info
+      date_added    DATE,             -- date added to database
+      UNIQUE(uid)
+    );
+
+    CREATE TABLE IF NOT EXISTS bookmarks(
+      uid           TEXT NOT NULL,    -- room's vnum
+      notes         TEXT,             -- player notes
+      UNIQUE(uid),
+      FOREIGN KEY(uid) REFERENCES rooms(uid)
+    );
+
+    CREATE TABLE IF NOT EXISTS player_tags(
+      uid           TEXT NOT NULL,    -- room's vnum
+      tags          TEXT,             -- player tags (DT, no-speed, shop, trainer, trap)
+      UNIQUE(uid),
+      FOREIGN KEY(uid) REFERENCES rooms(uid)
+    );
+
+    CREATE TABLE IF NOT EXISTS exits(
+      dir           TEXT NOT NULL,    -- direction, eg. "n", "s"
+      fromuid       TEXT NOT NULL,    -- exit from which room(in rooms table)
+      touid         TEXT NOT NULL,    -- exit to which room(in rooms table)
+      date_added    DATE,             -- date added to database
+      FOREIGN KEY(fromuid) REFERENCES rooms(uid)
+    );
+    CREATE INDEX IF NOT EXISTS fromuid_index ON exits(fromuid);
+    CREATE INDEX IF NOT EXISTS touid_index   ON exits(touid);
+  ]])
+end
+
+
+function create_tables_compatibility(use_db)
+  dbcheck(use_db:execute[[
+
+    PRAGMA foreign_keys = ON;
+    PRAGMA journal_mode = WAL;
+
+    CREATE TABLE IF NOT EXISTS rooms(
+      roomid        INTEGER PRIMARY KEY AUTOINCREMENT,
+      uid           TEXT NOT NULL,    -- vnum or how the MUD identifies the room
+      name          TEXT,             -- name of room
+      description   TEXT,             -- room flags
+      area          TEXT,             -- which area it is in
+      terrain       TEXT,             -- terrain
+      terraininfo   TEXT,             -- terrain info
+      safe          INTEGER,          -- 1 = safe room
+      lpk           INTEGER,          -- 1 = lpk room
+      npk           INTEGER,          -- 1 = npk room
+      cpk           INTEGER,          -- 1 = cpk room
+      shop          INTEGER,          -- 1 = shop here
+      train         INTEGER,          -- 1 = trainer here
+      notes         TEXT,             -- player notes
+      date_added    DATE,             -- date added to database
+      UNIQUE(uid)
+    );
+    CREATE INDEX IF NOT EXISTS safe_index ON rooms(safe);
+    CREATE INDEX IF NOT EXISTS cpk_index ON rooms(cpk);
+    CREATE INDEX IF NOT EXISTS shop_index ON rooms(shop);
+    CREATE INDEX IF NOT EXISTS train_index ON rooms(train);
+
+    CREATE TABLE IF NOT EXISTS exits(
+      exitid        INTEGER PRIMARY KEY AUTOINCREMENT,
+      dir           TEXT NOT NULL,    -- direction, eg. "n", "s"
+      fromuid       TEXT NOT NULL,    -- exit from which room(in rooms table)
+      touid         TEXT NOT NULL,    -- exit to which room(in rooms table)
+      date_added    DATE,             -- date added to database
+      FOREIGN KEY(fromuid) REFERENCES rooms(uid)
+    );
+    CREATE INDEX IF NOT EXISTS fromuid_index ON exits(fromuid);
+    CREATE INDEX IF NOT EXISTS touid_index   ON exits(touid);
+
+  ]])
+end
+
+
+function create_rooms_lookup_new(use_db)
+  local table_exists
+  for a in use_db:nrows "SELECT * FROM sqlite_master WHERE name = 'rooms_lookup' AND type = 'table'" do
+    table_exists = true
+  end
+
+  if not table_exists then
+    dbcheck(use_db:execute "CREATE VIRTUAL TABLE rooms_lookup USING FTS3(uid, name, area);")
+    -- in case we only deleted the rooms_lookup table to save space in the download
+    dbcheck(use_db:execute "INSERT INTO rooms_lookup(uid, name, area) SELECT uid, name, area FROM rooms;")
+  end
+end
+
+
+function create_rooms_lookup_compatibility(use_db)
+  local table_exists
+  for a in use_db:nrows "SELECT * FROM sqlite_master WHERE name = 'rooms_lookup' AND type = 'table'" do
+    table_exists = true
+  end
+
+  if not table_exists then
+    dbcheck(use_db:execute "CREATE VIRTUAL TABLE rooms_lookup USING FTS3(uid, name, description);")
+    -- in case we only deleted the rooms_lookup table to save space in the download
+    dbcheck(use_db:execute "INSERT INTO rooms_lookup(uid, name, description) SELECT uid, name, description FROM rooms;")
+  end
+end
+
+
+
+---------------------
+-- database queries
+---------------------
+
+function load_room_from_database(uid)
+  assert(uid, "No UID supplied to load_room_from_database")
+
+  if (room_not_in_database[uid]) then
+    return nil
+  end -- no point looking
+
+  local room = do_load_room(uid)
+
+  if (room) then
+    rooms[uid] = room
+    room_not_in_database[uid] = nil
+    return room
+  end -- if found
+
+  room_not_in_database[uid] = true
+  return nil
+end
+
+
+function do_load_room(uid)
+  local room
+
+  for row in db:nrows(string.format("SELECT * FROM rooms WHERE uid = %s", fixsql(uid))) do
+    room = {
+      name = row.name,
+      area = row.area,
+      terrain = row.terrain,
+      terraininfo = row.terraininfo,
+      date_added = row.date_added,
+      exits = {}
+    }
+
+    if (not compatibility) then
+      room.flags = row.flags
+      room.notes = load_notes_from_database(uid)
+      room.tags = load_tags_from_database(uid)
+
+    else
+      room.flags = row.description
+      room.flags = fix_flag(room.flags, row.safe, "safe")
+      room.flags = fix_flag(room.flags, row.lpk, "player-kill-lawful")
+      room.flags = fix_flag(room.flags, row.npk, "player-kill-neutral")
+      room.flags = fix_flag(room.flags, row.cpk, "player-kill-chaotic")
+
+      room.notes = row.notes
+
+      room.tags = ""
+      room.tags = fix_tag(room.tags, row.shop, "shop")
+      room.tags = fix_tag(room.tags, row.train, "trainer")
+    end
+
+    for exitrow in db:nrows(string.format("SELECT * FROM exits WHERE fromuid = %s", fixsql(uid))) do
+      room.exits[exitrow.dir] = tostring(exitrow.touid)
+    end -- for each exit
+  end   -- finding room
+
+  return room
+end
+
+
+function room_exits(uid)
+  local room = rooms[uid]
+  if (not room) then
+    room = load_room_from_database(uid)
+  end
+
+  local res = ""
+  if (room) then
+    res = serialize.save_simple(room.exits or {})
+  end
+  
+  return res
+end
+
+
+function fix_flag(flags, field, flag)
+  if (is_true(field))
+  and (not has_flag(flags, flag)) then
+    flags = add_a_flag(flags, flag)
+  end
+
+  return flags
+end
+
+
+function fix_tag(tags, field, tag)
+  if (is_true(field))
+  and (not has_tag(tags, tag)) then
+    tags = add_a_tag(tags, tag)
+  end
+
+  return tags
+end
+
+
+function add_a_flag(flags, flag)
+  return add_a_tag(flags, flag)
+end
+
+
+function load_notes_from_database(uid)
+  local res
+
+  for row in db:nrows(string.format("SELECT * FROM bookmarks WHERE uid = %s", fixsql(uid))) do
+    res = row.notes
+  end
+
+  return res
+end
+
+
+function load_tags_from_database(uid)
+  local res
+
+  for row in db:nrows(string.format("SELECT * FROM player_tags WHERE uid = %s", fixsql(uid))) do
+    res = row.tags
+  end
+
+  return res
+end
+
+
+
+-- -----------
+-- additions
+-- -----------
+
+--------------
+-- add rooms
+--------------
+
+function map_add_room(id, name, zone, flags, terrain, terraininfo)
+  local room = load_room_from_database(id)
+
+  if (not room) then -- room isn't mapped yet
+    db:exec("BEGIN TRANSACTION;")
+
+    save_room_to_database(id, Trim(name), Trim(flags), Trim(zone), Trim(terrain), Trim(terraininfo))
+
+    db:exec("COMMIT;")
+
+    -- update in-memory table
+    load_room_from_database(id)
+
+    mapper.draw(current_room)
+
+  else
+    mapper.mapprint("The room", id, "is already mapped.")
+  end
+end
+
+
+function save_room_to_database(uid, title, flags, area, terrain, terraininfo)
+  assert(uid, "No UID supplied to save_room_to_database")
+
+  local use_column = "flags"
+  if (compatibility) then
+    use_column = "description"
+  end
+
+  dbcheck(db:execute(string.format(
+    "INSERT INTO rooms(uid, name, %s, area, terrain, terraininfo, date_added) VALUES(%s, %s, %s, %s, %s, %s, DATETIME('NOW'));",
+      use_column,
+      fixsql(uid),
+      fixsql(title),
+      fixsql(flags),
+      fixsql(area),
+      fixsql(terrain),
+      fixsql(terraininfo)
+  )))
+
+  use_column = "area"
+  local use_field = area
+  if (compatibility) then
+    use_column = "flags"
+    use_field = flags
+  end
+
+  dbcheck(db:execute(string.format(
+    "INSERT INTO rooms_lookup(uid, name, %s) VALUES(%s, %s, %s);",
+      use_column,
+      fixsql(uid),
+      fixsql(title),
+      fixsql(use_field)
+  )))
+
+  room_not_in_database[uid] = nil
+
+  if (config2.show_database_mods) then
+    mapper.mapprint("Added room", uid, "to database. Name:", title)
+  end
+end
+
+
+
+------------------
+-- add bookmarks
+------------------
+
+function map_add_bookmark(id, new_note)
+  if (compatibility) then
+    ColourNote("tomato", "black", "GMCP Mapper: I can't edit bookmarks in compatibility mode. Please upgrade your database.")
+
+  else
+    if (id == "") then
+      id = uid -- current room is default
+    end
+
+    if (new_note == "") then
+      new_note = "x"
+    end
+
+    local room = load_room_from_database(id)
+
+    if (room) then -- room is in the map
+      db:exec("BEGIN TRANSACTION;")
+
+      local notes = load_notes_from_database(id)
+
+      if (notes) then -- room already has a bookmark
+        update_bookmark(id, new_note)
+        mapper.mapprint("Bookmark for room", uid, "changed to:", new_note)
+      else
+        save_bookmark(id, new_note)
+        mapper.mapprint("Bookmark for room", id, "set to:", new_note)
+      end
+
+      db:exec("COMMIT;")
+
+      -- update in-memory table
+      if (rooms[id]) then
+        rooms[id].notes = new_note
+      end
+
+    else
+      mapper.mapprint("The room", id, "isn't in the map.")
+    end
+  end
+end
+
+
+function room_edit_bookmark(room, uid)
+-- gui function
+  if (compatibility) then
+    ColourNote("tomato", "black", "GMCP Mapper: I can't edit bookmarks in compatibility mode. Please upgrade your database.")
+
+  else
+    local notes = room.notes or ""
+
+    if (notes ~= "") then
+      newnotes = utils.inputbox("Modify room comment (clear it to delete from database)", room.name, notes)
+    else
+      newnotes = utils.inputbox("Enter room comment (creates a bookmark for this room)", room.name, notes)
+    end
+
+    if (not newnotes) then
+      return
+    end -- if cancelled
+
+    if (notes ~= newnotes) then
+      if (newnotes == "") then
+        if (notes == "") then
+          mapper.mapprint("No comment entered, bookmark not saved.")
+        else
+          del_bookmark_from_database(uid)
+          mapper.mapprint("Bookmark for room", uid, "deleted. Was previously:", notes)
+
+          -- update in-memory table
+          if (rooms[id]) then
+            rooms[id].notes = nil
+          end
+        end
+
+      else -- newnotes not empty
+        if (notes == "") then
+          save_bookmark(uid, newnotes)
+          mapper.mapprint("Bookmark added to room", uid, ":", newnotes)
+        else
+          update_bookmark(uid, newnotes)
+          mapper.mapprint("Bookmark for room", uid, "changed to:", newnotes)
+        end
+
+        -- update in-memory table
+        if (rooms[id]) then
+          rooms[id].notes = newnotes
+        end
+      end
+    end
+  end
+end
+
+
+function save_bookmark(uid, notes)
+  dbcheck(db:execute(string.format(
+    "INSERT INTO bookmarks(uid, notes) VALUES(%s, %s);",
+      fixsql(uid),
+      fixsql(notes)
+  )))
+end
+
+
+
+-------------
+-- add tags
+-------------
+
+function save_tags_to_database(uid, tags)
+  dbcheck(db:execute(string.format(
+    "INSERT INTO player_tags(uid, tags) VALUES(%s, %s);",
+      fixsql(uid),
+      fixsql(tags)
+  )))
+end
+
+
+
+--------------
+-- add exits
+--------------
+
+function map_add_exit(dir, fromid, toid)
+  if (fromid == "") then
+    fromid = uid -- current room is default
+  end
+
+  local room = load_room_from_database(fromid)
+
+  if (room) then -- room fromid is in the map
+    if (is_valid_direction(dir)) then
+      if (not is_volatile(toid)) then
+        db:exec("BEGIN TRANSACTION;")
+
+        add_exit_to_database(dir, fromid, toid)
+
+        db:exec("COMMIT;")
+
+        -- update in-memory table
+        if (rooms[fromid]) then
+          if (not rooms[fromid].exits) then
+            rooms[fromid].exits = {}
+          end
+
+          rooms[fromid].exits[dir] = toid
+        end
+
+        mapper.draw(current_room)
+
+      else
+        mapper.mapprint("The room", toid, "changes locations.")
+      end
+
+    else
+      mapper.mapprint("You must provide a valid direction (n, ne, etc.)")
+    end
+
+  else
+    mapper.mapprint("The room", fromid, "isn't in the map.")
+  end
+end
+
+
+function add_exit_to_database(dir, fromuid, touid)
+  assert(dir, "No direction supplied to add_exit_to_database")
+  assert(fromuid, "No fromUID supplied to add_exit_to_database")
+  assert(touid, "No toUID supplied to add_exit_to_database")
+
+  dbcheck(db:execute(string.format(
+    "INSERT INTO exits(dir, fromuid, touid, date_added) VALUES(%s, %s, %s, DATETIME('NOW'));",
+      fixsql(dir),     -- direction (eg. "n")
+      fixsql(fromuid), -- from room
+      fixsql(touid)    -- destination room
+  )))
+
+  if (config2.show_database_mods) then
+    mapper.mapprint("Added exit to database,", dir, "from", fromuid, "to", touid)
+  end
+end
+
+
+function save_exits_to_database(zone, uid, exits)
+  local dest
+
+  for dir in string.gmatch(exits, "%a+") do
+    dest = gmcpval("exits." .. dir)
+
+    if (dest ~= "-99") then
+      dbcheck(db:execute(string.format(
+        "INSERT INTO exits(dir, fromuid, touid, date_added) VALUES(%s, %s, %s, DATETIME('NOW'));",
+          fixsql(dir),  -- direction (eg. "n")
+          fixsql(uid),  -- from current room
+          fixsql(dest)  -- destination room
+      )))
+    end
+  end -- for each exit
+end
+
+
+function room_add_exit(room, uid)
+-- gui function
+  local available = {
+    n = "North",
+    s = "South",
+    e = "East",
+    w = "West",
+    u = "Up",
+    d = "Down",
+    ne = "Northeast",
+    sw = "Southwest",
+    nw = "Northwest",
+    se = "Southeast",
+    tprt = "Teleport",
+    prtl = "Portal",
+  }
+
+  -- remove existing exits
+  for k in pairs(room.exits) do
+    available[k] = nil
+  end
+
+  if next(available) == nil then
+    utils.msgbox("All exits already used.", "No free exits!", "ok", "!", 1)
+    return
+  end -- not known
+
+  local chosen_exit = utils.listbox("Choose exit to add", "Exits ...", available)
+  if (not chosen_exit) then
+    return
+  end
+
+  exit_destination = utils.inputbox("Enter destination room id for " .. available[chosen_exit], room.name, "")
+
+  if (not exit_destination) then
+    return
+  end -- cancelled
+
+  dbcheck(db:execute(string.format(
+    "INSERT INTO exits(dir, fromuid, touid, date_added) VALUES(%s, %s, %s, DATETIME('NOW'));",
+      fixsql(chosen_exit),  -- direction (eg. "n")
+      fixsql(uid),  -- from current room
+      fixsql(exit_destination) -- destination room
+  )))
+
+  if (config2.show_database_mods) then
+    mapper.mapprint("Added exit", available[chosen_exit], "from room", uid, "to room", exit_destination, "to database.")
+  end
+
+  -- update in-memory table
+  rooms[uid].exits[chosen_exit] = exit_destination
+
+  mapper.draw(current_room)
+end
+
+
+
+-- -----------
+-- deletions
+-- -----------
+
+-----------------
+-- delete rooms
+-----------------
+
+function map_del_room(id)
+  local room = load_room_from_database(id)
+
+  if (room) then -- room is in the map
+    
+    if (count_exits(room.exits) == 0) then -- the room has no "from" links
+      db:exec("BEGIN TRANSACTION;")
+
+      del_room_from_database(id)
+
+      local notes = load_notes_from_database(uid)
+      if (notes) then
+        del_bookmark_from_database(id)
+      end
+      
+      local tags = load_tags_from_database(uid)
+      if (tags) then
+        del_tags_from_database(id)
+      end
+
+      db:exec("COMMIT;")
+
+      -- update in-memory table
+      if (rooms[id]) then
+        rooms[id] = nil
+      end
+
+      mapper.draw(current_room)
+
+    else
+      mapper.mapprint("Delete exits from room", id, "to other rooms first.")
+    end
+
+  else
+    mapper.mapprint("The room", id, "isn't in the map.")
+  end
+end
+
+
+function count_exits(exits)
+  local shortdir = {"n", "ne", "e", "se", "s", "sw", "w", "nw", "u", "d", "none"}
+  local i, res
+
+  res = 0
+
+  for i = 1, #shortdir do
+    if (exits[shortdir[i]]) then
+      res = res + 1
+    end
+  end
+
+  return res
+end
+
+
+function del_room_from_database(uid)
+  assert(uid, "No UID supplied to del_room_from_database")
+
+  dbcheck(db:execute(string.format(
+    "DELETE FROM rooms WHERE uid = %s;",
+      fixsql(uid)
+  )))
+
+  dbcheck(db:execute(string.format(
+    "DELETE FROM rooms_lookup WHERE uid = %s;",
+      fixsql(uid)
+  )))
+
+  if (config2.show_database_mods) then
+    mapper.mapprint("Deleted room", uid, "from database")
+  end
+end
+
+
+
+---------------------
+-- delete bookmarks
+---------------------
+
+function map_del_bookmark(id)
+  if (compatibility) then
+    ColourNote("tomato", "black", "GMCP Mapper: I can't edit bookmarks in compatibility mode. Please upgrade your database.")
+
+  else
+    if (id == "") then
+      id = uid -- current room is default
+    end
+
+    local notes = load_notes_from_database(id)
+
+    if (notes) then -- room is in the map
+      db:exec("BEGIN TRANSACTION;")
+
+      del_bookmark_from_database(id)
+
+      db:exec("COMMIT;")
+
+      -- update in-memory table
+      if (rooms[id]) then
+        rooms[id].notes = ""
+      end
+
+      mapper.mapprint("Bookmark for room", id, "deleted.")
+
+    else
+      mapper.mapprint("The room", id, "doesn't have notes, or isn't mapped.")
+    end
+  end
+end
+
+
+function del_bookmark_from_database(uid)
+  dbcheck(db:execute(string.format(
+    "DELETE FROM bookmarks WHERE uid = %s;",
+      fixsql(uid)
+  )))
+end
+
+
+
+----------------
+-- delete tags
+----------------
+
+function del_tags_from_database(uid)
+  dbcheck(db:execute(string.format(
+    "DELETE FROM player_tags WHERE uid = %s;",
+      fixsql(uid)
+  )))
+end
+
+
+
+-----------------
+-- delete exits
+-----------------
+
+function map_del_exits(fromid)
+  if (fromid == "") then
+    fromid = uid -- current room is default
+  end
+
+  local room = load_room_from_database(fromid)
+
+  if (room) then -- room fromid is in the map
+    db:exec("BEGIN TRANSACTION;")
+
+    del_exits_from_database(fromid)
+
+    db:exec("COMMIT;")
+
+    -- update in-memory table
+    if (rooms[fromid]) then
+      rooms[fromid].exits = {}
+    end
+
+  else
+    mapper.mapprint("The room", fromid, "isn't in the map.")
+  end
+end
+
+
+function map_del_exit(dir, fromid)
+  if (fromid == "") then
+    fromid = uid -- current room is default
+  end
+
+  local room = load_room_from_database(fromid)
+
+  if (room) then -- room fromid is in the map
+    if ((is_valid_direction(dir)) or (dir == "none")) then
+      db:exec("BEGIN TRANSACTION;")
+
+      del_exit_from_database(dir, fromid)
+
+      db:exec("COMMIT;")
+
+      -- update in-memory table
+      if (rooms[fromid]) then
+        rooms[fromid].exits[dir] = nil
+      end
+
+      mapper.draw(current_room)
+
+    else
+      mapper.mapprint("You must provide a valid direction (n, ne, etc.)")
+    end
+
+  else
+    mapper.mapprint("The room", fromid, "isn't in the map.")
+  end
+end
+
+
+function del_exits_from_database(uid)
+  assert(uid, "No UID supplied to del_room_from_database")
+
+  dbcheck(db:execute(string.format(
+    "DELETE FROM exits WHERE fromuid = %s;",
+      fixsql(uid)      -- fromuid
+  )))
+
+  if (config2.show_database_mods) then
+    mapper.mapprint("Deleted all exits from room", uid, "from database")
+  end
+end
+
+
+function del_exit_from_database(dir, fromuid)
+  assert(dir, "No direction supplied to add_exit_to_database")
+  assert(fromuid, "No fromUID supplied to add_exit_to_database")
+
+  dbcheck(db:execute(string.format(
+    "DELETE FROM exits WHERE dir = %s AND fromuid = %s;",
+      fixsql(dir),      -- dir
+      fixsql(fromuid)   -- fromuid
+  )))
+
+  if (config2.show_database_mods) then
+    mapper.mapprint("Deleted exit from database,", dir, "from", fromuid)
+  end
+end
+
+
+function room_delete_exit(room, uid)
+-- gui function
+  local available = {
+    n = "North",
+    s = "South",
+    e = "East",
+    w = "West",
+    u = "Up",
+    d = "Down",
+    ne = "Northeast",
+    sw = "Southwest",
+    nw = "Northwest",
+    se = "Southeast",
+    tprt = "Teleport",
+    prtl = "Portal",
+  }
+
+  -- remove non-existent exits
+  for k in pairs(available) do
+    if room.exits[k] then
+      available[k] = available[k] .. " --> " .. room.exits[k]
+    else
+      available[k] = nil
+    end -- if not a room exit
+  end
+
+  if (next(available) == nil) then
+    utils.msgbox("There are no exits from this room.", "No exits!", "ok", "!", 1)
+    return
+  end -- not known
+
+  local chosen_exit = utils.listbox("Choose exit to delete", "Exits ...", available)
+  if (not chosen_exit) then
+    return
+  end
+
+  dbcheck(db:execute(string.format(
+    "DELETE FROM exits WHERE dir = %s AND fromuid = %s;",
+      fixsql(chosen_exit),  -- direction (eg. "n")
+      fixsql(uid)           -- from current room
+  )))
+
+  if (config2.show_database_mods) then
+    mapper.mapprint("Deleted exit", available[chosen_exit], "from room", uid, "from database.")
+  end
+
+  -- update in-memory table
+  rooms[uid].exits[chosen_exit] = nil
+
+  mapper.draw(current_room)
+end
+
+
+
+-- ---------------
+-- modifications
+-- ---------------
+
+-----------------
+-- modify rooms
+-----------------
+
+function update_room(uid)
+  db:exec("BEGIN TRANSACTION;")
+
+  local oldarea, zone, oldname, name, oldterrain, terrain, oldterraininfo, terraininfo, oldflags, flags, cflags
+
+  if (not uid) then
+    uid = gmcpval("num")
+  end
+
+  zone = gmcpval("zone")
+
+  oldarea = rooms[uid].area -- if area has changed, then update/add it
+  if (oldarea ~= zone) then
+    room_update_area(uid, zone)
+  end
+
+  name = gmcpval("name")
+  oldname = rooms[uid].name -- if name has changed, then update/add it,
+  if (oldname ~= roomname) then
+    room_update_name(uid, roomname)
+  end
+
+  -- fix exits, in case some of them are missing
+  fix_exits(zone, uid, exits_str)
+
+  terrain = gmcpval("terrain")
+  oldterrain = rooms[uid].terrain -- if terrain has changed, then update/add it
+  if (oldterrain ~= terrain) then
+    room_update_terrain(uid, terrain)
+  end
+
+  terraininfo = gmcpval("terraininfo")
+  oldterraininfo = rooms[uid].terraininfo -- if terraininfo has changed, then update/add it
+  if (oldterraininfo ~= terraininfo) then
+    room_update_terraininfo(uid, terraininfo)
+  end
+
+  flags = gmcpval("flags")
+  if (flags == "_empty") then
+    flags = ""
+  end
+  oldflags = (rooms[uid].flags or "") -- if flags have changed, then update/add them,
+  cflags = flags
+  if (zone == "Tellerium") then
+    cflags = remove_anti_magic(flags)
+    oldflags = remove_anti_magic(flags)
+  end
+  if (oldflags ~= cflags) then
+    room_update_flags(uid, flags)
+  end
+
+  db:exec("COMMIT;")
+
+  mapper.draw(current_room)
+end
+
+
+function remove_anti_magic(flags)
+  flags = flags or ""
+  flags = string.gsub(flags, "anti%-magic, ", "")
+  flags = string.gsub(flags, ", anti%-magic", "")
+  flags = string.gsub(flags, "anti%-magic", "")
+  return flags
+end
+
+
+
+----------------
+-- modify area
+----------------
+
+function room_update_area(uid, zone)
+  dbcheck(db:execute(string.format(
+      "UPDATE rooms SET area = %s WHERE uid = %s;",
+        fixsql(zone),
+        fixsql(uid)
+      )))
+
+  if (not compatibility) then
+    dbcheck(db:execute(string.format(
+      "UPDATE rooms_lookup SET area = %s WHERE uid = %s;",
+        fixsql(zone),
+        fixsql(uid)
+    )))
+  end
+
+  if (config2.show_database_mods) then
+    mapper.mapprint("Room", uid, "area updated")
+  end
+
+  if (rooms[id]) then
+    rooms[uid].area = zone
+  end
+end -- room_update_area
+
+
+
+----------------
+-- modify name
+----------------
+
+function room_update_name(uid, name)
+  dbcheck(db:execute(string.format(
+    "UPDATE rooms SET name = %s WHERE uid = %s;",
+      fixsql(name),
+      fixsql(uid)
+  )))
+
+  dbcheck(db:execute(string.format(
+    "UPDATE rooms_lookup SET name = %s WHERE uid = %s;",
+      fixsql(name),
+      fixsql(uid)
+  )))
+
+  if (config2.show_database_mods) then
+    mapper.mapprint("Room", uid, "name updated")
+  end
+
+  if (rooms[id]) then
+    rooms[uid].name = name
+  end
+end
+
+
+
+---------------------------------
+-- modify terrain / terraintype
+---------------------------------
+
+function room_update_terrain(uid, terrain)
+  dbcheck(db:execute(string.format(
+    "UPDATE rooms SET terrain = %s WHERE uid = %s;",
+      fixsql(terrain),
+      fixsql(uid)
+  )))
+
+  if (config2.show_database_mods) then
+    mapper.mapprint("Room", uid, "terrain updated")
+  end
+
+  if (rooms[id]) then
+    rooms[uid].terrain = terrain
+  end
+end
+
+
+function room_update_terraininfo(uid, terraininfo)
+  dbcheck(db:execute(string.format(
+    "UPDATE rooms SET terraininfo = %s WHERE uid = %s;",
+      fixsql(terraininfo),
+      fixsql(uid)
+  )))
+
+  if (config2.show_database_mods) then
+    mapper.mapprint("Room", uid, "terraininfo updated")
+  end
+
+  if (rooms[id]) then
+    rooms[uid].terraininfo = terraininfo
+  end
+end
+
+
+
+-----------------
+-- modify flags
+-----------------
+
+function room_update_flags(uid, flags)
+  local use_column = "flags"
+  if (compatibility) then
+    use_column = "description"
+  end
+
+  dbcheck(db:execute(string.format(
+    "UPDATE rooms SET %s = %s WHERE uid = %s;",
+      use_column,
+      fixsql(flags),
+      fixsql(uid)
+  )))
+
+  if (compatibility) then
+    dbcheck(db:execute(string.format(
+      "UPDATE rooms_lookup SET description = %s WHERE uid = %s;",
+        fixsql(flags),
+        fixsql(uid)
+    )))
+  end
+
+  if (config2.show_database_mods) then
+    mapper.mapprint("Room", uid, "flags updated")
+  end
+
+  if (rooms[uid]) then
+    rooms[uid].flags = flags
+  end
+end
+
+
+
+---------------------
+-- modify bookmarks
+---------------------
+
+function update_bookmark(uid, notes)
+  dbcheck(db:execute(string.format(
+    "UPDATE bookmarks SET notes = %s WHERE uid = %s;",
+      fixsql(notes),
+      fixsql(uid)
+  )))
+end
+
+
+
+----------------
+-- modify tags
+----------------
+
+function map_toggle_tag(id, tag)
+  if (compatibility) then
+    ColourNote("tomato", "black", "GMCP Mapper: I can't tag rooms in compatibility mode. Please upgrade your database.")
+
+  else
+    if (id == "") then
+      id = uid -- current room is default
+    end
+
+    local room = rooms[id]
+
+    if (not room) then
+      room = load_room_from_database(uid)
+    end
+
+    if (not room) then
+      mapper.mapprint("The room", id, "isn't in the map.")
+
+    else
+      room_toggle_tag(room, id, tag)
+    end
+  end
+end
+
+
+function room_toggle_tag(room, uid, tag)
+  if (compatibility) then
+    ColourNote("tomato", "black", "GMCP Mapper: I can't tag rooms in compatibility mode. Please upgrade your database.")
+
+  else
+    if (has_tag(rooms[uid].tags, tag)) then
+      rooms[uid].tags = del_a_tag(rooms[uid].tags, tag)
+    else
+      rooms[uid].tags = add_a_tag(rooms[uid].tags, tag)
+    end
+
+    db:exec("BEGIN TRANSACTION;")
+
+    local tags = room.tags or ""
+    if (Trim(tags) == "") then
+      tags = nil
+    end
+
+    if (tags) then
+      if (rooms[uid].tags) then
+        save_tags_to_database(uid, rooms[uid].tags)
+      end
+
+    else
+      if (rooms[uid].tags) then
+        update_tags(uid, rooms[uid].tags)
+      else
+        del_tags_from_database(uid)
+      end
+    end
+
+    db:exec("COMMIT;")
+
+    if (has_flag(rooms[uid].tags, tag)) then
+      mapper.mapprint("Room", uid, "tagged as", tag)
+    else
+      mapper.mapprint("Room", uid, "no longer tagged as", tag)
+    end
+
+    mapper.draw(current_room)
+  end
+end
+
+
+function add_a_tag(tags, tag)
+  if (not tags) or (Trim(tags) == "") then
+    tags = tag
+  else
+    tags = tags .. ", " .. tag
+  end
+
+  return tags
+end
+
+
+function del_a_tag(tags, tag)
+  if (tags) and (has_tag(tags, tag)) then
+    tags = string.gsub(tags, escaped_str(tag) .. ", ", "")
+    tags = string.gsub(tags, ", " .. escaped_str(tag) .. "$", "")
+    tags = string.gsub(tags, escaped_str(tag), "")
+
+    tags = Trim(tags)
+
+    if (tags == "") then
+      tags = nil
+    end
+  end
+
+  return tags
+end
+
+
+function update_tags(uid, tags)
+  dbcheck(db:execute(string.format(
+    "UPDATE player_tags SET tags = %s WHERE uid = %s;",
+      fixsql(tags),
+      fixsql(uid)
+  )))
+end
+
+
+
+-----------------
+-- modify exits
+-----------------
+
+function fix_exits(zone, uid, exits)
+  local dest, aux
+
+  for dir in string.gmatch(exits, "%a+") do
+    dest = gmcpval("exits." .. dir)
+
+    if (dest) and (dest ~= "none") and (dest ~= "-99")
+    and (not is_volatile(uid)) and (not is_volatile(dest)) then
+
+      if (dest ~= rooms[uid].exits[dir]) then -- exit changed, update it
+
+        dbcheck(db:execute(string.format(
+          "INSERT INTO exits(dir, fromuid, touid, date_added) VALUES(%s, %s, %s, DATETIME('NOW'));",
+            fixsql(dir),  -- direction (eg. "n")
+            fixsql(uid),  -- from current room
+            fixsql(dest)  -- destination room
+        )))
+
+        -- update in-memory table
+        rooms[uid].exits[dir] = dest
+
+        if (config2.show_database_mods) then
+          mapper.mapprint("Room", uid, "-", dir, "exit updated")
+        end
+      end
+    end
+
+  end -- for each exit
+end
+
+
+function room_change_exit(room, uid)
+-- gui function
+  local available = {
+    n = "North",
+    s = "South",
+    e = "East",
+    w = "West",
+    u = "Up",
+    d = "Down",
+    ne = "Northeast",
+    sw = "Southwest",
+    nw = "Northwest",
+    se = "Southeast",
+    tprt = "Teleport",
+    prtl = "Portal",
+  }  -- end of available
+
+  -- remove non-existent exits
+  for k in pairs(available) do
+    if room.exits[k] then
+      available[k] = available[k] .. " --> " .. room.exits[k]
+    else
+      available[k] = nil
+    end -- if not a room exit
+  end
+
+  if (next(available) == nil) then
+    utils.msgbox("There are no exits from this room.", "No exits!", "ok", "!", 1)
+    return
+  end -- not known
+
+  local chosen_exit = utils.listbox("Choose exit to change destination of:", "Exits ...", available)
+  if not chosen_exit then
+    return
+  end
+
+  exit_destination = utils.inputbox("Enter destination room id for " .. available[chosen_exit], room.name, "")
+
+  if not exit_destination then
+    return
+  end -- cancelled
+
+  dbcheck(db:execute(string.format(
+    "UPDATE exits SET touid = %s WHERE dir = %s AND fromuid = %s;",
+      fixsql(exit_destination),
+      fixsql(chosen_exit),      -- direction (eg. "n")
+      fixsql(uid)               -- from current room
+  )))
+
+  if (config2.show_database_mods) then
+    mapper.mapprint("Modified exit", available[chosen_exit], "from room", uid, "to be to room", exit_destination, "in database.")
+  end
+
+  -- update in-memory table
+  rooms[uid].exits[chosen_exit] = exit_destination
+  mapper.draw(current_room)
+end
+
+
+
+-- ---------------
+-- special areas
+-- ---------------
+
+function toggle_wilds_mapping(status)
+  config2.do_map_wilds = do_toggle(config2.do_map_wilds, status)
+
+  save_config2()
+
+  if (config2.do_map_wilds) then
+    Note("-- MM_GMCP_Mapper: wilds mapping ON --")
+
+  else
+    Note("-- MM_GMCP_Mapper: wilds mapping OFF --")
+  end
+
+--  mapper.draw(current_room)
+end
+
+
+
+-- -------------
+-- maintenance
+-- -------------
+
+--------------
+-- room info
+--------------
+
+function show_room_info(id)
+  if (id == "") then
+    id = uid -- current room is default
+  end
+
+  local room = load_room_from_database(id)
+
+  if (room) then -- room is in the map
+    Tell("id: ")
+    ColourNote(fontcol, bgcol, id)
+    Tell("name: ")
+    ColourNote(fontcol, bgcol, room.name)
+    Tell("zone: ")
+    ColourNote(fontcol, bgcol, room.area)
+
+    if (room.terrain) then
+      Tell("terrain: ")
+      ColourNote(fontcol, bgcol, room.terrain)
+    end
+
+    if (room.terraininfo) then
+      Tell("terraininfo: ")
+      ColourNote(fontcol, bgcol, room.terraininfo)
+    end
+
+    Tell("flags: ")
+    ColourNote(fontcol, bgcol, room.flags or "-")
+
+    room.tags = load_tags_from_database(id)
+    Tell("tags: ")
+    ColourNote(fontcol, bgcol, room.tags or "-")
+
+    room.notes = load_notes_from_database(id)
+    if (room.notes) then
+      Tell("bookmarks: ")
+      ColourNote(fontcol, bgcol, room.notes)
+    end
+
+    if (room.exits) then
+      Tell("exits: ")
+      ColourNote(fontcol, bgcol, serialize.save_simple(room.exits))
+    end
+
+  else
+    mapper.mapprint("The room", id, "isn't in the map.")
+  end
+end
+
+
+function export_rooms(name)
+-- name must be an exact room match
+
+  local sname = string.upper(name)
+  local t = {}
+
+  for row in db:nrows(string.format('SELECT * FROM rooms WHERE UPPER(name) = "%s"', sname)) do
+    t[#t + 1] = row.uid
+  end -- finding rooms
+
+  for i = 1, #t do
+    do_export_room(t[i])
+  end
+end
+
+
+function export_area(name)
+  local sname = string.upper(name)
+  local t = {}
+
+  for row in db:nrows(string.format('SELECT * FROM rooms WHERE UPPER(area) = "%s"', sname)) do
+    t[#t + 1] = row.uid
+  end -- finding rooms
+
+  for i = 1, #t do
+    do_export_room(t[i])
+  end
+end
+
+
+function do_export_room(num)
+  local room = load_room_from_database(num)
+
+  if (room) then
+    AppendToNotepad("exported rooms", "mapper addroom " .. num .. " n:" .. room.name .. " a:" .. room.area .. " f:" .. (room.flags or " ") .. " t:" .. (room.terrain or " ") .. " ti:" .. (room.terraininfo or " ") .. "\r\n")
+
+    if (Trim(room.notes or "") ~= "") then
+      AppendToNotepad("exported rooms", "mapper addbm " .. num .. " b:" .. room.notes .."\r\n")
+    end
+
+    if (has_tag(room.tags, "dt")) then
+      AppendToNotepad("exported rooms", "mapper dt " .. num .."\r\n")
+    end
+
+    if (has_tag(room.tags, "no-speed")) then
+      AppendToNotepad("exported rooms", "mapper nospeed " .. num .."\r\n")
+    end
+
+    if (has_tag(room.tags, "shop")) then
+      AppendToNotepad("exported rooms", "mapper shop " .. num .."\r\n")
+    end
+
+    if (has_tag(room.tags, "trainer")) then
+      AppendToNotepad("exported rooms", "mapper trainer " .. num .."\r\n")
+    end
+
+    for dir, touid in pairs(room.exits) do
+      AppendToNotepad("exported rooms", "mapper addexit " .. dir .. " f:" .. num .. " t:" .. touid .. "\r\n")
+    end
+  end
+end
+
+
+
+----------------
+-- purge stuff
+----------------
+
+function purge_entire_area(name)
+  local arooms = {}
+  local aname = fixsql(string.upper(name))
+
+  -- make list of stuff to delete
+  for row in db:nrows(string.format("SELECT uid FROM rooms WHERE UPPER(area) = %s", aname)) do
+    arooms[#arooms + 1] = row.uid
+  end -- finding rooms
+
+  purge_stuff(arooms, name, false)
+end
+
+
+function purge_wilds(name)
+  local prooms = {}
+  local pname = fixsql(string.upper(name))
+
+  if (is_vmap(name)) then
+    -- make list of stuff to delete
+    for row in db:nrows(string.format("SELECT uid, name, terrain FROM rooms WHERE UPPER(area) = %s", pname)) do
+      if (not is_road(row.terrain)) or (is_cave(row.name)) then
+        prooms[#prooms + 1] = row.uid
+      end
+    end -- finding rooms
+
+    purge_stuff(prooms, name, false)
+
+  else
+    mapper.mapprint("'" .. name .. "' is not a valid plane name.")
+  end
+end
+
+
+function purge_pursuer()
+  local prooms = {}
+  local pname = "A Dizzying Array"
+
+  -- make lists of stuff to delete
+  for row in db:nrows(string.format("SELECT uid FROM rooms WHERE name = '%s'", pname)) do
+    prooms[#prooms + 1] = row.uid
+  end -- finding rooms
+
+  purge_bookmarks(prooms, pname)
+  purge_stuff(prooms, pname, true)
+end
+
+
+function purge_sandbox()
+  local srooms = {}
+  local sarea = "The Housing Sandbox"
+
+  -- make list of stuff to delete
+  for row in db:nrows(string.format("SELECT uid FROM rooms WHERE area = '%s'", sarea)) do
+    srooms[#srooms + 1] = row.uid
+  end -- finding rooms
+
+  purge_stuff(srooms, sarea, false)
+end
+
+
+function purge_molehill()
+  local mrooms = {}
+  local marea = "A Labyrinthine Molehill"
+  local mnotes = {}
+
+  -- make lists of stuff to delete
+  for row in db:nrows(string.format("SELECT uid FROM rooms WHERE area = '%s'", marea)) do
+    mrooms[#mrooms + 1] = row.uid
+
+    if (row.notes) and (row.notes ~= "NULL") and (row.notes ~= "") then
+      mnotes[#mnotes + 1] = row.uid
+    end
+  end -- finding rooms
+
+  purge_bookmarks(mnotes, marea)
+  purge_stuff(mrooms, marea, true)
+end
+
+
+function purge_bookmarks(t, name)
+  if (#t > 0) then
+    db:exec("BEGIN TRANSACTION;")
+
+    mapper.mapprint("Deleting " .. name .. " bookmarks...")
+    for i = 1, #t do
+      SetStatus("Erasing bookmark for room " .. t[i] .. "...")
+      map_del_bookmark(t[i])
+
+      -- update in-memory table
+      if (rooms[t[i]]) then
+        rooms[t[i]].notes = nil
+      end
+    end
+
+    db:exec("COMMIT;")
+
+    mapper.mapprint("Done.")
+    SetStatus("Ready")
+
+  else
+    mapper.mapprint("No bookmarks found for '" .. name .. "'")
+  end
+end
+
+
+function purge_list(list, name, unlink)
+  local t = utils.split(list, " ")
+  
+  purge_stuff(t, name, unlink)
+end
+
+
+function purge_stuff(t, name, unlink)
+  if (#t > 0) then
+    db:exec("BEGIN TRANSACTION;")
+
+    if (unlink) then
+      mapper.mapprint("Unlinking " .. name .. "...")
+    else
+      mapper.mapprint("Purging " .. name .. "...")
+    end
+
+    for i = 1, #t do
+      if (unlink) then
+        unlink_room(t[i])
+      else
+        nuke_room(t[i])
+      end
+    end
+
+    db:exec("COMMIT;")
+
+    mapper.mapprint("Done.")
+    SetStatus("Ready")
+
+    mapper.draw(current_room)
+
+  else
+    mapper.mapprint("No rooms found for '" .. name .. "'")
+  end
+end
+
+
+function unlink_room(uid)
+  SetStatus("Unlinking room " .. uid .. "...")
+  del_exits_from_database(uid)
+
+  -- update in-memory table
+  if (rooms[uid]) then
+    rooms[uid].exits = {}
+  end
+end
+
+
+function nuke_room(uid)
+  SetStatus("Erasing room " .. uid .. "...")
+  del_exits_from_database(uid)
+  del_room_from_database(uid)
+
+  local notes = load_notes_from_database(uid)
+  if (notes) then
+    del_bookmark_from_database(uid)
+  end
+  
+  local tags = load_tags_from_database(uid)
+  if (tags) then
+    del_tags_from_database(uid)
+  end
+
+  -- update in-memory table
+  rooms[uid] = nil
+end
+
+
+
+------------------
+-- privacy stuff
+------------------
+
+function purge_clanhalls()
+  local row
+  local crooms = {}
+  local careas = "% Clan Hall"
+
+  db:exec("BEGIN TRANSACTION;")
+
+  -- make list of stuff to delete
+  for row in db:nrows(string.format("SELECT uid, area FROM rooms WHERE area like '%s'", careas)) do
+    if (string.find(row.area, "Old ") ~= 1)
+    and (string.find(row.area, "The Old ") ~= 1) then
+      crooms[#crooms + 1] = row.uid
+    end
+  end -- finding rooms
+
+  mapper.mapprint("Purging clan halls data...")
+  for i = 1, #crooms do
+    SetStatus("Erasing room " .. crooms[i] .. "...")
+
+    del_exits_from_database(crooms[i])
+
+    del_room_from_database(crooms[i])
+
+    -- update in-memory table
+    rooms[crooms[i]] = nil
+  end
+
+  db:exec("COMMIT;")
+
+  mapper.mapprint("Done.")
+  SetStatus("Ready")
+
+  mapper.draw(current_room)
+end
+
+
+function purge_player_homes()
+  local row
+  local hrooms = {}
+  local hareas = "Player Homes %"
+
+  db:exec("BEGIN TRANSACTION;")
+
+  -- make list of stuff to delete
+  for row in db:nrows(string.format("SELECT uid, area FROM rooms WHERE area like '%s'", hareas)) do
+    if (uid ~= "25022646") then -- The Pirate's Cove Housing District
+      hrooms[#hrooms + 1] = row.uid
+    end
+  end -- finding rooms
+
+  mapper.mapprint("Purging player homes data...")
+  for i = 1, #hrooms do
+    SetStatus("Erasing room " .. hrooms[i] .. "...")
+
+    del_exits_from_database(hrooms[i])
+
+    del_room_from_database(hrooms[i])
+
+    -- update in-memory table
+    rooms[hrooms[i]] = nil
+  end
+
+  db:exec("COMMIT;")
+
+  mapper.mapprint("Done.")
+  SetStatus("Ready")
+
+  mapper.draw(current_room)
+end
+
+
+function purge_notes()
+  local row
+  local brooms = {}
+
+  db:exec("BEGIN TRANSACTION;")
+
+  -- make lists of stuff to delete
+  for row in db:nrows(string.format("SELECT uid, notes, area FROM rooms")) do
+    if (not is_vmap())
+    and (row.notes) then
+      brooms[#brooms + 1] = row.uid
+    end
+  end -- finding rooms
+
+  -- delete bookmarks
+  mapper.mapprint("Deleting non-vmap bookmarks...")
+  for i = 1, #brooms do
+    SetStatus("Erasing bookmark for room " .. brooms[i] .. "...")
+    map_del_bookmark(brooms[i])
+  end
+
+  db:exec("COMMIT;")
+
+  mapper.mapprint("Done.")
+  SetStatus("Ready")
+
+  mapper.draw(current_room)
+end
+
+
+
+------------------
+-- rebuild stuff
+------------------
+
+function rebuild_lookup()
+  db:exec("BEGIN TRANSACTION;")
+
+  mapper.mapprint("Rebuilding rooms_lookup table...")
+
+  -- delete all rows from rooms_lookup
+  dbcheck(db:execute(string.format(
+    "DELETE FROM rooms_lookup;"
+  )))
+
+  local use_column = "area"
+  if (compatibility) then
+    use_column = "description"
+  end
+
+  for row in db:nrows(string.format("SELECT uid, name, %s FROM rooms", use_column)) do
+    SetStatus("Recreating rooms_lookup entry for room " .. uid)
+
+    local use_field = row.area
+    if (compatibility) then
+      use_field = row.description
+    end
+
+    dbcheck(db:execute(string.format(
+      "INSERT INTO rooms_lookup(uid, name, %s) VALUES(%s, %s, %s);",
+        use_column,
+        fixsql(row.uid),
+        fixsql(row.name),
+        fixsql(use_field)
+    )))
+  end -- finding rooms
+
+  db:exec("COMMIT;")
+  SetStatus("Ready")
+
+  mapper.mapprint("Done.")
+end
+
+
+function recreate_database(cmd)
+  -- open databases on disk
+  if (cmd == "upgrade") and (compatibility) then
+    dbnew = assert(sqlite3.open(GetInfo(66) .. "mm_mapper.db"))
+  else
+    dbnew = assert(sqlite3.open(GetInfo(66) .. "mm_mapper_new.db"))
+  end
+
+  -- create rooms table
+  create_tables_new(dbnew)
+
+  dbnew:exec("BEGIN TRANSACTION;")
+
+  -- copy rooms from "old" table
+  local room
+
+  for row in db:nrows(string.format("SELECT * FROM rooms")) do
+    SetStatus("Copying room " .. row.uid .. " to the new database...")
+
+    room = do_load_room(row.uid)
+    room.uid = row.uid
+
+    if (compatibility) then
+      room.flags = fix_flag(room.flags, row.safe, "safe")
+      room.flags = fix_flag(room.flags, row.lpk, "player-kill-lawful")
+      room.flags = fix_flag(room.flags, row.npk, "player-kill-neutral")
+      room.flags = fix_flag(room.flags, row.cpk, "player-kill-chaotic")
+    end
+
+    dbcheck(dbnew:execute(string.format(
+      "INSERT INTO rooms(uid, name, flags, area, terrain, terraininfo, date_added) VALUES(%s, %s, %s, %s, %s, %s, %s);",
+        fixsql(room.uid),
+        fixsql(room.name),
+        fixsql(room.flags),
+        fixsql(room.area),
+        fixsql(room.terrain),
+        fixsql(room.terraininfo),
+        fixsql(room.date_added)
+    )))
+
+    if (room.notes) and (room.notes ~= "") then
+      dbcheck(dbnew:execute(string.format(
+        "INSERT INTO bookmarks(uid, notes) VALUES(%s, %s);",
+          fixsql(room.uid),
+          fixsql(row.notes)
+      )))
+    end
+
+    if (room.tags) and (room.tags ~= "") then
+      dbcheck(dbnew:execute(string.format(
+        "INSERT INTO player_tags(uid, tags) VALUES(%s, %s);",
+          fixsql(room.uid),
+          fixsql(room.tags)
+      )))
+    end
+  end
+
+  -- copy exits from "old" table
+
+  for row in db:nrows(string.format("SELECT * FROM exits")) do
+    SetStatus("Copying exits from room " .. row.fromuid .. " to the new database...")
+
+    dbcheck(dbnew:execute(string.format(
+      "INSERT INTO exits(dir, fromuid, touid, date_added) VALUES(%s, %s, %s, %s);",
+        fixsql(row.dir),
+        fixsql(row.fromuid),
+        fixsql(row.touid),
+        fixsql(row.date_added)
+    )))
+  end
+
+  SetStatus("Committing changes...")
+
+  dbnew:exec("COMMIT;")
+
+  SetStatus("Ready.")
+
+  if (cmd == "upgrade") and (compatibility) then
+    ColourTell("white", "navy", "GMCP Mapper: your database has been upgraded to the new structure - ")
+    ColourTell("lime", "navy", "reinstall this plugin")
+    ColourNote("white", "navy", " to start using the new file.")
+
+  else
+    ColourNote("white", "black", "GMCP Mapper: your database has been recreated as ")
+    ColourTell("lime", "black", "mm_mapper_new.db")
+    ColourNote("white", "black", " in your MUSHclient folder.")
+  end
+end
+
+
+
+-- ------
+-- misc
+-- ------
+
+------------------------
+-- scripting functions
+------------------------
+
+function speeding()
+  return (not mapper.check_we_can_find())
+end
+
+
+function handled_door()
+  return (config2.auto_open)
+end
+
+
+
+------------------------
+-- sapi / reader stuff
+------------------------
+
+function detect_reader()
+  local res = reader_plugin_present()
+
+  if (res) then
+    config2.visible = false
+    save_config2()
+  end
+
+  return res
+end
+
+
+function reader_plugin_present()
+  return is_plugin_present("MushReader", "925cdd0331023d9f0b8f05a7")
+end
+
+
+function sapi_plugin_present()
+  return is_plugin_present("Sapi_speaker", "463242566069ebfd1b379ec1") or is_plugin_present("Text_To_Speech", "463242566069ebfd1b379ec1")
+end
+
+
+function sapi_say(text)
+  if (sapi_present) then
+    local res = CallPlugin("463242566069ebfd1b379ec1", "say", text)
+  end
+end
+
+
+]]>
+
+</script>
+
+</muclient>

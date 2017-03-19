@@ -1,5 +1,18 @@
-My collection of MUSHclient plugins for Materia Magica.
+Ruthgul's collection of MUSHclient plugins for Materia Magica.
 
-Some are my own creation, most are adapted from other sources.
+A few are my own, others are contributions from other playrs, most are adapted from other games/authors.
 
-More details on each plugin's directory.
+For more details, check the Wiki.
+
+
+~ Notice: the plugins updater is currently not working, until migration to github is finished ~
+
+
+All scripts written in Lua.
+
+Materia Magica
+http://www.materiamagica.com
+
+MUSHclient
+http://www.gammon.com.au/mushclient
+

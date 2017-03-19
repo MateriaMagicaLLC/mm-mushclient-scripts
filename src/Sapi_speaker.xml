@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE muclient>
+
+<!-- Other scripts can speak stuff by doing:
+  CallPlugin("463242566069ebfd1b379ec1", "say", "What to say")
+-->
+
+<muclient>
+
+<plugin
+  name="Sapi_speaker"
+  author="Nick Gammon, O. Gomez, Ruthgul"
+  id="463242566069ebfd1b379ec1"
+  language="Lua"
+  purpose="Speaks incoming text using SAPI."
+  date_written="2010-09-01"
+  date_modified="2013-12-31 13:13:06"
+  requires="4.60"
+  version="2.0"
+  save_state="y"
+>
+
+<description trim="y">
+<![CDATA[
+
+~ Sapi_speaker ~
+
+Aliases
+* sapi on  - turns speaking of MUD output on (it's off by default)
+* sapi off  - turns speaking of MUD output off
+
+* sapi say <text>  - speaks <text>
+
+* sapi skip  - skips one sentence in the speak stream
+* sapi interrupt <text>  - stops what it's currently saying, clears the speak stream, and speaks <text> instead
+* sapi stop  - stops speaking, clears the speak stream
+
+* sapi options  - shows the current configuration
+* sapi rate <number>  - adjusts the speaking rate of the voice (from -10: slowest, to 10: fastest)
+* sapi volume <number>  - adjusts the volume of the voice (from 0: silent, to 100: loudest)
+* sapi voice <voice_name>  - chooses the sapi voice that will be used to speak
+
+Authors: Nick Gammon, Oriol Gomez, Ruthgul (maintained by Ruthgul)
+
+Changes added by Ruthgul:
+- started based on Text-To-Speech by Nick Gammon
+- ported the extra aliases / scripts in sapi-lib by Oriol Gomez to Lua
+- renamed the plugin to one of its older names, Sapi_speak, so the file doesn't get confused with Text-To-Speech, which is part of the official MUSHclient distribution
+- made it compatible with plugins_updater
+
+
+]]>
+</description>
+
+</plugin>
+
+
+
+<!--  Triggers  -->
+
+<aliases>
+
+  <alias
+   group="speech"
+   match="sapi on"
+   enabled="n"
+   omit_from_command_history="y"
+   omit_from_log="y"
+   omit_from_output="y"
+   script="speak_on"
+   sequence="100"
+  >
+  </alias>
+
+  <alias
+   group="speech"
+   match="sapi off"
+   enabled="n"
+   omit_from_command_history="y"
+   omit_from_log="y"
+   omit_from_output="y"
+   script="speak_off"
+   sequence="100"
+  >
+  </alias>
+
+  <alias
+   group="speech"
+   match="sapi say *"
+   enabled="n"
+   omit_from_log="y"
+   omit_from_output="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>say("%1")
+</send>
+  </alias>
+
+  <alias
+   group="speech"
+   match="sapi skip"
+   enabled="n"
+   omit_from_log="y"
+   omit_from_output="y"
+   script="speak_skip"
+   sequence="100"
+  >
+  </alias>
+
+  <alias
+   group="speech"
+   match="sapi stop"
+   enabled="n"
+   omit_from_log="y"
+   omit_from_output="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>speak_interrupt("")
+</send>
+  </alias>
+
+  <alias
+   group="speech"
+   match="sapi interrupt *"
+   enabled="n"
+   omit_from_log="y"
+   omit_from_output="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>speak_interrupt("%1")
+</send>
+  </alias>
+
+  <alias
+   group="speech"
+   match="sapi rate *"
+   enabled="n"
+   omit_from_log="y"
+   omit_from_output="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>set_rate("%1")
+</send>
+  </alias>
+
+  <alias
+   group="speech"
+   match="sapi volume *"
+   enabled="n"
+   omit_from_log="y"
+   omit_from_output="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>set_volume("%1")
+</send>
+  </alias>
+
+  <alias
+   group="speech"
+   match="sapi voice *"
+   enabled="n"
+   omit_from_log="y"
+   omit_from_output="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>set_voice("%1")
+</send>
+  </alias>
+
+  <alias
+   group="speech"
+   match="sapi options"
+   enabled="n"
+   omit_from_log="y"
+   omit_from_output="y"
+   script="read_options"
+   sequence="100"
+  >
+  </alias>
+
+
+<!--  Plugin help  -->
+
+  <alias
+   enabled="n"
+   group="speech"
+   match="^Sapi(|\_speaker)(|( |\:)help)$"
+   regexp="y"
+   ignore_case="y"
+   omit_from_log="y"
+   omit_from_output="y"
+   script="OnHelp"
+   sequence="100"
+  >
+  </alias>
+
+</aliases>
+
+
+
+<!--  Script  -->
+
+<script>
+
+<![CDATA[
+
+-- load LuaCOM
+require "luacom"
+require "luacom5"
+
+
+-----------------
+-- installation
+-----------------
+
+function OnPluginInstall()
+  Note(GetPluginInfo(GetPluginID(), 1) .. ": type " .. GetPluginInfo(GetPluginID(), 1) .. " help to see info about this plugin")
+
+  -- Instantiate a SAPI voice obejct
+  talk = assert(luacom.CreateObject("SAPI.SpVoice"), "cannot open SAPI")
+
+  -- Method call
+--  do_speak("SAPI Plug-in installed and is ready.")
+
+  speak = false
+  EnableGroup("speech", true)
+  
+  load_config()
+end
+
+
+function load_config()
+  local rate = tonumber(GetVariable("sapi_rate") or "")
+  if (rate) then
+    talk.Rate = rate
+  end
+  
+  local volume = tonumber(GetVariable("sapi_volume") or "")
+  if (volume) then
+    talk.Volume = volume
+  end
+end
+
+
+function plugin_update_url()
+  local t = {
+    "http://dl.dropbox.com/u/65599194/mm-updater/Sapi_speaker.xml",
+  }
+  return (table.concat(t, ";"))
+end
+
+
+
+---------------------------
+-- speaking of MUD output
+---------------------------
+
+-- here to draw the screen
+function OnPluginScreendraw(t, log, line)
+  -- check loaded
+  if not talk then
+    return
+  end -- if not installed
+
+  if (t == 0 or t == 1) and speak then
+    do_speak(line)
+  end -- if
+end -- function
+
+
+
+--------------------
+-- speak something
+--------------------
+
+function do_speak(txt)
+  talk:Speak(txt, 1)
+end
+
+
+
+------------
+-- aliases
+------------
+
+-- turn on speaking
+function speak_on(name, line, wildcards)
+  speak = true
+  do_speak("Sapi auto speak now on.")
+end -- function speak_on
+
+
+-- turn off speaking
+function speak_off(name, line, wildcards)
+  speak = false
+  do_speak("Sapi auto speak now off.")
+end -- function speak_off
+
+
+-- skip a sentence
+function speak_skip(name, line, wildcards)
+  talk:Skip("Sentence", 1)
+end -- function speak_skip
+
+
+-- stop speaking, clear the speak stream, read txt instead
+function speak_interrupt(txt)
+  talk:Speak(txt, 3)
+end
+
+
+-- set rate
+function set_rate(rate)
+  rate = tonumber(rate)
+  
+  if (rate) then
+    talk.Rate = rate
+    do_speak("Rate set to " .. rate .. ".")
+    SetVariable("sapi_rate", rate)
+    SaveState()
+    
+  else
+    do_speak("Rate should be set to a value between -10 and 10 (-10: slowest, 10 fastest).")
+  end
+end
+
+
+-- set volume
+function set_volume(vol)
+  vol = tonumber(vol)
+  
+  if (vol) then
+    talk.Volume = vol
+    do_speak("Volume set to " .. vol .. "%")
+    SetVariable("sapi_volume", vol)
+    SaveState()
+
+  else
+    do_speak("Volume should be set to a value between 0 and 100 (0: silent, 100: loudest).")
+  end
+end
+
+
+-- set voice
+function set_voice(choice)
+  choice = Trim(choice)
+  
+  local voices = talk:GetVoices()
+  
+  for index, voice in luacom.pairs(voices) do
+    -- does the name match?
+    local name = voice:GetDescription()
+    
+    if (string.find(string.lower(name), string.lower(choice))) then
+      talk:setVoice(voice)
+      do_speak("Voice set to " .. name .. ".")
+      
+      SetVariable("tts_voice", name)
+      SaveState()
+      break
+    end
+  end
+end
+
+
+-- read the current configuration
+function read_options()
+  -- read whether it's speaking the MUD's output
+  if (speak) then
+    do_speak("Speaking of MUD output is on.")
+  else
+    do_speak("Speaking of MUD output is off.")
+  end
+  
+  -- read rate
+  do_speak("The rate is set to " .. talk.Rate .. ".")
+  
+  -- read volume
+  do_speak("The volume is set to " .. talk.Volume .. "%")
+  
+  -- read voice
+  current_voice = GetVariable("sapi_voice")
+  if (current_voice) then
+    do_speak("Custom SAPI voice is set to " .. current_voice)
+  else
+    current_voice = talk.Voice:GetDescription()
+    do_speak("Default SAPI voice is being used: " .. current_voice)
+  end
+end
+
+
+
+-----------------------------
+-- Speak from other scripts
+-----------------------------
+
+-- eg. CallPlugin("463242566069ebfd1b379ec1", "say", "What to say")
+function say(what)
+  -- check loaded
+  if not talk then
+    return false  -- failure
+  end -- if not installed
+
+  do_speak(what)
+
+  return true  -- OK
+end -- function say
+
+
+
+---------
+-- Help
+---------
+
+function OnHelp()
+  Note(world.GetPluginInfo(world.GetPluginID(), 3))
+end
+
+
+]]>
+
+</script>
+
+</muclient>
