@@ -1,0 +1,6 @@
+2013-10-20 07:29:01
+* made the reverse setting persistent, via SaveState()
+
+2013-08-07 10:34:41
+* fixed the end-of-history-list trigger (it failed to detect on empty list)
+* added an alias to make reverse order optional

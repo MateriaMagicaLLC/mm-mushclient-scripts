@@ -1,0 +1,43 @@
+2014-11-06 10:19:26
+* changed it to use the gmcphelper.lua module, to reduce the number of CallPlugin()s to the GMCP Handler
+
+2014-04-11 09:16:11
+* added a small delay before attempting to read the character's name, to give detect globals time to initialize
+
+2014-01-04 17:05:14
+* changed the way it checks for the presence of other plugins
+
+2013-11-09 09:42:20
+* added support for extended-prompt off
+
+2013-10-20 09:25:38
+* made the show_sorted and show_hyperlinks settings persistent, via SaveState()
+
+2013-08-02 08:42:52
+* forced a new line after redrawing a line using its TriggerStyleRuns, to fix an issue with certain line wrap setups
+
+2013-07-05 10:31:26
+* fixed a prompt detection issue
+
+2013-06-22 10:17:11
+* reworked name detection & storage into separate plugins
+  If you're updating this plugin, please notice it now needs other 3 plugins to work, as explained in Requirements.
+
+2013-05-08 12:05:52
+* reworked name detection on plugin start
+* fixed an issue with a toggle working backwards
+
+2013-02-20 16:03:44
+* it now uses a database to store hints (skills.db, stored in the MUSHclient folder)
+* it no longer uses save states to store hints (I kept losng information, for no apparent reason)
+
+2013-01-16 16:42:56
+* will now show in-game hints [*], if no numeric hint has been added for a skill / spell that has them
+* made hints show in the same color as the skill / spell name
+* fixed a bug that happened when the character didn't know any spells
+
+2012-11-13 12:27:52
+* fixed a SaveState() issue
+
+2012-10-30 14:29:16
+* added support for mobs_n_items - it should now list trainers for skills/spells (on click, after the help file), if you've loaded them

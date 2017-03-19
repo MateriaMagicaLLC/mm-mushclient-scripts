@@ -1,0 +1,32 @@
+2014-04-11 09:06:52
+* added a small delay before attempting to read the character's name, to give detect globals time to initialize
+
+2014-01-04 16:27:05
+* changed the way it checks for the presence of other plugins
+
+2013-11-24 16:16:51
+* it will now use meh timers if it's available, to notify when a daily reward is available
+
+2013-11-13 11:12:03
+* fixed an issue with blackjack vouchers (they were counted twice, etc.)
+
+2013-11-09 09:47:34
+* added support for extended-prompt off
+
+2013-11-06 19:56:13
+* added checks vs name initialization to all the new aliases
+
+2013-10-27 18:48:34
+* added aliases to check %s of items received as rewards (totals and per city)
+* added counters for items received (in total and per city) - the counters are kept separately for each char you play
+
+2013-07-05 10:06:42
+* fixed it to work when you've never gotten a daily reward from a city (this case was crashing the script)
+
+2013-06-21 10:21:08
+* reworked name detection & storage into separate plugins
+  If you're updating this plugin, please notice it now needs other 3 plugins to work, as explained in Requirements.
+* it now shows a green * for available cities
+
+2013-05-08 11:28:10
+* reworked name detection on plugin start

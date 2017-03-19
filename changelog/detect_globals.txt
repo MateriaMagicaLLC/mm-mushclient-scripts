@@ -1,0 +1,29 @@
+2014-11-06 09:25:21
+* changed it to use the gmcphelper.lua module, to reduce the number of CallPlugin()s to the GMCP Handler
+
+2014-10-23 02:48:40
+* updated it to build the char's path using GMCP char.base.class1, class2, class3, class4, current-class, which are the unmodified names for those fields (and are now supported as such by the MM_GMCP_Handler).
+
+2014-04-11 06:14:48
+* changed to use the sendgmcp alias in the MM_GMCP_Handler, instead of the game command protocols gmcp send*
+
+2013-11-12 16:13:34
+* changed it to only auto-detect weapon type when requested by scripts
+
+2013-11-09 11:26:13
+* added support for plugins updater - for some reason the plugin_update_url() function was missing :x
+
+2013-11-09 09:48:31
+* added support for extended-prompt off
+
+2013-07-05 09:55:53
+* fixed char_name detection to include NPCs that have numbers in their names (eg, an automaton behemoth, Crusher MK1)
+
+2013-06-22 15:03:03
+* changed its plugin sequence, to ensure that it's loaded before its first call
+
+2013-06-22 14:24:36
+* added a delay after the first prompt, before requesting GMCP char.base
+
+2013-06-22 12:26:31
+* made it public for beta testing

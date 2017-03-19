@@ -1,0 +1,5 @@
+2013-06-22 15:01:41
+* changed its plugin sequence, to ensure that it's loaded before its first call
+
+2013-06-22 12:12:26
+* made it public for beta testing

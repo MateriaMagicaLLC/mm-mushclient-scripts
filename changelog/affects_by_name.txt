@@ -1,0 +1,57 @@
+2015-04-19
+* fixed the hinder wear off string (thanks Hoffer for providing the new string!)
+
+2015-01-19 17:31:03
+* fixed the smoke evocation string (thanks Karnifax for providing the new string!)
+
+2014-02-09 10:10:06
+* added lava cloak
+
+2014-01-04 16:16:42
+* changed the way it checks for the presence of other plugins
+
+2013-11-24 07:42:51
+* highlight triggers will now gag affects if the MushReader plugin is installed and enabled
+
+2013-11-23 19:54:30
+* made all highlight triggers SAPI say affects subtitles, if the Text-To-Speech and MushReader plugins are installed and enabled
+
+2013-10-27 12:58:55
+* added some highlights for new hunters dispelling stuff
+
+2013-07-05 09:43:18
+* fixed char_name detection to include NPCs that have numbers in their names (eg, an automaton behemoth, Crusher MK1)
+
+2013-06-22 11:55:38
+* added new wear off strings for disrupt sight, evoke smoke
+* added some strings for glare of the crocodile, pestilence
+
+2013-04-20 08:34:01
+* made it broadcast whenever it detects a supported affect
+  (this reverts the way it used to work - now Events Mini will watch for this plugin's broadcasts instead)
+
+2013-04-04 09:31:41
+- [deleted] added support for Op Affects Mini, My Affects Mini and Events Mini broadcasts
+* added support for Events Mini
+* added 1 string for mesmerize wearing off and leech conduit wearing off (these spells still need other wear-off strings)
+
+2013-01-16 17:56:00
+* added timepieces dispelling strings, as requested by Eljay
+  (Note: I don't have a timepiece, and I'm not planning to get one any time soon, so please include a log if you report any bugs related to this feature)
+
+2013-01-13 11:35:12
+* fixed some strings which were changed in game
+
+2013-01-05 14:19:18
+- [deleted] added support for Op Affects Mini and My Affects Mini
+* added / updated a bunch of strings (still lots of work pending here)
+
+2012-11-11 13:37:18
+* added radiance invocation wear off string
+
+2012-11-07 10:36:00
+* added camouflage (thanks, Grimheart!)
+
+2012-11-06 13:09:39
+* added new strings for fire invocation
+* added string for steam invocation (wear off on others)

@@ -1,0 +1,5 @@
+2013-08-02 08:32:27
+* forced a new line after redrawing a line using its TriggerStyleRuns, to fix an issue with certain line wrap setups
+
+2013-07-05 10:22:28
+* fixed char_name detection to include NPCs that have numbers in their names (eg, an automaton behemoth, Crusher MK1)

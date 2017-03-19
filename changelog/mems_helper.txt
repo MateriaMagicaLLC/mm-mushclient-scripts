@@ -1,0 +1,25 @@
+2015-04-19
+* made it check the user's preferred command stacking character, and automatically double it if it conflicts with the sequencer's (thanks Fiendish for letting me know how to check this!)
+
+2014-01-04 16:32:17
+* changed the way it checks for the presence of other plugins
+
+2013-11-09 09:48:59
+* added support for extended-prompt off
+
+2013-11-09 07:43:36
+* added memorization sets
+
+2013-11-09 06:11:39
+* made some show_*() functions for hash tables, which should look better than serialized output
+
+2013-11-08 21:08:15
+* added checks to verify that the sequencer plugin is available
+
+2013-11-08 20:43:00
+* added the mem calc complexity alias, to calc the total complexity of memorized spells
+* added memorize purge as the first command for the memorize spells alias
+* made the mems sequence persistent unless mems or spellbooks are modified
+
+2013-11-08 16:03:14
+* made it public for beta testing

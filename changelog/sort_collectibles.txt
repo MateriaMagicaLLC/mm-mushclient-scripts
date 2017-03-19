@@ -1,0 +1,6 @@
+2013-08-23 22:23:18
+* added an auto-continue trigger for long lists (eg, armoire)
+* fixed the trigger that gags + captures plates names (it didn't capture plates that had a ; in their name)
+
+2013-08-02 08:41:05
+* forced a new line after redrawing a line using its TriggerStyleRuns, to fix an issue with certain line wrap setups

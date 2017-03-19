@@ -1,0 +1,11 @@
+2013-10-22 09:38:37
+* put the color for buttons in a variable
+
+2013-07-28 12:25:46
+* it will now plot quest phase numbers on IMap, if it's installed
+
+2013-03-17 11:38:32
+* fixed an issue in the d+s alias
+
+2013-03-13 13:17:17
+* moved the quests database scripts to a separate plugin

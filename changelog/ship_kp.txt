@@ -1,0 +1,22 @@
+2014-01-04 16:44:27
+* changed the way it checks for the presence of other plugins
+
+2013-11-12 12:04:45
+* changed it to use the new backup_accelerator() and restore_accelerator() functions in the accelerators plugin
+
+2013-11-11 13:02:58
+* fixed an issue with the backed_up variable
+
+2013-11-10 15:28:15
+* rewrote all keystrokes to use the accelerators plugin
+* fixed a few issues in edit_keystroke()
+
+2013-11-09 09:43:09
+* fixed an issue with the not-onboard-a-ship detection triggers
+* added support for extended-prompt off
+
+2013-10-05 20:01:44
+* changed the way it detects a co-pilot's changes of speed - will no longer delay after increasing / decreasing speed
+
+2013-10-04 10:25:28
+* added keyboard configuration options (BETA)

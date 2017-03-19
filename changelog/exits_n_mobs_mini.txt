@@ -1,0 +1,13 @@
+2017-02-18
+* change to generic_miniwindow.lua:
+  made restore_defaults() auto-reposition the miniwindow to top-left (thanks Briony for reporting the necessity for this)
+Notice the generic_miniwindow.lua module needs to be updated
+
+2015-03-14
+* change to generic_miniwindow.lua:
+  + fixed an issue that happened when restore_defaults() was called before startx, starty were initialized (thanks Iyara for reporting this issue!)
+Notice the generic_miniwindow.lua module needs to be updated
+
+2014-09-30
+* made it public for beta testing (please report bugs to Ruthgul.)
+* plugin creation

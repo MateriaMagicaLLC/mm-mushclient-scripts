@@ -1,0 +1,4 @@
+2013-08-01 12:02:29
+* made the plugin public
+* made it send abridged directions (N, S, etc.) instead of full directions (north, south, etc.)
+* made the script into a plugin

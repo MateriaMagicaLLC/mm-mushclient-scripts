@@ -1,0 +1,42 @@
+2015-02-23 08:22:41
+* fixed an issue with Alyria's SPK water recolors
+  (they'd stopped working when I made the window resizable - it's crazy nobody reported this issue before - thanks Karnifax and Eziek for letting me know!)
+* rebuilt the image files used for Alyria's SPK water recolors
+  (unfortunately they're a lot bigger now - they grew from ~27 KB to ~280 KB each)
+
+2014-11-06 09:10:47
+* changed it to use the gmcphelper.lua module, to reduce the number of CallPlugin()s to the GMCP Handler
+
+2014-07-24/25
+* added code to resize the miniwindow by dragging its bottom right corner (adapted from Fiendish's / Lasher's code for Aardwolf)
+* reduced the size of the handler to move the window by dragging it (now it only covers the upper part of the miniwindow)
+* several changes to the images (please update aux files!):
+  + added a new pointer type: circ (dartboard-ish)
+  + re-created the image files for the planes, at higher quality (where applicable)
+  + remade the Sigil Underground plane image, so the plugin won't work with the old image file
+  + added images for lesser planes that were not supported in previous versions (Lasler Valley, Social wilds, Verity Isle)
+  Notice: if you update to this version using plugins updater, you'll need to update aux files first, and then update plugin. (Some of the old image files are incompatible, and the new version requires some extra image files.)
+
+2013-10-16 08:57:54
+* made gamma correction OFF by default (it was ON by default, by accident)
+
+2013-10-15 10:24:07
+* made it keep track of 2 separate icons - one to be used aboard ships, the other when not aboard ships; use imap icon and imap shipicon to change the default settings
+
+2013-10-08 11:28:15
+* made it save state for 4 options (choen icon, recolor for SPK waters (on / off and color), gamma correction)
+* added two optional recolors for Alyria's SPK waters (as requested by Cenoic)
+  Note if you update to this version using plugins updater, you'll need to update plugin first, and then update aux files.
+
+2013-08-26 09:10:05
+* added a variable to keep track of whether the user prefers to show the IMap miniwindow, or not - this fixes an issue with switch_maps re-showing IMap's miniwindow while in the wilds, after the user had hidden it manually
+
+2013-07-30 09:05:55
+* added a new alias, imap showlocation, primarily intended to interface with the quests helper plugin, but also usable standalone
+* updated the vmap images - they're now based on find_crystal's captures, rasterized (see difference above - the first screen capture was taken using the old vmap image, and the one for imap showlocation is using a new image)
+
+2013-07-05 12:44:41
+* fixed a bug that froze it when switching to a non-supported area (eg, Lasler Valley)
+
+2013-04-03 11:50:06
+* miniwindow position and size should now be saved properly

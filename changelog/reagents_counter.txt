@@ -1,0 +1,52 @@
+2017-02-18
+* change to generic_miniwindow.lua:
+  made restore_defaults() auto-reposition the miniwindow to top-left (thanks Briony for reporting the necessity for this)
+Notice the generic_miniwindow.lua module needs to be updated
+
+2015-04-19
+* (hopefully) fixed yet another new string that was causing it to loop endlessly (thanks Deathangel for reporting this issue!)
+
+2015-03-14
+* change to generic_miniwindow.lua:
+  + fixed an issue that happened when restore_defaults() was called before startx, starty were initialized (thanks Iyara for reporting this issue!)
+Notice the generic_miniwindow.lua: module needs to be updated
+
+2015-01-19 17:28:36
+* fixed a string that was causing it to loop endlessly (thanks Karnifax for reporting this issue!)
+
+2014-08-16
+* change to generic_miniwindow.lua:
+  + added copy selected text to clipboard (adapted from aard_channels_fiendish)
+Notice the generic_miniwindow.lua: module needs to be updated
+
+2014-08-04
+* fixed a regular expression that made it incompatible with LuaJit, just in case
+
+2014-07-25
+* change to generic_miniwindow.lua:
+  + fixed resize so it won't allow to make the miniwindow larger than the containing world window
+Notice the generic_miniwindow.lua: module needs to be updated
+
+2014-07-23 22:11:02
+* added the reset reagents alias, to restore the default size of the miniwindow
+* changed it to use the generic_miniwindow.lua: module to handle the miniwindow, whch adds the following features:
+  + allows to change the font, and the font size
+  + allows to change the miniwindow size
+Notice the generic_miniwindow.lua: module needs to be present
+
+2014-04-11 09:13:09
+* added a small delay before attempting to read the character's name, to give detect globals time to initialize
+
+2013-11-09 09:44:05
+* added support for extended-prompt off
+
+2013-10-20 09:01:43
+* renamed the reags show / hide mini aliases to reags mini [on|off]
+* changed the way it toggles / saves / loads the show_mini setting
+
+2013-06-22 10:16:27
+* reworked name detection & storage into separate plugins
+  If you're updating this plugin, please notice it now needs other 3 plugins to work, as explained in Requirements.
+
+2013-05-08 12:01:36
+* reworked name detection on plugin start

@@ -1,0 +1,44 @@
+2014-11-06 09:52:06
+* changed it to use the gmcphelper.lua module, to reduce the number of CallPlugin()s to the GMCP Handler
+
+2013-12-30 07:18:07
+* added another check vs nil to MXP auto-detect (tthis should fix an error that showed on disconnect)
+
+2013-12-16 03:56:12
+* changed some colors to help reading long lists
+
+2013-10-30 05:17:13
+* made it update_locations() on plugin disconnect - so it will now update properly when you quit
+
+2013-10-15 08:42:21
+* made its settings persistent (via SaveState())
+* added checks vs nil to MXP auto-add (this should stop it from crashing when GMCP and MXP are failing or missing)
+
+2013-10-05 12:14:56
+* fixed an issue with the cache
+
+2013-10-05 07:20:16
+* added a check to update_locations(), so it will only update mobs / items database info if the hits counter changed - this shiould make the area change lag significantly smaller
+
+2013-10-03 03:24:47
+* added a toggle to control MXP auto-detect's addition of objects on the ground (add mxp ground, ON by default)
+
+2013-10-03 02:37:27
+* added a toggle to control MXP auto-detect's addition of 1-stock items in shops (add mxp 1stock, OFF by default)
+  - this can be used to prevent it from auto-adding items sold by players, as suggested by Elbereth
+
+2013-09-01 14:19:34
+* added a cache for MXP auto-detection (this should reduce the HDD read / write lag when you turn on this script)
+* implemented the hits counter for MXP auto-detection
+
+2013-08-27 12:57:41
+* made it public for beta testing
+* made the help screen a bit more detailed
+* fixed some addition / deletion aliases, and re-enabled them (gods, I hate database programming - so boring!)
+* added a list of donation rooms, to be used by MXP auto-detection
+
+2013-08-22 14:15:18
+* added a counter for the number of times an NPC or item has been auto-detected in a given location (this counter is still not in use)
+* added clanhall and player homes detection, to be used by MXP auto-detection
+* added a toggle for MXP auto-detection (add mxp, OFF by default)
+* added MXP auto-detection for NPCs and items

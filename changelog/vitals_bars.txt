@@ -1,0 +1,2 @@
+2013-02-08 14:48:38:
+* updated to work with the new sc hp / sc sp / sc st output formats on build 2866+

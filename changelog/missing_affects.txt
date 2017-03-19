@@ -1,0 +1,20 @@
+2014-04-11 09:08:36
+* added a small delay before attempting to read the character's name, to give detect globals time to initialize
+
+2014-01-17 16:37:55
+* added a missing CR/LF at the end of the missing affects line
+
+2014-01-13 12:43:51
+* added the affects list wanted alias
+
+2013-09-11 09:47:23
+* added support for extended-prompt off
+
+2013-06-22 10:16:08
+* reworked name detection & storage into separate plugins
+  If you're updating this plugin, please notice it now needs other 3 plugins to work, as explained in Requirements.
+* it should now detect (and not include as missing) similar or mutually exclusive affects
+  (eg, if you added 'levitation' to the list of wanted affects, and you'r'e affected by 'float', it won't list levitation as missing)
+
+2013-05-08 11:47:28
+* reworked name detection on plugin start

@@ -1,0 +1,21 @@
+2013-12-06 09:50:27
+* added the export accel alias
+
+2013-11-12 11:55:52
+* changed backup_accelerator() and restore_accelerator() to work on single keystrokes instead of the whole set
+
+2013-11-11 13:02:38
+* fixed an issue with backup_accelerators() and restore_accelertors()
+
+2013-11-10 15:09:25
+* made the new version public for beta testing
+* added backup_accelerators(), restore_accelertors(), purge_accelerators() functions to support ship_kp and other similar plugins
+* added the restore default accels alias
+* added the liast accels alias
+* made user-defined aliases persistent, via save states
+* added the add accel and del accel aliases, to let the user add and remove accelerators from the command window
+* added support for user-defined accelerators
+
+2013-03-31 10:01:29
+* fixed an initialization issue that made keyboard shortcuts not load, randomly
+* added an alias to toggle keyboard shortcuts on/off

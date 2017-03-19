@@ -1,0 +1,33 @@
+2014-11-06 09:47:05
+* changed it to use the gmcphelper.lua module, to reduce the number of CallPlugin()s to the GMCP Handler
+
+2014-04-05 05:44:44
+* made the salvage helper check if you're on board (to fix an issue where it was triggering for some buildings)
+
+2014-01-25 12:26:13
+* fixed the trigger that estimates the profit for (selling) ingots - it wasn't working properly when carrying >= 1000 ingots
+
+2014-01-04 15:16:25
+* changed the way it checks for the presence of other plugins
+
+2013-11-22 12:43:37
+* coords of the salvage location ("X") will be appended to a "salvage" notepad, for players using MushReader
+
+2013-11-17 17:02:52
+* fixed the trigger that captures the ship's hull and shield % - it didn't detect the shield % on ships with an onboard sextant
+
+2013-11-17 11:55:04
+* made the salvage locator capture / show absolute x, y coords, as well as relative directions from the current room
+* added a capture to the latest set of salvage coords, and an alias to read them using the default SAPI voice (read salvage location)
+* added a capture for ship hull and shield, and an alias to read them using the default SAPI voice (read hull and shield)
+* made highlight triggers also SAPI say what is happening, if SAPI is available
+
+2013-11-09 10:22:09
+* added support for extended-prompt off
+
+2013-10-15 08:43:06
+* made it public for beta testing
+* added a trigger to store ship name + plane + coords on ship disembark
+* added shipyard services memory for crewmen and drydock cost
+* made config variables persistent (via SaveState())
+* rewrote the resources and ingots helpers to use hash tables instead of Arrays

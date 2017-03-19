@@ -1,0 +1,43 @@
+2016-02-09 19:12:00
+* added the notepad write alias
+
+2014-11-06 09:34:19
+* added a check vs nil to process_message()
+
+2014-10-25 08:47:37
+* fixed an issue with process_message(), which was capturing stuff said by "You" when show_echo was off
+
+2014-06-01 07:26:12
+* made it auto-clear a notepad once it reaches (1/2)+ capacity
+
+2014-01-05 08:02:37
+* will now check if MushReader is present - if it is, we will no longer append blank lines to notepads
+
+2013-12-19 09:14:45
+* added the list notepads alias
+
+2013-12-16 21:32:28	
+* changed the way it detects return to world focus - it now uses OnPluginGetFocus(), which reacts immediately
+
+2013-12-08 11:38:08	
+* changed the way it adds captures to notepads - it will now work as follows:
+  - when the world window has focus, it adds stuff to captures normally;
+  - when the world window doesn't have focus, it holds the new captured lines in a buffer, to be added later when the world window regains focus.
+(This is an experiment, to prevent the notepads from constantly skipping to the last line whenever new text is added. It should for example make things easier for people using screen readers.)
+
+2013-11-18 08:31:28	
+* rewrote the support for capture2dworld broadcasts, to work with the new format
+
+2013-11-09 12:27:24	
+* added two toggles: notepad echo and notepad timestamps
+
+2013-11-07 21:04:35	
+* added the notepad alias, to bring a notepad to the foreground
+
+2013-04-20 09:46:46	
+* made it public for beta testing (please report bugs to Ruthgul.)
+* added support for capture2dworld (unfiltered) broadcasts
+
+2013-04-04 18:36:12	
+* added support for capture2dworld
+* removed all capture triggers

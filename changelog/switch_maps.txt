@@ -1,0 +1,9 @@
+2014-11-06 10:30:55
+* changed it to use the gmcphelper.lua module, to reduce the number of CallPlugin()s to the GMCP Handler
+
+2014-01-04 17:02:44
+* changed the way it checks for the presence of other plugins
+
+2013-08-26 09:23:39
+* changed the way it calls IMap_GMCP and MM_GMCP_Mapper. to show / hide their respective miniwindows, from using aliases to using CallPlugin() - this fixes an issue with switch_maps re-showing those windows, even when you'd preferred to keep them hidden
+Note this change requires you to update both IMap_GMCP and MM_GMCP_Mapper.

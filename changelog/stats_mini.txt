@@ -1,0 +1,29 @@
+2017-02-18
+* change to generic_miniwindow.lua:
+  made restore_defaults() auto-reposition the miniwindow to top-left (thanks Briony for reporting the necessity for this)
+Notice the generic_miniwindow.lua module needs to be updated
+
+2015-03-14
+* change to generic_miniwindow.lua:
+  + fixed an issue that happened when restore_defaults() was called before startx, starty were initialized (thanks Iyara for reporting this issue!)
+Notice the generic_miniwindow.lua: module needs to be updated
+
+2014-11-06 10:40:05
+* changed it to use the gmcphelper.lua module, to reduce the number of CallPlugin()s to the GMCP Handler
+
+2014-08-16
+* change to generic_miniwindow.lua:
+  + added copy selected text to clipboard (adapted from aard_channels_fiendish)
+Notice the generic_miniwindow.lua: module needs to be updated
+
+2014-07-25 14:13:33
+* made it public for beta testing (please report bugs to Ruthgul.)
+
+2014-07-23	
+* made it use the generic_miniwindow.lua: module to handle the miniwindow, whch adds the following features:
+  + allows to change the font, and the font size
+  + allows to change the miniwindow size
+Notice the generic_miniwindow.lua: module needs to be present
+
+2014-07-23 15:26:36
+* plugin creation

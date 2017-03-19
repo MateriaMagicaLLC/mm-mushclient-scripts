@@ -1,0 +1,31 @@
+2014-01-17 17:04:52
+* changed the way it detects the end of a combat round
+  (before, it counted the different types of attacks + defenses used during the round, and checked that the total was > 1;
+  now it counts the total number of attacks + defenses used during the round, and checks that the total is > 2)
+
+2014-01-04 15:10:05
+* changed the way it checks for the presence of other plugins
+
+2014-01-01 08:36:08
+* if MushReader is present, and play_sounds is also present, it will now play the ping.mp3 sound when it detects the end of a combat round
+
+2013-10-20 09:54:06
+* made the short_names, show_bparts, show_avg_dmg and check_victimhp settings persistent, via SaveState()
+
+2013-07-05 10:28:01
+* fixed char_name detection to include NPCs that have numbers in their names (eg, an automaton behemoth, Crusher MK1)
+
+2013-04-24 08:34:56
+* changed colors used for third-party lines (someone else vs someone else), when not in brief mode
+
+2013-04-21 10:45:11
+* fixed some issues with toggles working backwards or not at all
+
+2013-04-19 19:48:03
+* added body parts hit counters, and made them toggeable
+* reworked average damage calculations, and made them toggeable
+* added a more verbose mode for names (on beta stage, should work for combat mode normal and verbose, and made it toggeable
+* added a toggle to auto-send check victimhp on end-of-round
+* reworked end-of-round detection (beta)
+* it no longer keeps track of the 'target', so it can be used in form vs form situations (this works better if short_names is turned off)
+* made it show totals on the next empty line after damage / defenses, which eliminates the need for an "am I in combat?" check

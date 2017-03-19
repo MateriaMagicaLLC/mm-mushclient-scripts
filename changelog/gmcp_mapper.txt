@@ -1,0 +1,217 @@
+2017-01-21 23:20:21
+* marked moving entrance room for new 3rd class boss as volatile (thanks Erech for reporting it!)
+
+2015-02-17 14:21:58
+* re-added an accidentally deleted alias for mapper show database mods (thanks Cyrion for reporting this issue!)
+
+2014-11-22 13:19:08
+* added the mapper speedwalk next alias, to show the next speedwalk step (to help figure out in which direction to flee, etc.)
+* added the mapper show database mods toggle, to control whether database updates will be shown on screen, or not
+* tidied up the scripts, removed unused / obsolete code
+
+2014-11-21
+* fixed an issue in the lookup table (use mapper recreate lookup to fix your database!)
+* added the mapper draw other floors toggle, to control whether floors above / below this one will be drawn in the miniwindow or not
+* changed it to use the gmcphelper.lua module, to reduce the number of CallPlugin()s to the GMCP Handler
+* change to mm_mapper..lua::
+  + Added toggle_show_up_down() to let the user toggle the drawing of up/down exits via an alias
+  Notice only the mapper.lua module needs to be updated to get both of the above changes
+
+2014-07-24
+* moved the "?" icon to the upper right corner of the miniwindow
+* added code to resize the mapper miniwindow by dragging its bottom right corner (adapted from Fiendish's / Lasher's code for Aardwolf)
+  Notice only the mapper.lua module needs to be updated to get both of the above changes
+
+2014-07-22
+* added code to show a background image (adapted from Fiendish's code for Aardwolf)
+  + in case someone wants to use this feature, the image file needs to be RGB, 8 bits per channel, named mm_mapper_bg.png, and placed in MUSHclient/worlds.
+  Notice only the mapper.lua module needs to be updated
+
+2014-05-23 09:00:54
+* fixed another issue with mapper purge aliases
+
+2014-05-19 13:52:40
+* fixed an issue with safewalk mode, in the mapper.lua module
+  Notice only the mapper.lua module needs to be updated
+  (if you're using the Plugins Updater, you only need to update aux files and reload the plugin)
+
+2014-05-04 15:27:28
+* fixed issues with mapper purge aliases
+
+2014-04-24 19:01:37
+* fixed issues with mapper bm and mapper findbm
+
+2014-04-15 10:22:11
+* fixed an issue that made new room flags fail to update
+
+2014-04-10 03:16:29
+* fixed an issue that made the PK flags for rooms not save when adding new rooms
+* now deleting a room from the database also purges its user defined tags
+
+2014-04/06 08:21:42
+* made the latest changes (march-april) public for beta testing
+  Remember for these features to work, you need to update the mapper.lua module.
+
+2014-04-05
+* added a yellow border for fear affect rooms
+* added two new player_tags for rooms:: dt and no-speed
+  + rooms tagged as dt (death_trap) are painted black, and are avoided on mapper goto speedwalks if safewalk is on;
+  + rooms tagged as no-speed are always avoided on mapper goto speedwalks, regardless of safewalk.
+  For these features to work, you need to update the mapper.lua module.
+* moved look() checks to mazes_for_mapper
+* added an alias, mapper purge wilds, to purge all rooms in a given plane, except for roads
+* changed the hover message for rooms to include tags, and show terrain (+ terraininfo) in the same line
+
+2014-03-15
+* renamed the database to mm_mapper.db; so it no longer includes the server's URL as part of the file name (which means we'll have a unified database for both the live and the dev servers)
+* restructured the rooms table in the mapper database, as follows:
+  + added the flags column
+  + removed the description column
+  + removed the safe, lpk, npk, cpk columns (no longer needed, since those are all room flags now)
+* moved user-set notes to a separate bookmarks table
+* moved user-set tags (shop, trainer) to a separate player_tags table
+* added an alias, mapper upgrade database, to convert old databases to the new format
+* added compatibility scripts to support old databases for users who haven't upgraded to the new format
+For these features to work, you need to update the mapper.lua module.
+
+2014-01-18 15:27:23
+* removed an extra link on the mapper where output that was preventing screen readers from accessing hyperlinks
+
+2014-01-13 09:32:54
+* made mapper find strip ANSI when showing results, if MushReader is detected (to fix an issue with JAWS and ANSI codes)
+
+2014-01-12 10:35:53
+* added the mapper safewalk toggle, to avoid PK on speedwalks.
+  Note: this will only work for mapper goto speedwalks, and NOT for mapper path, or clicking on a room in the map, etc.
+  Remember for this feature to work, you need to update the mapper.lua module.
+
+2014-01-04 16:33:26
+* changed the way it checks for the presence of other plugins
+
+2014-01-04 07:13:22
+* made it auto-purge its rooms cache when an area change is detected, to put a cap to its growth (it was only resetted on plugin install, so the amount of RAM used by MUSHclient could grow indefititely for this reason) - this change is experimental, we'll see if it doesn't slow us down too much
+
+2014-01-03 11:58:40
+* removed the help line stating that the game setting COMPASS was required to be ON, since this hasn't been true for quite a while (since GMCP room flags were added)
+* if MushReader is detected, it will also auto-toggle show_database_mods off, to reduce spam
+* added a 3 second delay to its initial detection of MushReader, to give that plugin time to load
+* made it check on startup whether MushReader is present - if it is, then this mapper will auto-hide its miniwindow
+
+2013-12-31 05:41:19
+* added the alias mapper adjacent - it should help answer questions like "on what street is X?"
+
+2013-12-30 21:48:49
+* made map_goto() check if the destination room is mapped before it tries to find a path to it
+
+2013-12-15 09:10:39
+* it no longer re-calculuates speedwalks after auto-openning a door
+* auto-open doors should no longer fail when the first thing to do in a speedwalk is auto-open a door
+* moved auto-open doors to the mapper.lua module
+  Remember for this feature to work, you need to update the mapper.lua module.
+
+2013-12-08 16:57:46
+* added an alias to toggle road-exits on or off (mapper show unmapped exits [on|off] - off by default)
+
+2013-11-09 11:08:20
+* fixed an issue with persistent visible state reverting to off
+* added support for extended-prompt off
+
+2013-11-06 08:31:39
+* made the "is the miniwindow visible?" state persistent (toggeable using mapper show and mapper hide, as usual)
+
+2013-10-24 01:33:45
+* added an alias to toggle road-exits on or off (mapper show road exits [on|off] - off by default)
+* added a feature that shows on-road exits, below visible exits (hopefully to help sight-impaired playrs follow roads in the wilds)
+
+2013-10-20 08:45:39
+* made the mapper map wilds and mapper map mazes aliases work with or without a parameter (without it, they work as toggles)
+* renamed the mapper show terrain alias to mapper color terrain (tio make what it does more obvious)
+* made the auto_open, color_terrain, do_map_mazes, do_map_wilds, show_flags and show_numbers settings persistent, via SaveState()
+
+2013-10-14 16:11:50
+* fixed some issues related to mazes
+
+2013-09-19 13:11:40
+* fixed an issue with mapper export / import that was making them fail when the room had no flags
+
+2013-08-30 20:29:11
+* added room #12258 (A Frozen Passage in Rune Forest) as a volatile room
+
+2013-08-27 11:59:27
+* added room #12242 (A Dark Alcove in Rune Forest) as a volatile room
+
+2013-08-26 09:15:55
+* added a variable to keep track of whether the user prefers to show the mapper miniwindow, or not - this fixes an issue with switch_maps re-showing the mapper's miniwindow while not in the wilds, after the user had hidden it manually
+
+2013-08-24 12:55:26
+* fixed more issues related to mazes
+
+2013-08-13 11:54:31
+* fixed more issues related to mazes
+
+2013-08-01 14:11:16
+* fixed some issues related to mazes
+* added support for speedwalk_manager_p1
+
+2013-07-30 12:17:28
+* added support for mazes_for_mapper (alpha stage, still not available for testing)
+
+2013-07-29 10:09:53
+* added a function, get_room_areas(), to interface with the quests_helper plugin.
+
+2013-07-24 11:33:30
+* fixed an issue where mapper purge - it wasn't purging bookmarks / notes for certain areas (eg, A Dizzying Array)
+
+2013-07-06 08:34:53
+* added a toggle to allow mapping the wilds (mapper map wilds)
+  Note: the more rooms you add to the map, the slower it will be to search for stuff, so use this option wisely.
+
+2013-07-05 13:20:53
+* added an alias to purge an entire area from the database (mapper purge area)
+
+2013-06-22 10:47:05
+* added a toggle for the auto-open doors feature (mapper auto-open)
+
+2013-05-28 10:46:36
+* fixed an issue with auto-open doors
+  (it wouldn't resume a speedwalk if the destination was farther than depth rooms away)
+
+2013-05-15 11:01:23
+* fixed a bugged call to the function that logs moving rooms to events_mini
+
+2013-05-12 03:50:28
+* added mapper export rooms and mapper export area
+* when entering a room that links to a moving room, it should add a line to events_mini (if it's intalled)
+* added mapper reset defaults
+
+2013-04-21 00:24:24
+* removed spook_check trigger that didn't belong here :x
+
+2013-04-17 11:30:29
+* fixed a glitch with auto-open when the first step on a mapper speedwalk was blocked by a door
+* made it broadcast when a mapper speedwalk is waiting for the user to enter a portal
+  Remember for these features to work, you need to update the mapper.lua module.
+
+2013-04-06 09:01:12
+* auto-open doors should now only attempt to open the direction we need to go
+  Note: for this feature to work, you need to update the mapper.lua module. 
+* dizzy rooms will have a blue border (after you walk them once to load their room flags)
+
+2013-02-22 22:10:34
+* added search by notes / bookmarks
+
+2013-01-26 11:13:19
+* added support for teleports and portals (beta)
+  Note: for this feature to work, you need to update the mapper.lua module.
+
+2013-01-05 12:14:22
+* cosmetic bug fix
+
+2012-11-15 11:00:37
+* made it not update the anti-magic flag for Tellerium
+
+2012-10-23 12:05:04
+* fixed an issue with auto-open doors
+
+2012-10-21 21:54:29
+* re-enabled the trigger to auto-open doors

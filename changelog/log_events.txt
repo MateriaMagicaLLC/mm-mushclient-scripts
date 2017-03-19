@@ -1,0 +1,5 @@
+2015-03-05 17:18:45
+* Made it public for beta testing.
+
+2015-03-05 14:55:56
+* Plugin created.

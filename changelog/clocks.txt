@@ -1,0 +1,35 @@
+2017-02-18
+* change to generic_miniwindow.lua:
+  made restore_defaults() auto-reposition the miniwindow to top-left (thanks Briony for reporting the necessity for this)
+Notice the generic_miniwindow.lua module needs to be updated
+
+2015-03-14
+* change to generic_miniwindow.lua:
+  + fixed an issue that happened when restore_defaults() was called before startx, starty were initialized (thanks Iyara for reporting this issue!)
+Notice the generic_miniwindow.lua module needs to be updated
+
+2014-08-16
+* change to generic_miniwindow.lua:
+  + added copy selected text to clipboard (adapted from aard_channels_fiendish)
+Notice the generic_miniwindow.lua module needs to be updated
+
+2014-07-25	
+* change to generic_miniwindow.lua:
+  + fixed resize so it won't allow to make the miniwindow larger than the containing world window
+Notice the generic_miniwindow.lua module needs to be updated
+
+2014-07-23 22:07:12	
+* added the reset clocks alias, to restore the default size of the miniwindow
+* changed it to use the generic_miniwindow.lua module to handle the miniwindow, whch adds the following features:
+  + allows to change the font, and the font size
+  + allows to change the miniwindow size
+Notice the generic_miniwindow.lua module needs to be present
+
+2013-11-09 09:41:56	
+* added support for extended-prompt off
+
+2013-10-24 00:17:18	
+* fixed an initialization issue
+
+2013-10-20 10:07:21	
+* fixed an issue with the clocks hide / clocks show aliases

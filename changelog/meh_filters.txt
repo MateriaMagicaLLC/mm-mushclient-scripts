@@ -1,0 +1,18 @@
+2016-12-08 17:20:29
+* fixed show skills/spells triggers (thanks to Alim for reporting the issue)
+
+2014-11-06 10:42:16
+* changed it to use the gmcphelper.lua module, to reduce the number of CallPlugin()s to the GMCP Handler
+
+2014-04-11 06:55:19
+* added a small delay before attempting to read the character's name, to give detect globals time to initialize
+
+2014-01-02 09:51:58
+* fixed the name capture in the score screen
+* added a gag for quests for the score screen
+
+2013-12-24 10:52:15
+* added the show scan alias
+
+2013-12-18 06:17:14
+* made it public for beta testing

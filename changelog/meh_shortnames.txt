@@ -1,0 +1,11 @@
+2014-09-30
+* Added gags for (Invisible), (Pulsating), (Red Aura), (Gold Aura) items, that were bugging out (due to the parenthesis) - this is a quick and dirty fix, will work more on it when I have time.
+* Added ANSI to HTML colors for mobs and players (for example, so that glyph engineers look cyan and imms look white.)
+* Restored mobs colors (using HTML code provided by Asalemas.)
+* Made it actually not process packets until the number of <get equals the number of </get>, and the number of <pers equals the number of </pers> in it. (It accumulates / concats received packets until those conditions are met, then it edits them, and last it lets the client process them.)
+* Fixed issues with regular expressions.
+* Fixed issues with the main replacement iterators.
+
+2014-09-29
+* Shared it for alpha testing.
+* Created the plugin.

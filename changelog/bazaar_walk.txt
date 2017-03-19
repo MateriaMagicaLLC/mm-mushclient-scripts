@@ -1,0 +1,3 @@
+2013-12-15 09:32:45
+* made it auto-open shop doors.
+* it now uses Speedwalk Manager GMCP P2 to walk you to shops.

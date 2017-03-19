@@ -1,0 +1,8 @@
+2014-11-06 10:33:06
+* changed it to use the gmcphelper.lua module, to reduce the number of CallPlugin()s to the GMCP Handler
+
+2013-08-02 08:45:40
+* forced a new line after redrawing a line using its TriggerStyleRuns, to fix an issue with certain line wrap setups
+
+2012-10-23 12:09:28
+* fixed an issue with GMCP info being requested before the GMCP handler plugin was properly initialized.

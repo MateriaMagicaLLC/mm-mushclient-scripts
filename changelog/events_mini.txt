@@ -1,0 +1,65 @@
+2017-02-18
+* change to generic_miniwindow.lua:
+  made restore_defaults() auto-reposition the miniwindow to top-left (thanks Briony for reporting the necessity for this)
+Notice the generic_miniwindow.lua module needs to be updated
+
+2015-03-14
+* change to generic_miniwindow.lua:
+  + fixed an issue that happened when restore_defaults() was called before startx, starty were initialized (thanks Iyara for reporting this issue!)
+Notice the generic_miniwindow.lua module needs to be updated
+
+2014-10-01
+* change to generic_miniwindow.lua:
+  + (hopefully) fixed a wrap text issue that affected windows with scrollbars (thanks Reznov for reporting this issue)
+Notice the generic_miniwindow.lua module needs to be updated
+
+2014-08-16
+* change to generic_miniwindow.lua:
+  + added copy selected text to clipboard (adapted from aard_channels_fiendish)
+Notice the generic_miniwindow.lua module needs to be updated
+
+2014-07-30
+* change to generic_miniwindow.lua:
+  + added support for scroll-wheel
+Notice the generic_miniwindow.lua module needs to be updated
+
+2014-07-25
+* change to generic_miniwindow.lua:
+  + fixed resize so it won't allow to make the miniwindow larger than the containing world window
+Notice the generic_miniwindow.lua module needs to be updated
+
+2014-07-23 22:08:45
+* added the reset events alias, to restore the default size of the miniwindow
+Notice the generic_miniwindow.lua module needs to be updated
+
+2014-07-23
+* changes to generic_miniwindow.lua:
+  + added a parameter to do_install_miniwindow(), to allow the creation of miniwindows without scrollbars
+  + fixed the math to show the miniwindow title centered
+  + made it load saved values for BODY_FONT_NAME and BODY_FONT_SIZE (they were saved but not loaded on reinstall)
+Notice the generic_miniwindow.lua module needs to be updated
+
+2014-01-04 14:25:52
+* changed the way it checks for the presence of other plugins
+
+2013-08-26
+* fixed an issue in generic_miniwindow.lua that crashed the plugin when you tried to change the miniwindow font
+  How to patch your install:
+  - EITHER use plugins_updater (type update plugins, then click update aux files to the right of events_mini),
+  - OR re-download, replace generic_miniwindow.lua with the new version, and then reinstall the plugin manually.
+
+2013-04-20 08:34:12
+* added support for Affects by Name broadcasts (this reverts the way it used to work)
+
+2013-04-20 07:07:04
+* moved all the miniwindow code to a module file (generic_miniwindow.lua), to make these plugins easier to maintain
+Notice if you already have a previous version of this plugin, and you try to update it using Plugins Updater, it won't work. You'll need to download and install it manually, as explained above. (This is because previous versions don't "know" about the module.) Once you install this new version, Plugins Updater will let you update it ok.
+
+2013-04-04 08:56:26
+* made it public for beta testing (please report bugs to Ruthgul.)
+
+2013-04-03 23:09:38
+* made it broadcast whenever the plugin is installed / uninstalled / enabled / disabled
+
+2013-04-03 22:13:19
+* plugin creation

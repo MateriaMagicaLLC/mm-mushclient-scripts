@@ -1,0 +1,20 @@
+2014-04-11 09:09:48
+* added a small delay before attempting to read the character's name, to give detect globals time to initialize
+
+2014-01-21 17:39:05
+* added Smuggler's Gulch reags shop
+
+2013-11-09 09:44:19
+* added support for extended-prompt off
+
+2013-10-20 08:55:55
+* made the show_hints setting persistent, via SaveState()
+* made reags show hints work with or without a parameter (without it, it works as a toggle)
+* renamed the show hints alias to reags show hints
+
+2013-06-22 10:16:22
+* reworked name detection & storage into separate plugins
+  If you're updating this plugin, please notice it now needs other 3 plugins to work, as explained in Requirements.
+
+2013-05-08 11:58:46
+* reworked name detection on plugin start

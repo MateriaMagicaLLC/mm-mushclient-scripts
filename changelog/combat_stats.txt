@@ -1,0 +1,77 @@
+2015-03-12 20:54:46
+* fixed an outdated string - thanks Reznov for reporting this!
+
+2014-10-24 17:17:55
+* made it broadcast that it requires weapon detection on first prompt (it was doing it on plugin install, which was causing issues - thanks Reznov for reporting this!)
+
+2014-04-11 09:02:04
+* added a small delay before attempting to read the character's name, to give detect globals time to initialize
+
+2013-12-06 09:15:50
+* changed the detect breathe/lay/slit/strike type aliases, to fix an issue with spaces in some Execute aliases
+
+2013-11-12 14:27:23
+* updated it to request weapon detection to detect globals
+
+2013-11-09 09:41:12
+* added support for extended-prompt off
+
+2013-07-05 09:52:48
+* fixed char_name detection to include NPCs that have numbers in their names (eg, an automaton behemoth, Crusher MK1)
+* debug strings are now off
+
+2013-06-22 12:10:43
+* reworked name detection & storage into separate plugins
+  If you're updating this plugin, please notice it now needs other 3 plugins to work, as explained in Requirements.
+
+2013-05-08 11:12:14
+* fixed a detection issue on plugin start
+
+2013-05-08 11:12:14
+* reworked name detection on plugin start
+
+2013-04-20 21:43:34
+* fixed an issue with the previous quick and dirty patch vvv :x
+
+2013-04-20 05:05:34
+* added a (quick and dirty) patch for missing trailing ' for spells names - eg, when you cast 'mental clarity, it will patch to cast 'mental clarity'
+
+2013-04-04 19:20:51
+* fixed some triggers that were sending to script (after omit), instead of sending to script.
+
+2013-01-18 10:27:53
+* fixed druid spell names issue - eg, it used "air" instead of "air invocation" and "air evocation"
+ (please reset counters after you update, the old data for these spells is wrong)
+
+2012-11-17 13:36:56
+* fixed an issue in specific skills detection (for breathe / lay / slit / strike)
+
+2012-11-08 18:39:57
+* fixed an issue with spellcasting detection
+
+2012-11-08 03:46:55
+* fixed weapons detection to work with +weight bonus (to damage) weapons (thanks Eljay!)
+
+2012-11-07 11:34:24
+* changed the way it detects the actual beginning of spellcasting
+  (this should fix an issue with a spell being wrongly identified, when a second spell was cast before the first one ended casting)
+
+2012-11-06 21:14:11
+* fixed issues with music and weapons detection, hopefully (thanks Eljay!)
+
+2012-11-06 13:23:02
+* added spells (alpha)
+  If you wanna test this feature, please make aliases for your spells as explained in Requirements.
+
+2012-11-04 03:16:08
+* added combat reset <skill>, as requested by Elbereth
+  (this will only reset the hits / misses counters, not the usage one)
+
+2012-11-03 20:02:17
+* added defensive skills - only usage betters are counted for them
+  (because they lack a failure string)
+* made it not report after combat info when stats are empty.
+
+2912-11-03 09:30:43
+* added usage counters until usage betters happen, as requested by Riya
+  (these are not resetted by level / multi-class betters)

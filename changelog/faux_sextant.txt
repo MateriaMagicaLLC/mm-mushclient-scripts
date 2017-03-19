@@ -1,0 +1,24 @@
+2014-11-06 09:29:44
+* changed it to use the gmcphelper.lua module, to reduce the number of CallPlugin()s to the GMCP Handler
+
+2014-01-04 16:19:45
+* changed the way it checks for the presence of other plugins
+
+2013-12-19 10:01:51
+* made show coords SAPI read the coords if MushReader + SAPI plugin are detected
+
+2013-12-18 14:00:29
+* added the show coords alias
+
+2013-11-09 09:47:53
+* added support for extended-prompt off
+
+2013-10-22 11:02:37
+* made the show_sextant setting persistent, via SaveState()
+
+2013-10-20 17:14:18
+* made the log_coords setting persistent, via SaveState()
+* added a log coords alias, to choose if we want to append the sextant readings to logfiles or not
+
+2013-07-05 09:59:41
+* fixed a prompt detection issue

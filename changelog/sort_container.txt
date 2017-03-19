@@ -1,0 +1,13 @@
+2014-04-11 09:15:10
+* added a small delay before attempting to read the character's name, to give detect globals time to initialize
+
+2013-11-09 09:42:45
+* added support for extended-prompt off
+
+2013-10-15 08:45:32
+* made auto-continue work for large containers (it was present but not active)
+
+2013-09-20 12:34:48
+* made the plugin public for beta testing
+* added the pick_quote_char() function, to decide whether the item's name should be enclosed in quotes or double quotes
+* added format to list_container(), and made the totals line show after the list of sorted items

@@ -1,0 +1,59 @@
+2014-11-09 17:45:02
+* added a check vs nil to process_message()
+
+2014-11-01 08:17:35
+* updated captures types according to changes to capture2dworld
+
+2014-10-24 09:25:28
+* fixed an issue with read captures say, which was reading stuff said by "You"
+
+2014-01-04 11:31:55
+* changed the way it checks for the presence of other plugins
+
+2014-01-04 11:31:55
+* made notify when active actually work :x
+
+2014-01-03 11:46:54
+* added a new alias, notify when active, to choose whether we want to be notified of incoming messages when the world window is active (this is OFF by default)
+* by default, it will no longer notify you of incoming messages if the world window is active, because they're already being read by your reader
+* it will now try to use SAPI by default for notifications, to make them distinguishable from the rest of the text being read
+* renamed the announce incoming messages alias to notify incoming messages
+* reduced the OnPluginLoad() delay to detect MushReader / SAPI to 3 seconds
+
+2014-01-02 15:41:01
+* added a 5 second delay to its initial detection of MushReader / SAPI, to give those plugins time to load
+
+2013-12-31 12:11:20
+* added an alias announce incoming messages, to toggle announcements on / o ff
+* made it SAPI say announcements for incoming messages, instead of trying to play a sound file
+
+2013-12-24 09:38:37
+* made it only read the latest "depth" lines, where depth is 5 by default, and can be changed via the read captures depth alias
+* made it read captures in reverse order by default, and added another alias to read them in natural order
+* removed the -<offest> option from read captures
+
+2013-12-08 19:14:04
+* re-enabled support for MushReader.
+
+2013-12-08 11:29:01
+* added a new alias, skip line, to make it stop reading the current line and advance to the next one (only works for SAPI)
+
+2013-11-06 08:05:34
+* removed support for MushReader (it doesn't let you read specific text via scripts)
+
+2013-11-03 20:16:29
+* [deleted] fixed an issue when calling MushReader
+
+2013-11-03 19:00:41
+* fixed an issue when removing a capture type from the list
+
+2013-11-03 17:55:25
+* made it public for beta testing
+* made it auto-toggle on the play_sounds_in_background world option.
+* added some generic .wav files for channel activity alerts.
+* made it auto-detect the MushReader or Text-To-Speech plugins
+* added an offest to the read alias, to allow re-reads
+* added an alias to purge channel types
+* added an alias to read unread lines of a given channel type
+* made it work based on capture2dworl's broadcasts
+* plugin created

@@ -1,0 +1,15 @@
+2013-12-18 07:55:52
+* removed the sapi say alias (moved it to the new Sapi_speaker plugin.)
+
+2013-11-09 08:35:20
+* disabled the cooldown for play a sound
+
+* 2013-11-07 14:15:51
+* added a 15 seconds anti-spam cooldown to play a sound, when trying to play the same sound file
+
+2013-11-07 11:54:26
+* made it public for beta testing
+* added checks vs file existence and presence of the SAPI plugin, and notes in their absence
+* added an alias to say something using the default SAPI voice (sapi say ...)
+* changed it from using PlaySound() to Sound(), to support MP3 files as well as WAV files
+* made it use MUSHclient/sounds folder by default (no alternatives)

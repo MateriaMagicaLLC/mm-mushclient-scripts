@@ -1,0 +1,7 @@
+2014-01-04 18:24:33
+* added support for a mortar and pestle
+* changed the way it checks for the presence of other plugins
+
+2013-11-12 12:04:01
+* made it public for beta testing
+* changed it to use the new backup_accelerator() and restore_accelerator() functions in the accelerators plugin

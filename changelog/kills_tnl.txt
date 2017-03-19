@@ -1,0 +1,11 @@
+2014-02-17 15:27:58
+* added average experience per hour (beta)
+
+2014-01-20 10:32:01
+* it now keeps track of the MXP entity exptnl to detect changes in experience to next level
+
+2014-01-04 16:24:30
+* changed the way it checks for the presence of other plugins
+
+2014-01-04 11:01:18
+* made it SAPI say its output if both MushReader and SAPI are detected

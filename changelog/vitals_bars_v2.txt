@@ -1,0 +1,15 @@
+2016-12-12 22:33:13
+* cosmetic fix: moved the name label a few pixels upwards, so now it shouldn't be messing with the window's boundary box anymore
+
+2014-11-06 10:44:32
+* changed it to use the gmcphelper.lua module, to reduce the number of CallPlugin()s to the GMCP Handler
+
+2014-07-26 06:42:22
+* added the vitals resync ap alias, to request an update for your archon points
+* made it public for beta testing (please report bugs to Ruthgul.)
+
+2014-07-24 05:28:32
+* added an extra gauge for char.status.tnlpct
+
+2012-05-14 03:08:38
+* plugin creation

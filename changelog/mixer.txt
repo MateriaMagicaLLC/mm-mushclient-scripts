@@ -1,0 +1,21 @@
+2013-09-18 12:30:37
+* mixes ending on r and s should now work properly (there was a parameter parsing error in show_recipes())
+* should no longer send 'look in <container>' twice, when using the same container for sedum rosea and other sprigs
+
+2013-09-17 08:47:02
+* fixed an issue with list_results() sending full sprigs names to domix, instead of only the first word
+
+2013-09-01 15:21:42
+* added an auto-continue trigger for long lists (eg, trunk)
+
+2013-08-31 09:49:52
+* added support for sedum rosea sprigs (via the optional parmeter 's' in the show sprigs alias)
+
+2013-08-30 14:08:03
+* added an optional parameter 'r' to show sprigs, to pick sprigs in reverse order (lowest-to-highest power, instead of the default highest-to-lowest power)
+
+2013-08-26 12:00:07
+* made it public for beta testing
+* added a missing trigger to detect empty containers
+* changed the way it checks stop conditions
+ 

@@ -1,0 +1,3 @@
+2013-06-22 10:17:21
+* reworked name detection & storage into separate plugins
+  If you're updating this plugin, please notice it now needs other 3 plugins to work, as explained in Requirements.

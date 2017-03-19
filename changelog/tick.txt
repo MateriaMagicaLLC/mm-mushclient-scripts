@@ -1,0 +1,34 @@
+2014-01-03 11:51:07
+* changed the way it checks for the presence of other plugins
+
+2014-01-03 11:51:07
+* added a 3 second delay to its initial detection of MushReader, to give that plugin time to load
+
+2014-01-01 08:35:48
+* if MushReader is present, and play_sounds is also present, it will now play the tick.mp3 sound 3 seconds before a tick, once it's synchronized
+
+2013-12-31 11:52:15
+* added a tick mute alias, that will toggle SAPI tick announcements on / off
+* [deleted] made it SAPI say "incoming tick" 3 seconds before a tick happens, if MushReader is present
+* it will not show the miniwindow if it detects MushReader is present
+
+2013-08-17 07:52:14
+* made the unsync warning a bit less sensitive (it will now trigger when it thinks it's shifted by more than 1 second)
+
+2013-07-05 10:34:21
+* fixed char_name detection to include NPCs that have numbers in their names (eg, an automaton behemoth, Crusher MK1)
+
+2013-02-09 16:35:16
+* made it warn more frequently when it might be unsync'd
+
+2013-01-15 11:50:34
+* made it not auto-resync anymore - when it unsync's, type tick sync to force resyncs
+* restored the tick sync alias, to force a resync without needing to reinstall the plugin
+* remade the tick timer
+
+2013-01-11 11:29:17
+* removed (re-)sync on auction, since auction no longer happens on tick
+* fixed a few room events strings that had changed
+
+2012-11-18 10:13:43
+* added a few more options to the (re-)sync trigger

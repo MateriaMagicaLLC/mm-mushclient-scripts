@@ -1,0 +1,17 @@
+2014-01-04 15:15:37
+* changed the way it checks for the presence of other plugins
+
+2013-12-23 13:29:22
+* renamed the set sound alias to alarm sound (I hadn't realized it would interfere with the game command set sound)
+
+2013-12-11 14:05:03
+* made the timer active when disconnected
+
+2013-11-28 08:26:17
+* made it public for beta testing
+* fixed an issue with set_unique_countdown()
+
+2013-11-24
+* added set_unique_countdown(), to be used by quests, latest daily and other similar plugins
+* added support for SAPI
+* made it use play sounds to make noise

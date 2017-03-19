@@ -1,0 +1,12 @@
+2014-07-30 18:06:04
+* it will now use a proxy (freeproxyx.appspot.com) to bypass Dropbox's https (plugins_updater_v2 uses https, this plugin doesn't.)
+
+2013-12-25 03:25:16
+* if update plugins, or update plugin <partial_name> return only 1 result, the result's plugin id will be copied to the clipboard
+
+2013-11-07 13:37:04
+* made the update plugin alias work with a partial plugin name
+* added a check vs plugin not installed to update plugin and update aux
+
+2013-04-14 00:31:23
+* updated to work with Dropbox's new redirect

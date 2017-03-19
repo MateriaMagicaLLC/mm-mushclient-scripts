@@ -1,0 +1,36 @@
+2014-04-11 02:18:12
+* updated the wait after a cancelled quest (halved the timer)
+
+2014-03-11 08:16:45
+* updated the orc pursuer says (now to you) trigger
+
+2014-01-04 16:39:37
+* changed the way it checks for the presence of other plugins
+
+2013-12-06 10:48:58
+* added triggers to capture quest details to a notepad, as you request them.
+
+2013-11-28 08:31:53
+* it will now use meh timers if it's available, instead of its own timer, to notify when a quest is available
+
+2013-11-07 12:15:53
+* fixed the Execute() call to play a sound to work with the new version (it requires the play_sounds plugin + a quest.wav file placed in the MUSHclient/sounds folder)
+
+2013-10-22 09:16:56
+* fixed the timer after a successful pursur quest
+* put the color for buttons in a variable
+
+* 2013-08-02 10:27:43
+* fixed some issues in the trigger that detects orc pursuer quests completed, and the function that handles it
+
+2013-05-17 10:13:10
+* replaced the wait.time() calls with a standalone timer - this should help keep track of the latest completed / failed quest, and reduce the spam which was caused by multiple rejected achievement phases
+
+2013-04-04 09:40:53	
+* added support for events mini.
+
+2013-03-21 02:37:42
+* fixed 2 triggers that were missing keep_evaluating="y"
+
+2012-10-25 09:58:45
+* added support for play sounds - it should now play a "quest.wav" sound file, together with the quest available notification, if the file is available

@@ -1,0 +1,9 @@
+2013-10-22 13:27:10
+* put the color for buttons in a variable
+
+2013-08-02 08:35:05
+* forced a new line after redrawing a line using its TriggerStyleRuns, to fix an issue with certain line wrap setups
+
+2013-04-03 08:44:59
+* changed the q s alias to work without a parameter - in that case, it will do quest status for the last quest checked or requested (q s + a number is unchanged.)
+* new alias: q s all, will show quest status when multi-questing

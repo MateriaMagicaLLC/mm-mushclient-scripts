@@ -1,0 +1,19 @@
+2016-12-13
+* added support for the amulet around neck slot (thanks, Syll, for suggesting the need for this update)
+  Please notice this plugin is now discontinued. You should use the game command: check equipment missing, instead.
+
+2015-04-19
+* fixed the plugin_update_url() function... it was pointing at a non-existent folder (thanks Deathangel for reporting this issue!)
+
+2014-04-11 09:05:39
+* added a small delay before attempting to read the character's race, to give detect globals time to initialize
+
+2013-11-09 09:48:13
+* added support for extended-prompt off
+
+2013-06-22 10:15:08
+* reworked race detection & storage into separate plugins
+  If you're updating this plugin, please notice it now needs other 3 plugins to work, as explained in Requirements.
+
+2013-04-20 05:28:34
+* added missing trigger for equipment worn on shoulders

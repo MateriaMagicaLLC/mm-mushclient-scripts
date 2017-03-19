@@ -1,0 +1,8 @@
+2014-11-06 10:15:23
+* changed it to use the gmcphelper.lua module, to reduce the number of CallPlugin()s to the GMCP Handler
+
+2013-10-20 09:14:42
+* made the sorted and sortby settings persistent, via SaveState()
+
+2013-10-05 21:07:36
+* fixed the ship prompt trigger that calls IMap to work on ships without an onboard sextant

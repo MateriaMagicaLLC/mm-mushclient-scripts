@@ -1,0 +1,8 @@
+2014-01-04
+* changed the way it detects the presence of other plugins
+
+2013-12-15
+* started based on the MSP plugin for Materia Magica by Christof
+* ported it to Lua, for easier maintenance
+* made it auto-choose a default file type (MP3) and a default folder (MUSHclient/sounds/msp/)
+* added an alias to reset the defaults, in case things go wrong

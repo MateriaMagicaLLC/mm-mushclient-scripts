@@ -1,0 +1,8 @@
+2013-12-23 15:29:27
+* added special highlights
+
+2013-08-02 08:36:55
+* forced a new line after redrawing a line using its TriggerStyleRuns, to fix an issue with certain line wrap setups
+
+2013-07-31 09:55:53
+* made it public for beta testing

@@ -1,0 +1,40 @@
+2014-11-06 09:49:13
+* changed it to use the gmcphelper.lua module, to reduce the number of CallPlugin()s to the GMCP Handler
+
+2014-04-11 08:55:29
+* added a small delay before attempting to read the character's name, to give detect globals time to initialize
+
+2014-04-06 16:19:50
+* it now uses GMCP 100% to detect PK rooms
+
+2013-10-20 17:30:54
+* changed the prompt alias to meh prompt, and the tag alias to meh tag
+* made the gag_tagged setting persistent, via SaveState()
+
+2013-09-01 14:37:28
+* changed the way iti (re)initializes PK rooms detection
+
+2013-08-13 10:13:38
+* fixed the levitation detect trigger (it failed to detect levitation when cast on water)
+
+2013-07-05 10:12:48
+* fixed a prompt detection issue
+* fixed char_name detection to include NPCs that have numbers in their names (eg, an automaton behemoth, Crusher MK1)
+
+2013-06-22 10:16:03
+* reworked name detection & storage into separate plugins
+  If you're updating this plugin, please notice it now needs other 3 plugins to work, as explained in Requirements.
+* it should now notice racial levitation for dracons and racial haste for halflings
+
+2013-05-11 08:19:01
+* fixed a detection issue on plugin start
+
+2013-05-08 11:31:38
+* reworked name detection on plugin start
+* fixed haste detection on 'affects' output
+
+2013-01-14 19:47:42
+* fixed air invocation wear off string
+
+2012-11-06 13:27:19
+* added new strings for fire invocation

@@ -1,0 +1,15 @@
+2014-11-22 12:52:57
+* fixed sendgmcp to auto-add the required {"":""} after the name of the required package
+* tidied up the scripts, removed unused / obsolete code
+
+2014-11-09
+* change to gmcphelper.lua:
+  + fixed the fieldname regex in get_last_tag()
+Notice the gmcphelper.lua module needs to be updated
+
+2014-10-23 02:34:13
+* fixed the fieldname regex (Aardwolf's can only contain letters, in MM it can include numbers, - and _ );
+* changes to gmcphelper.lua:
+  + fixed the fieldname regex (Aardwolf's can only contain letters, in MM it can include numbers, - and _ );
+  + replaced several assert()s with ifs, to fail silently when needed.
+Notice the gmcphelper.lua module needs to be updated

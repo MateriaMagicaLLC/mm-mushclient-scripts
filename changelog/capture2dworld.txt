@@ -1,0 +1,86 @@
+2015-04-17
+* fixed yet another missing check vs nil issue, when using the aucverb option, where if you logged in after an auction had started, it crashed horribly (thanks Alelacan for reporting this issue, and even pinpointing what was causing it! ^_^)
+
+2014-11-09 18:28:57
+* changed it to use the gmcphelper.lua module, to reduce the number of CallPlugin()s to the GMCP Handler
+
+2014-11-03 18:30:34
+* fixed an issue with content filters
+
+2014-11-03 07:59:40
+* fixed TALK captures (which no longer show your name when you talk)
+* cleaned up some code that was no longer used
+
+2014-11-02 06:42:06
+* fixed unfiltered relays (for capture2notepads, etc.) to broadcast all relay channels, whether they are chosen to be captured or not
+
+2014-10-31 22:13:12
+* got rid of pseudo-channels, so it's now 1 channel type per game channel type (mostly)
+  pseudo-channels were split as follows:
+  + private: notify, page, tell
+  + public: archon, shout, talk, yell
+* got rid of "special relays"
+  there is now only 1 list of relays to be captured, which can be edited using the aliases capture relay <channel> and uncapture relay <channel>
+
+2014-10-25 08:28:36
+* added support for plugins_updater_v2 announcement broadcasts
+* moved sound alert for announcement broadcasts to the vi_starter_pack plugin
+
+2014-10-24 21:06:14
+* made it public for beta testing
+- [deleted] if MushReader is present, and play_sounds is also present, it will now play the announce.mp3 sound whenever it detects a gecho
+* added support for gecho GMCP hooks
+
+2014-03-14 13:18:19
+* updated to capture TALK
+
+2013-12-16 21:35:34
+* added auction stop to the aucverb group
+
+2013-11-18 08:28:13
+* added 1 extra parameter to plain text broadcasts, to lessen the spam
+* changed the table separator for broadcasts to something other than ";", to fix an issue with messages including ";" - using a non-standard ASCII char now, so let me know if you have any issues
+
+2013-11-05 20:39:50
+* fixed some channel capture triggers, which were making channel type detection fail
+
+2013-11-03 15:48:20
+- [deleted] added broadcast options to interact with read captures
+
+2013-10-27 12:58:41
+* updated the trigger for PKTALK
+
+2013-10-23 10:00:55
+* abridged captures for Vandemaar's Magic Mirrors
+* added Vandemar's Magic Mirrors to say captures
+* abridged captures for Novice ct
+
+2013-08-07 22:29:26
+* fixed some issues related to content filters
+
+2013-07-05 09:47:47
+* fixed char_name detection to include NPCs that have numbers in their names (eg, an automaton behemoth, Crusher MK1)
+
+2013-04-20 19:53:28
+* fixed an issue with the 'say' capture triggers
+
+2013-04-20 09:37:45
+* made it broadcast whenever it captures text
+  (this reverts the way it used to work - now capture2mini will watch for this plugin's broadcasts instead)
+
+  Two types of broadcasts:
+  + msg = 1 for filtered broadcasts, to be used by capture2mini and similar plugins
+  + msg = 2 for unfiltered broadcasts, to be used by capture2notepads and similar plugins.
+
+2013-04-04 09:27:50
+- [deleted] added support for capture2mini broadcasts
+
+2013-04-03 12:28:46
+* added support for capture2mini
+
+2013-01-31 16:15:00
+* fixed it to capture alliance talk to a specific clan
+
+2012-11-01 11:49:30
+* added content filters for words and players
+* added aliases to edit the lists of special relays

@@ -1,0 +1,5 @@
+2014-08-04 05:53:22
+* fixed several regular expressions that made it incompatible with LuaJit, just in case
+
+2013-07-05 10:03:42
+* fixed char_name detection to include NPCs that have numbers in their names (eg, an automaton behemoth, Crusher MK1)

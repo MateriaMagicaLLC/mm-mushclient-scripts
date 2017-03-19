@@ -1,0 +1,3 @@
+2013-10-20 17:48:47
+* made the meh sort alias work both with and without a parameter (without it, it works as a toggle)
+* renamed the sort alias to meh sort

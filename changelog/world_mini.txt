@@ -1,0 +1,12 @@
+2014-07-25 14:13:33
+* made it public for beta testing (please report bugs to Ruthgul.)
+
+2014-07-23
+* started based on the Main_Layout plugin for Aardwolf by Fiendish and Lasher
+* moved all miniwindow related code into the world_miniwindow.lua module, for easier maintenance
+* renamed the background and logo images to bg.png and mm_logo.png, which must be located in MUSHclient/worlds (in case someone wants to use them, they need to be RGB, 8 bits per channel)
+* replaced the resizer code with the one from generic_miniwindow.lua for a more consistent look (code by Lasher, Enelya)
+* Notice the world_miniwindow.lua module needs to be present
+
+2014-07-23 07:39:46
+* plugin creation

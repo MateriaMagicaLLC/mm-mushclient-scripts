@@ -1,0 +1,9 @@
+2013-10-26 20:26:44
+* fixed the pp capture trigger - it wasn't working for 1 practice
+
+2013-02-14 17:45:29
+* it now uses less color codes switches (previous versions hit the max allowed # of colors for ct, for quests granting many different types of rewards)
+* it now uses "clantalk" instead of "ct", in an attempt to avoid using your clantag (this should also help reduce the number of colors)
+
+2013-01-09 13:09:11
+* added support for crystal quests
