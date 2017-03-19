@@ -4,9 +4,7 @@ A few are my own, others are contributions from other players, most are adapted 
 
 For more details, check the Wiki.
 
-
-~ Notice: the plugins updater is currently not working, until migration to github is finished ~
-
+~ Notice: plugins_updater_v2 needs to be updated manually, once, because of the migration to github ~
 
 All scripts written in Lua.
 
