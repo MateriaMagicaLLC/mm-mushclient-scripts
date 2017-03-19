@@ -122,7 +122,7 @@ Syntax:
 Authors: Nick Gammon, Ruthgul (maintained by Ruthgul)
 
 Latest version:
-http://sites.google.com/site/mscriptsmm
+http://github.com/mu3r73/mm-mushclient-scripts
 
 ]]>
 
@@ -1086,7 +1086,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/MM_GMCP_Mapper_GMCP.xml",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/MM_GMCP_Mapper_GMCP.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -1094,7 +1094,7 @@ end
 
 function plugin_update_aux_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/mm_mapper.lua,MUSH/lua",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/mm_mapper.lua,MUSH/lua",
   }
   return (table.concat(t, ";"))
 end

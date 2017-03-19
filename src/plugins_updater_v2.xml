@@ -98,7 +98,7 @@ Async code by Fiendish
 
 
 Latest version:
-http://sites.google.com/site/mscriptsmm
+http://github.com/mu3r73/mm-mushclient-scripts
 
 ]]>
 
@@ -233,7 +233,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/plugins_updater_v2.xml",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/plugins_updater_v2.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -241,11 +241,11 @@ end
 
 function plugin_update_aux_url()
   local t = {
---    "http://dl.dropbox.com/u/65599194/mm-updater/llthreads.dll,MUSH",
---    "http://dl.dropbox.com/u/65599194/mm-updater/ssl.dll,MUSH",
-    "http://dl.dropbox.com/u/65599194/mm-updater/async.lua,MUSH/lua",
-    "http://dl.dropbox.com/u/65599194/mm-updater/ssl.lua,MUSH/lua",
-    "http://dl.dropbox.com/u/65599194/mm-updater/https.lua,MUSH/lua/ssl",
+--    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/dll/llthreads.dll,MUSH",
+--    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/dll/ssl.dll,MUSH",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/async.lua,MUSH/lua",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/ssl.lua,MUSH/lua",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/https.lua,MUSH/lua/ssl",
   }
   return (table.concat(t, ";"))
 end
@@ -256,7 +256,7 @@ end
 -- detect updates
 -------------------
 
-updates_url = "http://dl.dropboxusercontent.com/u/65599194/mm-text/plugins_versions.txt"
+updates_url = "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/text/plugins_versions.txt"
 
 
 function detect_updates()
@@ -485,7 +485,7 @@ end
 
 
 function fix_url(url)
-  url = string.gsub(url, "dl.dropbox.com", "dl.dropboxusercontent.com")
+  url = string.gsub(url, "dl.dropbox.com/u/65599194/mm-updater/", "raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/")
   return url
 end
 

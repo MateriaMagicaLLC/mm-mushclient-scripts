@@ -56,7 +56,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://sites.google.com/site/mscriptsmm
+http://github.com/mu3r73/mm-mushclient-scripts
 
 ]]>
 
@@ -291,7 +291,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/tick.xml",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/tick.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -299,7 +299,7 @@ end
 
 function plugin_update_aux_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/tick.mp3,MUSH/sounds",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/tick.mp3,MUSH/sounds",
   }
   return (table.concat(t, ";"))
 end

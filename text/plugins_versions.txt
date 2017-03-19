@@ -1,0 +1,122 @@
+id = b2772cad800b33a6073d9377  hash = 297C213E3861AD8D20D802B01648DE8F  aux_files = {   [1] = {     name = "captures.MCL",     dest = "MUSH/worlds",     },   [2] = {     name = "announce.mp3",     dest = "MUSH/sounds",     },   }
+id = 6010f6bda5ebf2210998613d  hash = 6D2DB530D759EA71F846EB7C9A54D2D6
+id = cd8aa6f67b9f78ab77e67ae3  hash = EE90D49FEB2BB3A6FF8E70AC6ACC30CC  aux_files = {   [1] = {     name = "generic_miniwindow.lua",     dest = "MUSH/lua",     },   }
+id = 632048f8236c5a1319306ff6  hash = C5178EF5FF7BFE77162693070168B744
+id = 925cdd0331023d9f0b8f05a7  hash = CE731AF3D3EA2918DF2FF79FB8A1F21D
+id = d553d532b7fd796f3c0759c8  hash = 6C223B968E2CCDFDACC07E537BBF515D
+id = 54846c23d8b15594e7eb4b8a  hash = 3B48F72476B7AF6390C4276FC6FF7850
+id = 7a03ddd09375ae8c2e4ae697  hash = 678ADE10C9D27D0C8813301DB8FD54F5
+id = 4327c10cd9ae383bef04a7fc  hash = 89CF48BF1ABCD3520E5C78B5FDD3383A
+id = 017a906269344dcc9209af11  hash = 756A8BB3F10C29B9111473668523E3DD  aux_files = {   [1] = {     name = "MM_Glass_Jar_Falling.mp3",     dest = "MUSH/sounds",     },   }
+id = d75d47db12b5271e7e063d46  hash = 7502EBC4BF7F3260EA4F5C6CA42256A6
+id = 697bd90f4f6ee5ac1493050c  hash = EFD4E1DF7FBE735C78B567262623FF61
+id = 51a661f409c5d66601ff16e9  hash = B809BE3B7124073C9580CB5246DF04B0  aux_files = {   [1] = {     name = "generic_miniwindow.lua",     dest = "MUSH/lua",     },   }
+id = 47150df0ca58b162ea22b396  hash = 9666E51B813B7E5CB612397CEA5F8010
+id = fbd5b7cc1ef6acf827a3f4a1  hash = 7F56F796E4C4D1FB7D9C0A9926C50A36  aux_files = {   [1] = {     name = "async.lua",     dest = "MUSH/lua",     },   [2] = {     name = "ssl.lua",     dest = "MUSH/lua",     },   [3] = {     name = "https.lua",     dest = "MUSH/lua/ssl",     },   }
+id = adf79802005a0d6186530bee  hash = E5FF9D6D2B7366D7E93ADFFED9104BAA
+id = 4df60011beba94a6b9e41859  hash = A6134DE980AA8EFBBCC9A5C146DD0838
+id = d2b442f2da9a95f34f5a199f  hash = B3DA3303DB9937D95B7F80D9700E365B  aux_files = {   [1] = {     name = "generic_miniwindow.lua",     dest = "MUSH/lua",     },   }
+id = e377771aeee520a633f3dd4d  hash = D2708DB2FE13208293BD0232EF165541
+id = 0d02361abda86a9c64488bf3  hash = 929F1C630A5B4674A36D859641229C5D  aux_files = {   [1] = {     name = "generic_miniwindow.lua",     dest = "MUSH/lua",     },   }
+id = 644c7a6e7d17a3195d0d025d  hash = 02234BA12EA795978A4E33AB45A57C7F
+id = ffc9367251d8355fc40c4f67  hash = BFC1F7AC8EBDB1D12156D08D3AB19CB8
+id = d54ccc4800e5df1ad0ed0aac  hash = E044C809C923FAB954C70926CB1B94AA
+id = 226fb67b0722e0f0ddc3a235  hash = DFC1B104C11C8D61F9297AB18683DA7A
+id = cab11fa55cae7d04b2fe8b70  hash = AF613776621A947BE4CE630988D38B21
+id = 118122989b315b5a97526fcc  hash = D6C7B38B635A14AFD7328185F54FABD4
+id = 0c85b0fa3ab1503d1eb123b4  hash = 6AC37526040C04B11EE794B1AE6DF887  aux_files = {   [1] = {     name = "mm_boil.mp3",     dest = "MUSH/sounds/msp",     },   [2] = {     name = "mm_stream.mp3",     dest = "MUSH/sounds/msp",     },   }
+id = 57ba85788195beece2a1a171  hash = E34DB35B1FC6359CE44EB884321A944A
+id = 4e2bf9f75646bf678cf620dd  hash = 067095B0C977163E9591EBD080F2702F  aux_files = {   [1] = {     name = "ping.mp3",     dest = "MUSH/sounds",     },   }
+id = 1d71bf1797912d451784ca21  hash = 548760124C7B0F643EBE2F83E1917FDD
+id = 97784abf5f30629a0d7e7307  hash = 0AC161749706DA9D75211A6423A817B0
+id = 1df4fa3b486a36ededa19433  hash = D982D4ACC04A37A22268FBF0F47E04C2
+id = 8755063a5cf00f3312b113e6  hash = E24283E03B0C34710AC02D094B41732F
+id = f973af093e715dece34dc25f  hash = B7E57B697CEA81CFD7A8760871F2DA93  aux_files = {   [1] = {     name = "mm_mapper.lua",     dest = "MUSH/lua",     },   }
+id = 9ced43d0a7b4a60116794096  hash = 66AF5AC8939240845A7ED8D736D20D8A  aux_files = {   [1] = {     name = "generic_miniwindow.lua",     dest = "MUSH/lua",     },   }
+id = 522cd3350766f852d36c5e5c  hash = 992E6C60DC1960DC58164A2BAB2B697B
+id = bb2a97fe72b34a0cd5135bcf  hash = B72BF0EA0197449CC949013D6D652FE3
+id = dc22833520922eacc933b2ac  hash = 2ACEF25BCF1971F52B50D636FA744751
+id = 6e79c67fd99121b8b383e377  hash = 7311B92AC9C80CE2917B22368254244F
+id = 4f76c77c73affc51fa8fc841  hash = 4DDC5DB578FF178F5D90910E5604D675
+id = 164db33914b912da8aac6ecc  hash = D351741341BDB0292FC246834A2C3B32
+id = 84399d3da75ce710a39635d6  hash = D6271CE636970D7087FDB2B3B0290196
+id = fdebcc7a082dc4e7c6d4c306  hash = DBF8A1E7E986B6F72DF31C685362CD7A  aux_files = {   [1] = {     name = "generic_miniwindow.lua",     dest = "MUSH/lua",     },   }
+id = 4b03d42b86ed2b802247c058  hash = 482EA7F125F0690D81CAE7D4F7152FA0
+id = 3a006258a11ad009439f9dd9  hash = 509DDBD595F957328DC6E3F71A14700A
+id = 34819975b09478bd0aaa8a3d  hash = A9C517E20E9CAD4CACEA88B3E66E519E
+id = d81aeca9c0a10f0270dfe0f4  hash = EDB7F5549709D128748F7E8E0928C872
+id = 7ccd9d550eaeedb90ed0825d  hash = 9B4084421EBAF95064EED1C23D5987F9
+id = 94dbcac2c9633407655fdbfa  hash = 91853CFD054502C6FDB66BFB81334049
+id = 909d8c23b717f4de1262d0a4  hash = B0C2E82F4E30F0399217C1547B87C725
+id = 783cca60ac0d776ca859de57  hash = B14781DBDC558744E77E5FD5703261C3  aux_files = {   [1] = {     name = "tick.mp3",     dest = "MUSH/sounds",     },   }
+id = 78c38a09ed49fe8a8e03ec6a  hash = 51E73536530ACB84A90C7F142E77C7AC  aux_files = {   [1] = {     name = "generic_miniwindow.lua",     dest = "MUSH/lua",     },   }
+id = 3c56fcf3317c6230888de0f6  hash = 5C910EED0022DD2C2909958172301964  aux_files = {   [1] = {     name = "buttons.png",     },   }
+id = 0084625af85a3786d14c5b8d  hash = D1A92BD8871D6F78CF4900C42528E387
+id = 598d2a61318e7e4604d54fe8  hash = 2C0F5A9F66823FC9399261E9CF447C0B
+id = 29aff4e19e96d79f40ffcbd6  hash = A348A1FDA30030FFE3FE9E2EDF0EF928
+id = a11c9d4e484b5fc428a49941  hash = 5F0CD9F2198291A465F54111C4F4C700
+id = ce9475a5d7acf80d07396cac  hash = BD4514E9CB301142EA921A2E26968769
+id = d900cb999816b1f6f2d4bdc5  hash = 5CBDF03C17475A28876AF7F5A252AD8A
+id = bc15ed541f8f0d068b9cf55f  hash = 48125E4E84D1BEEC0565E5ED622DDBE4
+id = 15160c25503baa781f667459  hash = F2CB2AE749348B315CBFB7EBA029EF89
+id = a326b480b3f02b3ff6d58e7d  hash = 7C3B8227994352D2ABD227F9B083D375
+id = 9249299865b9d174ff96adbe  hash = C74B134C3E59FA869495341E4670CCF3
+id = 463242566069ebfd1b379ec1  hash = B5766E3083CDFEDC65E512870C597620
+id = 8e6a05d3e8bbd72d1f6a7ae8  hash = CF8A4584F3223D0FD887B50961CBBC0B  aux_files = {   [1] = {     name = "mm_boil.mp3",     dest = "MUSH/sounds/msp",     },   [2] = {     name = "mm_stream.mp3",     dest = "MUSH/sounds/msp",     },   }
+id = efe96b7604c453d0a92110e0  hash = ED689ED2EA27803AB05BC391A434AF17
+id = 98e6a55b66fa94328c5dc168  hash = B288B5C667B7E20C90B190C48B30019C
+id = ad02c292bb640b7aee9e4df0  hash = 9340609B40977C9D2E3CD26557696126
+id = 60a4b5df5d7507d9ec3d2d7a  hash = 45CBD155B28D3DF023FD106B3266ACFB
+id = adc3a873d4e47348da7cb426  hash = FF27E951099FC716EB002676BA20D0FB  aux_files = {   [1] = {     name = "arrow.png",     },   [2] = {     name = "circ.png",     },   [3] = {     name = "cross.png",     },   [4] = {     name = "custom.png",     },   [5] = {     name = "dest.png",     },   [6] = {     name = "horse.png",     },   [7] = {     name = "ship.png",     },   [8] = {     name = "alyria.png",     },   [9] = {     name = "alyria_spk_purple.png",     },   [10] = {     name = "alyria_spk_red.png",     },   [11] = {     name = "fp.png",     },   [12] = {     name = "lasler.png",     },   [13] = {     name = "social.png",     },   [14] = {     name = "sugx.png",     },   [15] = {     name = "ug.png",     },   [16] = {     name = "verity.png",     },   }
+id = cb6469228f9f7e26129c1ebc  hash = 31BA57E6996A0CBA6EA5FE5C999A13C1  aux_files = {   [1] = {     name = "world_miniwindow.lua",     dest = "MUSH/lua",     },   }
+id = 616b8084d0f246d12d54588b  hash = 2B638BAEEF5AD21D2CF57E264320309E  aux_files = {   [1] = {     name = "generic_miniwindow.lua",     dest = "MUSH/lua",     },   }
+id = 66f8ef96f2166bb586529087  hash = E02A66CAFB64759E151B63E06A7380D6
+id = ed9db27b1b50b46624e21eb4  hash = 0FF073AE17DBB8FB5D4AC872AA0029F6
+id = f99134f19ea994a0cc0888d1  hash = 5B290493AD53E0F0212422602DA48CE0
+id = f67c4339ed0591a5b010d05b  hash = C770624E07BBA699C594622B066DAF52  aux_files = {   [1] = {     name = "gmcphelper.lua",     dest = "MUSH/lua",     },   [2] = {     name = "sandbox.dune.net.MCL",     dest = "MUSH/worlds",     },   }
+id = 1079f88c024e8171e2d91e76  hash = 981988D0E19F2333209B20F71150F57E
+id = 7daf1d7890d9db73d74a8188  hash = 699479E444389E8D7C8746DEAC4B0DBB
+id = a6ef71f61368df7da2fcf5a6  hash = 19A528D9CC54C0FE0A8148F75BBE9292
+id = e8db9e0976d964b82332096b  hash = 20228E9D4ABF09BBC2620653B6708F74
+id = 84cc0397252aec0dbd589eaa  hash = 2051BA011B1EB629A955DBB8D5D12CA7
+id = 71b23c59cf79acc8521fc4a9  hash = 41E64F5C667ABD62D56BB87FA06F4F06
+id = 366aa79676f9fb1941eb5f69  hash = 5C4B7ED48E6AA5C170AD4739D2E71763
+id = da9c885cd98fd213dd8f719a  hash = 7EBF2D1DF13E9DCE00A9AA070AC60509
+id = aedf0cb0be5bf045860d54b7  hash = 076EEB19B2AA80A7434B72DE397F3E29
+name = alyria_spk_purple.png  hash = 4B4EE3F0DDD4D2FE85751B4E91647E64
+name = mm_boil.mp3  hash = C6A05259E5B6133EB900D331BB2B02A3
+name = generic_miniwindow.lua  hash = 18A76D66D834FC073090D4754E46648A
+name = mm_stream.mp3  hash = 026226C91B85024C7368DC4DC21BE9C7
+name = tick.mp3  hash = 7BF41ECDB1AA5273CBE81981219E6D9D
+name = custom.png  hash = 37A97CF8063D2B980B1567D00ADD3122
+name = arrow.png  hash = 0F7BCC9C7B4CAFABE452F0E479FC02BD
+name = spdman2_locations.db  hash = 176CAE855F0408D396B74DFC3433450A
+name = world_miniwindow.lua  hash = 1D46EF3A73B88BEE540D280A06016D9C
+name = alyria_spk_red.png  hash = 5E8C1597EDA4D371152CAE90BA4B7247
+name = sandbox.dune.net.MCL  hash = 6ACCC5E536B37BCC677FE6B3436C5764
+name = circ.png  hash = 6702936EB3DB83A69CBA4733DCC699A2
+name = ug2x.png  hash = C7C6E62CD1AA71B5E876018B70157130
+name = alyria.png  hash = 5023E43A6CEAC6E4E60BD3B2135EC4A5
+name = mapper.lua  hash = 50509BDC8E66EC0F88A02CED8C639CBF
+name = dest.png  hash = 8D086898D506D67FC24ACD312180B9DE
+name = ssl.lua  hash = C67DB2536E8CE898DDA7FA8882196863
+name = social.png  hash = EC00E093C0ED89FF2E373CB8CCC2B053
+name = mm_mapper.lua  hash = A1EA1652A515846FF46F81B485FA826B
+name = async.lua  hash = B5FED56D5E3DDE4E41DF82260C0879EE
+name = captures.MCL  hash = ED0B86B7E7E7504F794836B4A5BDF63C
+name = lasler.png  hash = B0D8355FA695B460E32AB6BBE0F1C4EF
+name = https.lua  hash = 37D600574074246E36C7AF03C87F9E8D
+name = verity.png  hash = 0346D57425CAA91EE6104C1CBE8593B9
+name = announce.mp3  hash = 2937035A53B59CF78BA3BE026D2B033C
+name = ping.mp3  hash = 1FB476103807EA8667A746DEE8BE66E1
+name = cross.png  hash = ABAD0EBB54C250E6090EA3CD1C96E69F
+name = sugx.png  hash = 61213BB41BC2760BDD925A991F4D1048
+name = horse.png  hash = C49F802AA9FBE7DA95481DF49D7E9485
+name = gmcphelper.lua  hash = D763CC96EEDBC14AD28CC8C1E47FD508
+name = ug.png  hash = 3E2F8CC69040E259F007E2C74B850406
+name = MM_Glass_Jar_Falling.mp3  hash = 8E79D679DFC0EA257EAB077CF4E33D8B
+name = fp.png  hash = 93CE0042A9114AAF935AE050675C15C8
+name = buttons.png  hash = BEC677A70A28EF45962A5A7D5D2084D1
+name = locations.db  hash = EC4CA63FAC2116077824C570A25E7131
+name = meh_id.db  hash = 5ADBBE834AB885E7FA6FCC3B4CF6F1CC
+name = ship.png  hash = 9D8F5C21E4ACEDC7EC1E324998504988

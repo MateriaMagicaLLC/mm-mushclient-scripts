@@ -49,7 +49,7 @@ Syntax:
 Authors: Elbereth and Ruthgul
 
 Latest version:
-http://sites.google.com/site/mscriptsmm
+http://github.com/mu3r73/mm-mushclient-scripts
 
 ]]>
 
@@ -359,7 +359,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/terrain_o_vision.xml",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/terrain_o_vision.xml",
   }
   return (table.concat(t, ";"))
 end

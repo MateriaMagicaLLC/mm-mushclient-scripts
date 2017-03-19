@@ -43,7 +43,7 @@ Notes:
 Author: Ruthgul
 
 Latest version:
-http://sites.google.com/site/mscriptsmm
+http://github.com/mu3r73/mm-mushclient-scripts
 
 ]]>
 
@@ -231,7 +231,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/meh_id.xml",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/meh_id.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -284,7 +284,7 @@ function get_database(path, filename)
   Note("-- " ..  GetPluginInfo(GetPluginID(), 1) .. ": downloading database --")
 
   local res = 0
-  local url = "https://dl.dropboxusercontent.com/u/65599194/mm-updater/" .. filename
+  local url = "raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/" .. filename
 
   SetStatus ("Downloading file: " .. url .. " to: " .. path .. filename .. "...")
 

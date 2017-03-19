@@ -45,7 +45,7 @@ Authors: Nick Gammon, Oriol Gomez, Ruthgul (maintained by Ruthgul)
 Changes added by Ruthgul:
 - started based on Text-To-Speech by Nick Gammon
 - ported the extra aliases / scripts in sapi-lib by Oriol Gomez to Lua
-- renamed the plugin to one of its older names, Sapi_speak, so the file doesn't get confused with Text-To-Speech, which is part of the official MUSHclient distribution
+- renamed the plugin to one of its older names, Sapi_speaker, so the file doesn't get confused with Text-To-Speech, which is part of the official MUSHclient distribution
 - made it compatible with plugins_updater
 
 
@@ -250,7 +250,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/Sapi_speaker.xml",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/Sapi_speaker.xml",
   }
   return (table.concat(t, ";"))
 end

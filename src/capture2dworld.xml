@@ -84,7 +84,7 @@ Note: don't include # when you add a channel - eg, use barter, not #barter.
 Author: Ruthgul
 
 Latest version:
-http://sites.google.com/site/mscriptsmm
+http://github.com/mu3r73/mm-mushclient-scripts
 
 ]]>
 
@@ -866,7 +866,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/capture2dworld.xml",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/capture2dworld.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -874,8 +874,8 @@ end
 
 function plugin_update_aux_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/captures.MCL,MUSH/worlds",
-    "http://dl.dropbox.com/u/65599194/mm-updater/announce.mp3,MUSH/sounds",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/captures.MCL,MUSH/worlds",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/announce.mp3,MUSH/sounds",
   }
   return (table.concat(t, ";"))
 end

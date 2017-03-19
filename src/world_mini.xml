@@ -53,7 +53,7 @@ Miniwindow code adapted from Fiendish's / Lasher's similar plugin for Aardwolf.
 This version maintained by Ruthgul,
 
 Latest version:
-http://sites.google.com/site/mscriptsmm
+http://github.com/mu3r73/mm-mushclient-scripts
 
 ]]>
 
@@ -142,7 +142,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/world_mini.xml",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/world_mini.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -150,7 +150,7 @@ end
 
 function plugin_update_aux_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/world_miniwindow.lua,MUSH/lua",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/world_miniwindow.lua,MUSH/lua",
   }
   return (table.concat(t, ";"))
 end

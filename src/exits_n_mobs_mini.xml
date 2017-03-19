@@ -53,7 +53,7 @@ Author: Ruthgul
 Miniwindow code adapted from Fiendish's / Enelya's chat capture plugins
 
 Latest version:
-http://sites.google.com/site/mscriptsmm
+http://github.com/mu3r73/mm-mushclient-scripts
 
 ]]>
 
@@ -219,7 +219,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/exits_n_mobs_mini.xml",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/exits_n_mobs_mini.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -227,7 +227,7 @@ end
 
 function plugin_update_aux_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/generic_miniwindow.lua,MUSH/lua",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/generic_miniwindow.lua,MUSH/lua",
   }
   return (table.concat(t, ";"))
 end

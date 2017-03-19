@@ -52,7 +52,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://sites.google.com/site/mscriptsmm
+http://github.com/mu3r73/mm-mushclient-scripts
 
 ]]>
 
@@ -212,7 +212,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/meh_timers.xml",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/meh_timers.xml",
   }
   return (table.concat(t, ";"))
 end

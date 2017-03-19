@@ -64,7 +64,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://sites.google.com/site/mscriptsmm
+http://github.com/mu3r73/mm-mushclient-scripts
 
 ]]>
 
@@ -397,7 +397,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/IMap_GMCP.xml",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/IMap_GMCP.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -405,22 +405,22 @@ end
 
 function plugin_update_aux_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/arrow.png",
-    "http://dl.dropbox.com/u/65599194/mm-updater/circ.png",
-    "http://dl.dropbox.com/u/65599194/mm-updater/cross.png",
-    "http://dl.dropbox.com/u/65599194/mm-updater/custom.png",
-    "http://dl.dropbox.com/u/65599194/mm-updater/dest.png",
-    "http://dl.dropbox.com/u/65599194/mm-updater/horse.png",
-    "http://dl.dropbox.com/u/65599194/mm-updater/ship.png",
-    "http://dl.dropbox.com/u/65599194/mm-updater/alyria.png",
-    "http://dl.dropbox.com/u/65599194/mm-updater/alyria_spk_purple.png",
-    "http://dl.dropbox.com/u/65599194/mm-updater/alyria_spk_red.png",
-    "http://dl.dropbox.com/u/65599194/mm-updater/fp.png",
-    "http://dl.dropbox.com/u/65599194/mm-updater/lasler.png",
-    "http://dl.dropbox.com/u/65599194/mm-updater/social.png",
-    "http://dl.dropbox.com/u/65599194/mm-updater/sugx.png",
-    "http://dl.dropbox.com/u/65599194/mm-updater/ug.png",
-    "http://dl.dropbox.com/u/65599194/mm-updater/verity.png",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/arrow.png",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/circ.png",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/cross.png",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/custom.png",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/dest.png",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/horse.png",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/ship.png",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/alyria.png",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/alyria_spk_purple.png",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/alyria_spk_red.png",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/fp.png",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/lasler.png",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/social.png",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/sugx.png",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/ug.png",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/verity.png",
   }
   return (table.concat(t, ";"))
 end

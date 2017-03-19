@@ -70,7 +70,7 @@ In the example function:
 
 Downloads and installs new versions of certain plugins.
 
-*Notice* it's currently using a proxy to bypass Dropbox's https.
+*Notice* it's currently using a proxy to bypass https.
 
 
 Syntax:
@@ -89,7 +89,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://sites.google.com/site/mscriptsmm
+http://github.com/mu3r73/mm-mushclient-scripts
 
 ]]>
 
@@ -193,7 +193,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/plugins_updater.xml",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/plugins_updater.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -303,7 +303,7 @@ end
 -- update stuff
 -----------------
 
---mydbpath = "http://dl.dropbox.com/u/65599194/mm-updater/"
+--mydbpath = "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/"
 
 function update_plugin(id)
   if (IsPluginInstalled(id)) then
@@ -406,7 +406,7 @@ function parse_location(id, spath, pluginpath)
   local proxy_url = "http://freeproxyx.appspot.com/"
 
   url = tpath[1]
-  url = string.gsub(url, "dl.dropbox.com", "dl.dropboxusercontent.com")
+  url = string.gsub(url, "dl.dropbox.com/u/65599194/mm-updater/", "raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/")
   url = string.gsub(url, "http://", proxy_url)
   url = string.gsub(url, "https://", proxy_url)
 

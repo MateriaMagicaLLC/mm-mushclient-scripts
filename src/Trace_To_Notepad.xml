@@ -102,7 +102,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/Trace_To_Notepad.xml",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/Trace_To_Notepad.xml",
   }
   return (table.concat(t, ";"))
 end

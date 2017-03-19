@@ -389,7 +389,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/output_functions.xml",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/output_functions.xml",
   }
   return (table.concat(t, ";"))
 end

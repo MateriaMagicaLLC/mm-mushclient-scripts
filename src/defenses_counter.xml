@@ -513,7 +513,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "http://dl.dropbox.com/u/65599194/mm-updater/defenses_counter.xml",
+    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/defenses_counter.xml",
   }
   return (table.concat(t, ";"))
 end
