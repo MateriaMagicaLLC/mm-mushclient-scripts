@@ -1,6 +1,6 @@
 Ruthgul's collection of MUSHclient plugins for Materia Magica.
 
-A few are my own, others are contributions from other playrs, most are adapted from other games/authors.
+A few are my own, others are contributions from other players, most are adapted from other games/authors.
 
 For more details, check the Wiki.
 
