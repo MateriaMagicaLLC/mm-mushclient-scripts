@@ -55,7 +55,7 @@ In the example function:
    language="Lua"
    purpose="updates plugins"
    date_written="2012-07-20 11:30:15"
-   date_modified="2014-11-06 10:11:03"
+   date_modified="2017-03-19 18:05:36"
    requires="4.71"
    version="2.0"
    >
@@ -256,7 +256,7 @@ end
 -- detect updates
 -------------------
 
-updates_url = "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/text/plugins_versions.txt"
+updates_url = "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/text/plugins_versions.txt"
 
 
 function detect_updates()
@@ -375,6 +375,7 @@ end
 
 
 function find_plugin_data(id)
+  Note("@find_plugin_data")
   local local_path = fix_slashes(GetPluginInfo(id, 20))
   local local_path_n_file = fix_slashes(GetPluginInfo(id, 6))
 
@@ -383,10 +384,12 @@ function find_plugin_data(id)
 
   local url_path
   local res, splug = CallPlugin(id, "plugin_update_url")
+  Note("splug = " .. splug)
   if (res == 0) then -- supported
     url_path = string.gsub(fix_url(splug), file_name, "")
   end
-
+  Note("url_path = " .. url_path)
+  
   return url_path, local_path, file_name
 end
 
@@ -485,7 +488,7 @@ end
 
 
 function fix_url(url)
-  url = string.gsub(url, "dl.dropbox.com/u/65599194/mm-updater/", "raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/")
+  url = string.gsub(url, "dl.dropbox.com/u/65599194/mm%-updater/", "raw.githubusercontent.com/mu3r73/mm%-mushclient%-scripts/master/src/")
   return url
 end
 

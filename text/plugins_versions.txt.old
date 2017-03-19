@@ -12,7 +12,7 @@ id = d75d47db12b5271e7e063d46  hash = 7502EBC4BF7F3260EA4F5C6CA42256A6
 id = 697bd90f4f6ee5ac1493050c  hash = EFD4E1DF7FBE735C78B567262623FF61
 id = 51a661f409c5d66601ff16e9  hash = B809BE3B7124073C9580CB5246DF04B0  aux_files = {   [1] = {     name = "generic_miniwindow.lua",     dest = "MUSH/lua",     },   }
 id = 47150df0ca58b162ea22b396  hash = 9666E51B813B7E5CB612397CEA5F8010
-id = fbd5b7cc1ef6acf827a3f4a1  hash = 7C680EC900CD64BDEF0E0183399B3B5E  aux_files = {   [1] = {     name = "async.lua",     dest = "MUSH/lua",     },   [2] = {     name = "ssl.lua",     dest = "MUSH/lua",     },   [3] = {     name = "https.lua",     dest = "MUSH/lua/ssl",     },   }
+id = fbd5b7cc1ef6acf827a3f4a1  hash = 7F56F796E4C4D1FB7D9C0A9926C50A36  aux_files = {   [1] = {     name = "async.lua",     dest = "MUSH/lua",     },   [2] = {     name = "ssl.lua",     dest = "MUSH/lua",     },   [3] = {     name = "https.lua",     dest = "MUSH/lua/ssl",     },   }
 id = adf79802005a0d6186530bee  hash = E5FF9D6D2B7366D7E93ADFFED9104BAA
 id = 4df60011beba94a6b9e41859  hash = A6134DE980AA8EFBBCC9A5C146DD0838
 id = d2b442f2da9a95f34f5a199f  hash = B3DA3303DB9937D95B7F80D9700E365B  aux_files = {   [1] = {     name = "generic_miniwindow.lua",     dest = "MUSH/lua",     },   }
