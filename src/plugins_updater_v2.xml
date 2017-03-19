@@ -377,10 +377,10 @@ end
 function find_plugin_data(id)
   local local_path = fix_slashes(GetPluginInfo(id, 20))
   local local_path_n_file = fix_slashes(GetPluginInfo(id, 6))
-
+  
   local esc_lpath = string.gsub(local_path, "%p", "%%%1")
   local file_name = string.gsub(local_path_n_file, esc_lpath, "")
-
+  
   local url_path
   local res, splug = CallPlugin(id, "plugin_update_url")
   if (res == 0) then -- supported
