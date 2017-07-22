@@ -14,7 +14,7 @@
    language="Lua"
    purpose="a tutorial for the Materia Magica MUSHclient bundle"
    date_written="2013-12-31 06:47:39"
-   date_modified="2016-12-22 06:03:10"
+   date_modified="2017-07-22 18:52:02"
    requires="4.71"
    version="1.0"
    >
@@ -33,7 +33,7 @@ Syntax:
 * tutorial
 
 
-Authors: Ruthgul, Jeneya
+Authors: Ruthgul, Jeneya, Iyara
 
 Latest version:
 http://github.com/mu3r73/mm-mushclient-scripts
@@ -163,7 +163,8 @@ tutorial 22 -  Example: Adding a keystroke to read captures without leaving the 
 tutorial 23 -  Making aliases that work with and without a target
 tutorial 24 -  How to install and uninstall plugins
 tutorial 25 -  How to update plugins
-tutorial 26 -  Pre-installed plugins and features
+tutorial 26 -  Macro keystrokes and output
+tutorial 27 -  Pre-installed plugins and features
 
 ]],
 
@@ -1022,6 +1023,52 @@ To see more details about this plugin, type plugins_updater help.
   ["p26"] = [[
 
 ~ MUSHclient Bundle for Materia Magica, p26 ~
+
+[ Macro keystrokes and output ]
+
+control shift c	clear output
+control shift o	next line
+control alt enter - toggle interrupt
+control alt o	toggle output
+control shift I	current line
+control shift space - select
+control shift U	previous line
+control shift N	end line
+control shift Y	top line
+control shift S	snapshot
+
+alt U	reads your health percent
+alt I	reads your spell point percent
+alt O	reads your stamina percent
+alt J	reads last 5 messages
+alt K	reads last 5 clan messages
+alt L	reads last 5 form talks
+alt R	reads last 5 VI relays
+alt A	reads 5 last alliance talk
+alt ;	reads 5 last says
+alt P	reads 5 last announcements
+alt '	reads last auctions
+alt C	reads compass coordinates
+alt ,	victim's health percent
+alt .	reads health percent of lowest health form member
+alt /	reads health and name of current tank
+
+control F12	toggle sound
+control shift F12	TTS (toggle?)
+numberpad 5	(while on transport item - stand)
+
+
+[ Numberpad and directions ]
+
+control <numberpad> will open that direction
+alt <numberpad>	will look that direction
+control alt <numberpad>	will flee that direction
+
+]],
+
+  ["p27"] = [[
+
+~ MUSHclient Bundle for Materia Magica, p27 ~
 
 [ Pre-installed plugins and features ]
 
