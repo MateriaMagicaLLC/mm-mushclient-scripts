@@ -24,7 +24,7 @@ id = d54ccc4800e5df1ad0ed0aac  hash = E044C809C923FAB954C70926CB1B94AA
 id = 226fb67b0722e0f0ddc3a235  hash = DFC1B104C11C8D61F9297AB18683DA7A
 id = cab11fa55cae7d04b2fe8b70  hash = AF613776621A947BE4CE630988D38B21
 id = 118122989b315b5a97526fcc  hash = D6C7B38B635A14AFD7328185F54FABD4
-id = 0c85b0fa3ab1503d1eb123b4  hash = 6AC37526040C04B11EE794B1AE6DF887  aux_files = {   [1] = {     name = "mm_boil.mp3",     dest = "MUSH/sounds/msp",     },   [2] = {     name = "mm_stream.mp3",     dest = "MUSH/sounds/msp",     },   }
+id = 0c85b0fa3ab1503d1eb123b4  hash = 9762185AC5FD8D30FBAF6C0B6AAC993E  aux_files = {   [1] = {     name = "mm_boil.mp3",     dest = "MUSH/sounds/msp",     },   [2] = {     name = "mm_stream.mp3",     dest = "MUSH/sounds/msp",     },   }
 id = 57ba85788195beece2a1a171  hash = E34DB35B1FC6359CE44EB884321A944A
 id = 4e2bf9f75646bf678cf620dd  hash = 067095B0C977163E9591EBD080F2702F  aux_files = {   [1] = {     name = "ping.mp3",     dest = "MUSH/sounds",     },   }
 id = 1d71bf1797912d451784ca21  hash = 548760124C7B0F643EBE2F83E1917FDD
