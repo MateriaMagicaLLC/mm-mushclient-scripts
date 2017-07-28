@@ -75,7 +75,7 @@ end
    language="Lua"
    purpose="detect stuff that is relevant to other plugins"
    date_written="2013-06-20 08:11:54"
-   date_modified="2014-11-06 09:25:21"
+   date_modified="2017-07-28 09:57:44"
    requires="4.71"
    version="1.0"
    sequence="300"
@@ -143,6 +143,18 @@ http://github.com/mu3r73/mm-mushclient-scripts
 <!--  Triggers  -->
 
 <triggers>
+
+<!-- on game version -->
+
+  <trigger
+   enabled="y"
+   match="^           \`\|   \|\' \|\; \| \`\|\_\_\| \|\|  \\\_\,  \|\; \|  v(?P&lt;version&gt;.+)$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>on_game_version("%&lt;version&gt;")</send>
+  </trigger>
 
 <!-- on first prompt -->
 
@@ -254,6 +266,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
 require "wait"
 require "gmcphelper"
 
+game_version = ""
 
 
 -----------------
@@ -330,6 +343,15 @@ function init_stuff()
   weapon = nil
 end
 
+function on_game_version(version)
+  game_version = version
+end
+
+function send_id()
+  if (game_version ~= "4.50") then
+    SendNoEcho("protocol register MUSHclient_bundle")
+  end
+end
 
 
 --------------
@@ -340,6 +362,7 @@ function on_first_prompt()
   EnableTrigger("first_prompt", false)
   
   detect_char_base()
+  send_id()
 end
 
 
