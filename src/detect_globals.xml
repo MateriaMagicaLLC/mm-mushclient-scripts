@@ -75,7 +75,7 @@ end
    language="Lua"
    purpose="detect stuff that is relevant to other plugins"
    date_written="2013-06-20 08:11:54"
-   date_modified="2017-07-28 09:57:44"
+   date_modified="2017-07-28 22:42:57"
    requires="4.71"
    version="1.0"
    sequence="300"
@@ -349,7 +349,7 @@ end
 
 function send_id()
   if (game_version ~= "4.50") then
-    SendNoEcho("protocol register MUSHclient_bundle")
+    SendNoEcho("protocol register MM_MUSHclient_bundle")
   end
 end
 
