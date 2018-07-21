@@ -43,7 +43,7 @@ Notes:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -201,21 +201,21 @@ function OnPluginInstall()
   Tell("-- " .. GetPluginInfo(GetPluginID(), 1) .. ": type ")
   ColourTell("silver", "black", GetPluginInfo(GetPluginID(), 1) .. " help")
   Note(" to see info about this plugin --")
-  
+
   -- open database on disk
   local path = GetInfo(66)
   local filename = "meh_id.db"
-  
+
   local res = 0
-  
+
   if (not file_exists(path .. filename)) then
     local res = get_database(path, filename)
-    
+
     if (res ~= 0) then
       Note("-- " .. GetPluginInfo(GetPluginID(), 1) .. ": error downloading database --")
     end
   end
-  
+
   if (res == 0) then
     db = assert(sqlite3.open(path .. filename))
   end
@@ -231,7 +231,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/meh_id.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/meh_id.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -284,7 +284,7 @@ function get_database(path, filename)
   Note("-- " ..  GetPluginInfo(GetPluginID(), 1) .. ": downloading database --")
 
   local res = 0
-  local url = "raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/" .. filename
+  local url = "raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/" .. filename
 
   SetStatus ("Downloading file: " .. url .. " to: " .. path .. filename .. "...")
 
@@ -353,7 +353,7 @@ end
 function scroll_id(line)
   if (db) then
     local scroll
-    
+
     for row in db:nrows(string.format("SELECT * FROM scrolls")) do
       scroll = string.gsub(row.color, "%-", "%%-")
       if (string.find(string.lower(line), scroll)) then
@@ -365,7 +365,7 @@ function scroll_id(line)
         break
       end
     end
-    
+
     if (not scroll) then
       Note("")
     end
@@ -417,7 +417,7 @@ function survey_id(distance, direction, survey_string)
     if (not location) then
       location = "?????"
     end
-    
+
     if (location) then
       distance = distances[distance]
       if (direction ~= "") then
@@ -485,11 +485,11 @@ function show_wgs(tri, mar)
 
   elseif (db) then
     local wgs
-    
+
     for row in db:nrows(string.format("SELECT * FROM worldgates WHERE trigael = %s AND marabah = %s", fixsql(tri), fixsql(mar))) do
       wgs = row.wgs
     end
-    
+
     if (wgs) then
       Note("Open worldgates: " .. wgs)
     end
@@ -522,7 +522,7 @@ end
 function show_sprig_power(sprig)
   if (db) then
     local power
-    
+
     for row in db:nrows(string.format("SELECT * FROM sprigs WHERE sprig = %s", fixsql(sprig))) do
       power = row.power
       break

@@ -48,7 +48,7 @@ Author: Ruthgul
 Miniwindow code adapted from Fiendish's / Enelya's chat capture plugins
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -300,7 +300,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/clocks.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/clocks.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -308,7 +308,7 @@ end
 
 function plugin_update_aux_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/generic_miniwindow.lua,MUSH/lua",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/generic_miniwindow.lua,MUSH/lua",
   }
   return (table.concat(t, ";"))
 end

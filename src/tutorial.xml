@@ -38,7 +38,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -116,7 +116,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/tutorial.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/tutorial.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -124,8 +124,8 @@ end
 
 function plugin_update_aux_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/mm_boil.mp3,MUSH/sounds/msp",
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/mm_stream.mp3,MUSH/sounds/msp",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/res/mm_boil.mp3,MUSH/sounds/msp",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/res/mm_stream.mp3,MUSH/sounds/msp",
   }
   return (table.concat(t, ";"))
 end
@@ -174,7 +174,7 @@ The bundle includes the client + a Materia Magica world with some pre-installed 
 |w
 If you're running Windows Vista / 7 / newer, you'll need to |Cinstall Windows Help |wto be able to read MUSHclient's help files.
 |w
-Alternatively, you can read the online documentation here: 
+Alternatively, you can read the online documentation here:
 http://www.mushclient.com/scripts/doc.php
 |w
 |w
@@ -406,7 +406,7 @@ For example, this is an alias that shortens a mapper command:
 |D- |wAlias: |Wmw *
 |w
 |D- |wSend:
-|Wmapper where 
+|Wmapper where
 |w
 |D- |wSend to: |WExecute |w(it's already chosen by default)
 |w
@@ -558,7 +558,7 @@ For example:
 |w
 The |Waddalias |walias lets you create simple aliases that will work both with and without a target.
 |w
-|D* |wTo |Wadd an alias |wusing this feature, type |Caddalias <alias_name> <game_command or game_alias or client_alias>|w.  Noteice the name you choose for the alias cannot contain spaces.  
+|D* |wTo |Wadd an alias |wusing this feature, type |Caddalias <alias_name> <game_command or game_alias or client_alias>|w.  Noteice the name you choose for the alias cannot contain spaces.
 |w
 |w
 For example:
@@ -663,7 +663,7 @@ function show_a_page(page)
     for line in string.gmatch(page, "[^\r\n]+") do
       res = {}
       l = line
-      
+
       pos = string.find(l, "|")
 
       while (pos) do
@@ -679,7 +679,7 @@ function show_a_page(page)
           else
             res[#res].text = aux
           end
-        end  
+        end
 
         l = string.sub(l, pos + 2, string.len(l))
 
@@ -700,7 +700,7 @@ function show_a_page(page)
         else
           res[#res].text = l
         end
-      end  
+      end
 
       for i = 1, #res do
         if (res[i].text) then
@@ -717,6 +717,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

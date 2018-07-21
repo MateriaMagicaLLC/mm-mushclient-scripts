@@ -41,7 +41,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -259,7 +259,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/generic_buy.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/generic_buy.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -339,11 +339,11 @@ function buy_put(amount, item, container)
   --    it will buy items until the container is full
   -- otherwise, it will buy amount items
   -- in all cases, it will place the items in the container
-  
+
   wait.make (function ()
     if (not buying) then
       buying = true
-      
+
       num = tonumber(amount)
       if (num ~= nil) then -- amount is a valid number
         total_slots = nil
@@ -353,7 +353,7 @@ function buy_put(amount, item, container)
         wait.regexp("^(.*?)\\<(.+)hp (.+)sp (.+)st\\> $",-1,trigger_flag.KeepEvaluating)
         wait.time (.3)
         EnableTriggerGroup("capacity", false)
-        
+
         if (total_slots) and (used_slots) then
           local free_slots = total_slots - used_slots
 
@@ -371,7 +371,7 @@ function buy_put(amount, item, container)
           elseif (free_slots == 0) then
             Note("-- generic_buy - error: the container is full! --")
           end
-        
+
         else
           Note("-- generic_buy - error: couldn't retrieve the container's capacity / free slots --")
         end
@@ -409,7 +409,7 @@ function buy_list(wildcards)
       wait.regexp("^(.*?)\\<(.+)hp (.+)sp (.+)st\\> $",-1,trigger_flag.KeepEvaluating)
       wait.time(.3)
       EnableTriggerGroup("capacity", false)
-      
+
       if (total_slots) and (used_slots) then
         local free_slots = total_slots - used_slots
   --      Note("free slots: " .. free_slots)
@@ -453,6 +453,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

@@ -40,7 +40,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -109,7 +109,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   <send>EnableTriggerGroup("script-bazaar", false)
 </send>
   </trigger>
-  
+
 </triggers>
 
 
@@ -139,7 +139,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/bazaar_walk.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/bazaar_walk.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -164,13 +164,13 @@ function queue_directions(path)
   aux = string.gsub(aux, "nw", "(nw)")
 
   local taux = utils.split(aux, ",")
-  
+
   -- add auto-open for the last door
   local lastdir = taux[#taux]
   table.insert(taux, #taux, "o" .. lastdir)
-  
+
   aux = table.concat(taux, " ")
-  
+
   Execute("spd2 " .. aux)
   EnableTriggerGroup("script-bazaar", false)
 end
@@ -178,6 +178,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

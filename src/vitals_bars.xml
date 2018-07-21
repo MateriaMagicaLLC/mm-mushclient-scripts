@@ -42,7 +42,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -203,7 +203,7 @@ function OnPluginInstall()
   Note(" to see info about this plugin --")
 
   multiplier = tonumber(GetVariable("multiplier") or 1)
-  
+
   EnableTrigger("first_prompt", true)
 end
 
@@ -244,7 +244,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/vitals_bars.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/vitals_bars.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -325,11 +325,11 @@ function vitals_start()
 
   -- draw the 3D box that will contain all gauges
   draw_3d_box(igauge, 2, 2, (width - 3) * multiplier, (height - 3) * multiplier)
-  
+
   vitals_redraw()
 
   WindowShow(igauge, true)
-  
+
   vitals_started = true
 end
 
@@ -437,13 +437,13 @@ function current_vitals(my_hp, my_sp, my_st)
   hp = tonumber(my_hp)
   sp = tonumber(my_sp)
   st = tonumber(my_st)
-  
+
   vitals_redraw()
 end
 
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

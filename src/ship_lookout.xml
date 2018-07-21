@@ -48,7 +48,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -192,7 +192,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/ship_lookout.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/ship_lookout.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -215,7 +215,7 @@ end
 function get_gmcp_room()
   local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "room.info")
   luastmt = "gmcpdata = " .. gmcparg
-  
+
   assert(loadstring(luastmt or ""))()
 end
 

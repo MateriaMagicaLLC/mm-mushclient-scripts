@@ -513,7 +513,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/defenses_counter.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/defenses_counter.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -551,7 +551,7 @@ function toggle_verbose()
   verbose = not verbose
 
   save_config()
-  
+
   if (verbose) then
     ColourNote(fg_col, bg_col, "defenses_counter: verbose mode ON")
   else
@@ -657,10 +657,10 @@ function process_end_of_round()
   if (attacks_vs_me_this_round > 1) then
     inc_total_rounds_with_more_than_one_attack_vs_me()
   end
-  
+
   if (round_def > 1) then
     inc_total_def("second defense")
-    
+
     if (verbose) then
       ColourNote(fg_col, bg_col, "second defense triggered this round")
     end
@@ -683,11 +683,11 @@ end
 
 function show_total_def()
   defenses_list = { "acrobatics", "dodge", "magical fade", "parry", "shield block", "combat blink", "dust invocation", "telekinetic shield", "second defense" }
-  
+
   ColourNote(fg_col, bg_col, "Total rounds: " .. total_rounds)
   ColourNote(fg_col, bg_col, "Total rounds with more than 1 non-failed attack against me: " .. total_rounds_with_more_than_one_attack_vs_me)
   ColourNote(fg_col, bg_col, "Total defenses used: ")
-  
+
   for i = 1, #defenses_list do
     ColourNote(fg_col, bg_col, defenses_list[i] .. ": " .. (total_def[defenses_list[i]] or 0))
   end

@@ -44,7 +44,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -102,7 +102,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   <send>quest_complete("%&lt;num&gt;")
 </send>
   </alias>
-  
+
   <alias
    match="^q[ ]+Q[ ]+(?P&lt;num&gt;[0-9]+)$"
    enabled="y"
@@ -247,7 +247,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/quests_abridged.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/quests_abridged.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -260,13 +260,13 @@ end
 
 function show_line()
   ColourTell(buttoncol, "black", "[" .. #tquests + 1 .. "] ")
-  
+
   for i = 1, #trigger_style_runs do
     ColourTell(RGBColourToName(trigger_style_runs[i].textcolour),
                RGBColourToName(trigger_style_runs[i].backcolour),
                trigger_style_runs[i].text)
   end
-  
+
   Note("")
 end
 
@@ -301,7 +301,7 @@ end
 function quest_status(num)
   if (num) and (num ~= "") then
     num = tonumber(num)
-    
+
     if (tquests[num]) then
       Send("q status " .. tquests[num])
 
@@ -309,7 +309,7 @@ function quest_status(num)
       Note("-- quests_abridged: you're only in " .. #tquests .. " quests! - trying q s " .. num .. " instead --")
       Send("q status " .. num)
     end
-  
+
   else
     do_quest_status_last()
   end
@@ -328,7 +328,7 @@ function quest_complete(num)
   end
 
   Hyperlink(cmd, "[" .. cmd .. "]", "", buttoncol, "black", false)
-  
+
   Note("")
   Note("-- quests_abridged: make sure that all phases are completed before you click the hyperlink --")
 end
@@ -342,7 +342,7 @@ function quest_cancel(num)
     Hyperlink(cmd, "[" .. cmd .. "]", "", buttoncol, "black", false)
     Note("")
     Note("-- quests_abridged: make sure that all phases are completed before you click the hyperlink --")
-    
+
   else
     Note("-- quests_abridged: you're only in " .. #tquests .. " quests! --")
   end
@@ -367,7 +367,7 @@ end
 function do_quest_status_last()
   if (quest_num) then
     Send("q s " .. quest_num)
-  
+
   else
     Send("q s")
   end
@@ -376,6 +376,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

@@ -1,7 +1,7 @@
 To update plugins_updater_v2, and enable it to work with this github repo:
 
 1. download the file:
-https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/plugins_updater_v2.xml
+https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/plugins_updater_v2.xml
 
 ... place it in the folder:
 MUSHclient/world/plugins/MM/

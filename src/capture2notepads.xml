@@ -67,7 +67,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -237,7 +237,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/capture2notepads.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/capture2notepads.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -276,7 +276,7 @@ function OnPluginBroadcast(msg, id, name, text)
   and (name == "capture2dworld")
   and (msg == 2) then
     process_message(text)
-  
+
   elseif (id == "51a661f409c5d66601ff16e9") -- comm_stuff
   and (name == "comm_stuff")
   and (msg == 1) then
@@ -306,7 +306,7 @@ function process_irc_msg(text)
 --  Note("user: " .. user)
 --  Note("extuser: " .. extuser)
 --  Note("msg: " .. msg)
-  
+
   if (show_echo) or (user ~= "me") then
     add_to_notepad("irc", extuser .. ": " .. msg)
   end
@@ -334,7 +334,7 @@ function add_to_notepad(notepad, txt)
     end
 
     AppendToNotepad(notepad, txt .. crlfs)
-    
+
     -- make the notepad not nag "wanna save me?" when it is closed
     NotepadSaveMethod(notepad, 2)
 

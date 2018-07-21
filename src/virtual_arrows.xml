@@ -46,7 +46,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 
 ]]>
@@ -135,7 +135,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/virtual_arrows.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/virtual_arrows.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -143,7 +143,7 @@ end
 
 function plugin_update_aux_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/buttons.png",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/res/buttons.png",
   }
   return (table.concat(t, ";"))
 end
@@ -168,12 +168,12 @@ end
 function redraw_window()
   width = 80
   height = 60
-  
+
   bgcol = ColourNameToRGB("black")
 
   vawin = "va_window_" .. GetPluginID ()
   WindowCreate (vawin, 0, 0, 0, 0, 0, 0, 0)
-  
+
   windowinfo = movewindow.install(vawin, miniwin.pos_top_center)
 
   WindowShow(vawin, false)
@@ -245,19 +245,19 @@ end
 function mousedown(flags, hs_id)
   clear_flags()
   dir = nil
-  
+
   if (flags == miniwin.hotspot_got_control + miniwin.hotspot_got_lh_mouse) then
     open = true -- ctrl + click => open
     dir = hs_id
-  
+
   elseif (flags == miniwin.hotspot_got_alt + miniwin.hotspot_got_lh_mouse) then
     look = true -- alt + click => look
     dir = hs_id
-  
+
   elseif (flags == miniwin.hotspot_got_control + miniwin.hotspot_got_alt + miniwin.hotspot_got_lh_mouse) then
     flee = true -- ctrl + alt + click => flee
     dir = hs_id
-  
+
   elseif (flags == miniwin.hotspot_got_lh_mouse) then
     walk = true -- just click => move
     dir = hs_id
@@ -275,13 +275,13 @@ function mouseup(flags, hs_id)
   if (dir ~= nil) then
     if (flee) then
       Send("flee " .. dir)
-    
+
     elseif (look) then
       Send("look " .. dir)
-    
+
     elseif (open) then
       Send("open " .. dir .. " door")
-    
+
     elseif (walk) then
       Send(dir)
     end

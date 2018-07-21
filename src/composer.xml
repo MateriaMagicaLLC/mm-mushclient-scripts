@@ -43,7 +43,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -132,7 +132,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/composer.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/composer.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -548,7 +548,7 @@ end
 
 function show_notes(song)
   mysong = string.lower(Trim(song))
-  
+
   if (song_exists(mysong)) then -- we know the song's complexity boundaries
     calc_notes(mysong)
 
@@ -563,14 +563,14 @@ end
 
 function song_exists(song)
   local res = false
-  
+
   for k, v in pairs(songs) do
     if (v.name == song) then
       res = true
       break
     end
   end
-  
+
   return res
 end
 
@@ -593,7 +593,7 @@ end
 
 function find_cmplx(song)
   local minp, maxp
-  
+
   for k, v in pairs(songs) do
     if (v.name == song) then
       minp = v.min
@@ -601,7 +601,7 @@ function find_cmplx(song)
       break
     end
   end
-  
+
   return minp, maxp
 end
 
@@ -612,7 +612,7 @@ function rec_notes(part_song, part_cmplx, part_num, minp, maxp)
     if (part_cmplx < res_cmplx) then
       res_cmplx = part_cmplx
       res_song = part_song
-      
+
       if (part_cmplx == minp) then
         res_done = true
       end
@@ -624,7 +624,7 @@ function rec_notes(part_song, part_cmplx, part_num, minp, maxp)
       for i = 1, #notes_values[part_num + 1] do
         local cmplx = notes_values[part_num + 1][i]
         local nnotes = notes_by_value[part_num + 1][cmplx]
-        
+
         if ((part_cmplx + cmplx) <= maxp) and (not res_done) then
           local note = pick_random(nnotes)
           SetStatus("trying: " .. Trim(part_song .. " " .. note))
@@ -649,13 +649,13 @@ end
 
 function list_result()
   local aux
-  
+
   if (#res_song > 0) then
     Tell("* song: ")
     Hyperlink("play " .. res_song, res_song, "", "silver", "black", false)
     SetClipboard("play " .. res_song)
     Note(" - complexity: " .. res_cmplx)
-  
+
   else
     Note("No results found.")
   end
@@ -665,7 +665,7 @@ end
 
 function show_complexity(song_notes)
   local t = utils.split(Trim(song_notes), " ")
-  
+
   Tell("* song complexity: ")
   ColourNote("silver", "black", calc_cmplx(t))
 end
@@ -686,6 +686,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

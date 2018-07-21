@@ -79,7 +79,7 @@ IRC code written by Alicia Konnen
 Miniwindow code written by Fiendish and Enelya
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 
 ]]>
@@ -397,7 +397,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/comm_stuff.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/comm_stuff.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -405,7 +405,7 @@ end
 
 function plugin_update_aux_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/generic_miniwindow.lua,MUSH/lua",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/generic_miniwindow.lua,MUSH/lua",
   }
   return (table.concat(t, ";"))
 end
@@ -685,7 +685,7 @@ function handle_vitals()
         local hp = math.floor(tonumber(get_gmcp_value("char.vitals.hp") or 0) * 100 / max_hp)
         local sp = math.floor(tonumber(get_gmcp_value("char.vitals.sp") or 0) * 100 / max_sp)
         local st = math.floor(tonumber(get_gmcp_value("char.vitals.st") or 0) * 100 / max_st)
-        
+
         if (idebug) then
           AppendToNotepad("IRC DEBUG", hp .. " " .. sp .. " " .. st .. "\r\n")
         end
@@ -714,7 +714,7 @@ end
 function grab_maxes()
   --only requesting maxes once per minute, top
   local frequency = 60
-  
+
   if (not latest_maxes) or ((os.time() - latest_maxes) > frequency) then
     Execute("sendgmcp char.maxstats") -- request max vitals
     latest_maxes = os.time()
@@ -762,9 +762,9 @@ function handle_affects(txt)
 
       local who = t[1]
       local affect = t[4]
-      
+
       local stripped_affect = string.gsub(affect, " off$", "")
-      
+
       if (idebug) then
         AppendToNotepad("IRC DEBUG", "who: " .. who .. " - aff: " .. affect .. " - strip_aff: " .. stripped_affect .. "\r\n")
       end
@@ -773,7 +773,7 @@ function handle_affects(txt)
         if (prev_time) and ((prev_time - os.time()) <= min_time) then
           wait.time(min_time)
         end
-        
+
         irc_message(irc_channel, "§aff§ " .. affect)
       end
     end
@@ -807,7 +807,7 @@ function irc_join(channel)
   if (idebug) then
     AppendToNotepad("IRC DEBUG", "trying to join channel " .. channel .. "\r\n")
   end
-  
+
   if (isIRCConnected()) then
     if (idebug) then
       AppendToNotepad("IRC DEBUG", "we're connected - sending JOIN\r\n")
@@ -1015,7 +1015,7 @@ function sendIRCMessage(conn, message)
     local str = string.gsub(message, "\n", "")
     str = string.gsub(str, "\r", "")
     str = string.gsub(str, "%-CTCP%-", string.char(0x01))
-    
+
     conn:send(str.." \r\n")
     prev_time = os.time()
   end
@@ -1132,7 +1132,7 @@ function parsePart(cmd, source, target, param, conn)
 	local user, host = string.match(source, "^(.-)%!(.+)$")
 
   ircNote("(" .. target .. "): * " .. user .. " leaves.", cmd)
-  
+
   -- broadcast if the person left the default channel
   if (target == irc_channel) then
     local extuser = Trim(user) .. "@" .. Trim(target)
@@ -1159,7 +1159,7 @@ function parseQuit(cmd, source, target, param, conn)
   -- broadcast if the person quit
   local extuser = Trim(user) .. "@" .. Trim(target)
   BroadcastPlugin(1, Trim(user) .. ";" .. extuser .. ";§quit§")
-  
+
   ircNote(str, cmd)
 end
 
@@ -1174,7 +1174,7 @@ end
 function parsePrivmsg(cmd, source, target, param, conn)
 	local user, host = string.match(source, "^(.-)%!(.+)$")
 	local str = ""
-  
+
   if (string.find(target or "", "#")) or (string.find(target or "", "&")) then
 		str = "@" .. Trim(target)
   elseif (string.lower(Trim(target)) == string.lower(my_name)) then
@@ -1183,7 +1183,7 @@ function parsePrivmsg(cmd, source, target, param, conn)
     str = " to " .. Trim(target)
   end
   local extuser = user .. str
-  
+
   if (idebug) then
     AppendToNotepad("IRC DEBUG", "extuser: " .. extuser .. "\r\n")
   end
@@ -1218,7 +1218,7 @@ function parsePrivmsg(cmd, source, target, param, conn)
   if (show_msg) then
     ircNote(Trim(str), cmd)
   end
-  
+
   -- broadcast
   BroadcastPlugin(1, user .. ";" .. extuser .. ";" .. param)
 end

@@ -93,7 +93,7 @@ EnableTrigger("findcrystal", false)</send>
    send_to="10"
   >
 <send>imap dest off
-</send>  
+</send>
 </trigger>
   <trigger
    enabled="y"
@@ -104,7 +104,7 @@ EnableTrigger("findcrystal", false)</send>
    sequence="100"
   >
 <send>imap dest off
-</send>  
+</send>
 </trigger>
 
 
@@ -177,7 +177,7 @@ function OnHelp ()
 end
 ]]>
 
-</script> 
+</script>
 
 
 

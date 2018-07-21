@@ -36,7 +36,7 @@ Syntax:
 Authors: Ruthgul, Jeneya, Iyara
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -110,7 +110,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/tutorial_vi.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/tutorial_vi.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -118,8 +118,8 @@ end
 
 function plugin_update_aux_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/mm_boil.mp3,MUSH/sounds/msp",
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/mm_stream.mp3,MUSH/sounds/msp",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/res/mm_boil.mp3,MUSH/sounds/msp",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/res/mm_stream.mp3,MUSH/sounds/msp",
   }
   return (table.concat(t, ";"))
 end
@@ -183,7 +183,7 @@ The package includes the client + a Materia Magica world with some pre-installed
 
 If you're running Windows Vista / 7 / newer, you'll need to install Windows Help to be able to read MUSHclient's help files.
 
-Alternatively, you can read the online documentation here: 
+Alternatively, you can read the online documentation here:
 http://www.mushclient.com/scripts/doc.php
 
 
@@ -331,7 +331,7 @@ For this example we will try to find a locker in Xaventry.
 
 6. Press Enter to go to Xaventry lockers, as long as you and Xaventry are not separated by ocean and you are in city or on a road.
 
-This method of speedwalking is great for walking to banks, lockers, gates and quest masters.  Soon you don't have to look up the abbreviations and you will just zip around.    
+This method of speedwalking is great for walking to banks, lockers, gates and quest masters.  Soon you don't have to look up the abbreviations and you will just zip around.
 
 
 ]],
@@ -830,7 +830,7 @@ To see more details about this plugin, type accelerators help.
 
 You must have the accelerator plugin by Ruthgul in order to make this work.
 
-1. Type add accel Alt+Z sapi stop 
+1. Type add accel Alt+Z sapi stop
 
 2. Press Enter
 
@@ -869,7 +869,7 @@ Now do this with the other score commands so you have this important info at you
 
 * Assigning keystrokes for the check commands
 
-Recently the 'check commands' became available to us on MM.  These are awesome commands, but often we are in the middle of battle when we need to check the important info they give us, and typing out the whole command is just not possible if we wish to stay alive ourselves, or keep the tank or another form member alive. 
+Recently the 'check commands' became available to us on MM.  These are awesome commands, but often we are in the middle of battle when we need to check the important info they give us, and typing out the whole command is just not possible if we wish to stay alive ourselves, or keep the tank or another form member alive.
 
 These are some of the most useful check commands:
 
@@ -927,7 +927,7 @@ b goblin - will bash a goblin (if there's one in your room.)
 b - will bash your current opponent in combat.
 b south - will bash the south oor (if there is one)
 
-  
+
 Another example: addalias md cast 'magic dart'
 
 Then, once you've added it:
@@ -1120,6 +1120,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

@@ -45,7 +45,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -100,7 +100,7 @@ function OnPluginInstall()
   Tell("-- " .. GetPluginInfo(GetPluginID (), 1) .. ": type ")
   ColourTell("silver", "black", GetPluginInfo(GetPluginID (), 1) .. " help")
   Note(" to see the list of available commands --")
-  
+
   -- open database on disk
   db = assert(sqlite3.open(GetInfo(66) .. "spdman2_locations.db"))
 
@@ -117,7 +117,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/spdman2_default_database.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/spdman2_default_database.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -448,7 +448,7 @@ locations = {
       ["73100"] = "Xaventry Town Square;XavTS",
       ["27890"] = "Sigil Town Square;SigTS",
     },
-    
+
     ["Faerie Plane"] = {
     -- banks
       ["199049"] = "Cavhfail Bank;CavBank",
@@ -483,14 +483,14 @@ locations = {
 
 function populate_database()
   local desc
-  
+
   for type, tplane in pairs(locations) do
     for plane, tplaces in pairs(tplane) do
       for uid, tdesc in pairs(tplaces) do
         tdesc = utils.split(tdesc, ";")
         desc = tdesc[1]
         name = tdesc[2]
-        
+
         db_save_location(type, plane, uid, desc, name)
       end
     end
@@ -512,7 +512,7 @@ function load_location_from_database(shortcut)
       plane = row.plane,
       uid = row.uid,
       desc = row.desc,
-      shortcut = row.shortcut,      
+      shortcut = row.shortcut,
     }
   end
 
@@ -534,7 +534,7 @@ end
 
 function save_location_to_database(type, plane, uid, desc, shortcut)
   db:exec("BEGIN TRANSACTION;")
-  
+
   dbcheck(db:execute(string.format(
     "INSERT INTO locations(type, plane, uid, desc, shortcut, date_added) VALUES(%s, %s, %s, %s, %s, DATETIME('NOW'));",
       fixsql(type),
@@ -543,7 +543,7 @@ function save_location_to_database(type, plane, uid, desc, shortcut)
       fixsql(desc),
       fixsql(shortcut)
   )))
-  
+
   db:exec("COMMIT;")
 end
 
@@ -565,6 +565,6 @@ end
 
 
 ]]>
-</script> 
+</script>
 
 </muclient>

@@ -84,7 +84,7 @@ Note: don't include # when you add a channel - eg, use barter, not #barter.
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -828,7 +828,7 @@ function OnPluginInstall()
     Note(" to see info about this plugin --")
 
     init_captures_list()
-    
+
     -- give the plugins time to initialize
     wait.time(3)
     detect_plugins()
@@ -866,7 +866,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/capture2dworld.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/capture2dworld.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -874,8 +874,8 @@ end
 
 function plugin_update_aux_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/captures.MCL,MUSH/worlds",
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/announce.mp3,MUSH/sounds",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/res/captures.MCL,MUSH/worlds",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/res/announce.mp3,MUSH/sounds",
   }
   return (table.concat(t, ";"))
 end
@@ -1002,7 +1002,7 @@ function init_captures_list()
     -- default is full list minus auction|say
     SetVariable("captures", default_channel_types)
     SaveState()
-  
+
   else
     if (string.find(x, "private")) then
       uncapture_chantype("private")
@@ -1026,17 +1026,17 @@ end
 
 function capture_chantype(chantype)
   local t = utils.split(chantype, " ")
-  
+
   if (t[1] == "relay") then
     if (t[2]) then
       add_relay(t[2])
-    
+
     else
       Tell("-- capture2dworld: type ")
       ColourTell("silver", "black", "capture relay <chatroomname>")
       Note(" (eg, capture relay sightimpaired) --")
     end
-  
+
   else
     if (is_listed("all_channel_types", t[1])) then
       if (not is_listed("captures", t[1])) then
@@ -1061,10 +1061,10 @@ end
 
 function uncapture_chantype(chantype)
   local t = utils.split(chantype, " ")
-  
+
   if (t[1] == "relay") then
     del_relay(t[2])
-  
+
   else
     if (is_listed("captures", t[1])) then
       del_from_list("captures", t[1])
@@ -1101,7 +1101,7 @@ function list_captures()
 
   ColourNote("silver", "black", capt)
   Note("(out of this full list: " .. all .. ")")
-  
+
   list_relays(false)
 end
 
@@ -1115,7 +1115,7 @@ function add_relay(rname)
   if (not is_listed("captures", "relay")) then
     capture_chantype("relay")
   end
-  
+
   if (not is_listed("relays", rname)) then
     add_to_list("relays", rname)
     SaveState()
@@ -1147,7 +1147,7 @@ function list_relays(show_header)
   if (show_header) then
     Note("-- capture2dworld --")
   end
-  
+
   local rel = GetVariable("relays") or "-"
   rel = string.gsub(rel, "|", ", ")
 
@@ -1241,13 +1241,13 @@ function OnPluginBroadcast(msg, id, pname, text)
     if (msg == 1) then
       handle_irc_msg(text)
     end
-  
+
   elseif (id == "f67c4339ed0591a5b010d05b") then -- GMCP message
     if (text == "char.gecho_notification") then -- gecho
       get_gmcp_gecho()
       handle_gmcp_gecho()
     end
-  
+
   elseif (id == "fbd5b7cc1ef6acf827a3f4a1") then -- plugins_updater_v2
     if (msg == 1) then
       Note(text)
@@ -1265,9 +1265,9 @@ end
 function get_gmcp_gecho()
   local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "char.gecho_notification")
   luastmt = "gmcpdata = " .. gmcparg
-  
+
 --  Note("gmcparg: " .. (gmcparg or "nil"))
-  
+
   assert(loadstring(luastmt or ""))()
 end
 
@@ -1305,10 +1305,10 @@ end
 function handle_gmcp_gecho(msg)
   if (not msg) then
     msg = gmcpval("gecho_msg")
-  
+
   elseif (msg == "debug") then
     msg = do_simulate()
-  
+
   --msg not nil, not "debug" => process it as it comes
   end
 
@@ -1328,7 +1328,7 @@ function handle_gmcp_gecho_v1_nocolors(msg)
     for line in string.gmatch(msg, "[^§]*§") do
       line = string.match(line, "(.+)§")
       line = Trim(line or "")
-      
+
       if (line ~= "") then
 --        Note("broadcasting: " .. line)
         broadcast_txt_line("announce", line, "")
@@ -1347,7 +1347,7 @@ function handle_gmcp_gecho_v2_colors(msg)
 --    show_txt("orangered", "black", "[gecho] ")
 
     local aux = strip_crlfs(msg)
-    
+
     local fg, bg, col, txt
     fg = "silver"
     bg = "black"
@@ -1359,7 +1359,7 @@ function handle_gmcp_gecho_v2_colors(msg)
         if (col) then
           fg = col
         end
-      
+
       elseif (string.find(x, "^|Z%d%d%d")) then
         col, txt = string.match(x, "^|Z(%d%d%d)(.*)")
         col = RGBColourToName(x256_to_rgb(tonumber(col)))
@@ -1371,7 +1371,7 @@ function handle_gmcp_gecho_v2_colors(msg)
         fg = "silver"
         bg = "black"
         txt = string.match(x, "^|X(.*)")
-      
+
       elseif (string.find(x, "^|%a")) then
         col, txt = string.match(x, "^|(%a)(.*)")
         col = fg_mm_to_name(col)
@@ -1392,19 +1392,19 @@ function handle_gmcp_gecho_v2_colors(msg)
           for line in string.gmatch(txt, "[^§]*§") do
             line = string.match(line, "(.+)§")
             line = Trim(line or "")
-            
+
             if (line ~= "") then
               show_txt(fg, bg, line)
-              
+
               broadcast_txt_line("announce", line, "")
             end
-            
+
             show_txt("silver", "black", "\r\n")
           end
-        
+
         else
           show_txt(fg, bg, txt)
-          
+
           broadcast_txt_line("announce", txt, "")
         end
       end
@@ -1421,7 +1421,7 @@ function strip_colors(msg)
   res = string.gsub(msg, "|[xz]%d%d%d", "")
   res = string.gsub(res, "|[%d%a]", "")
   res = Trim(res)
-    
+
 --  end
 
   return res, white
@@ -1432,11 +1432,11 @@ function strip_crlfs(msg)
   msg = string.gsub(msg, "\r", "§")
   msg = string.gsub(msg, "\n", "§")
   msg = msg .. "§"
-  
+
   while (string.find(msg, "§§")) do
     msg = string.gsub(msg, "§§", "§")
   end
-  
+
   return msg
 end
 
@@ -1474,14 +1474,14 @@ local code_to_name = {
 
 function fg_mm_to_name(color)
   local res = code_to_name[color]
-  
+
   return res
 end
 
 
 function bg_mm_to_name(color)
   local res = code_to_name[color]
-  
+
   return res
 end
 
@@ -1513,11 +1513,11 @@ local compatibility_16_to_rgb = {
 
 function x256_to_rgb(x256)
   local r, g, b, rgb
-  
+
   if (x256 >= 0) and (x256 <= 15) then
     -- compatibility 16
     rgb = compatibility_16_to_rgb[x256]
-  
+
   elseif (x256 >= 16) and (x256 <= 231) then
     -- cube
     x256 = x256 - 16
@@ -1526,16 +1526,16 @@ function x256_to_rgb(x256)
     x256 = x256 - (r * 6 * 6)
     g = math.floor(x256 / 6)
     b = x256 - (g * 6)
-    
+
     rgb = (256 * 256 * to255(b)) + (256 * to255(g)) + to255(r)
-  
+
   elseif (x256 >= 232) and (x256 <= 255) then
     -- grayscale
     x256 = x256 - 232
-    
+
     rgb = (256 * 256 * to255gray(x256)) + (256 * to255gray(x256)) + to255gray(x256)
   end
-  
+
   return rgb
 end
 

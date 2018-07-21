@@ -98,7 +98,7 @@ Async code by Fiendish
 
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -233,7 +233,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/plugins_updater_v2.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/plugins_updater_v2.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -241,11 +241,11 @@ end
 
 function plugin_update_aux_url()
   local t = {
---    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/dll/llthreads.dll,MUSH",
---    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/dll/ssl.dll,MUSH",
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/async.lua,MUSH/lua",
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/ssl.lua,MUSH/lua",
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/https.lua,MUSH/lua/ssl",
+--    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/dll/llthreads.dll,MUSH",
+--    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/dll/ssl.dll,MUSH",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/async.lua,MUSH/lua",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/ssl.lua,MUSH/lua",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/https.lua,MUSH/lua/ssl",
   }
   return (table.concat(t, ";"))
 end
@@ -256,7 +256,7 @@ end
 -- detect updates
 -------------------
 
-updates_url = "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/text/plugins_versions.txt"
+updates_url = "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/text/plugins_versions.txt"
 
 
 function detect_updates()
@@ -377,16 +377,16 @@ end
 function find_plugin_data(id)
   local local_path = fix_slashes(GetPluginInfo(id, 20))
   local local_path_n_file = fix_slashes(GetPluginInfo(id, 6))
-  
+
   local esc_lpath = string.gsub(local_path, "%p", "%%%1")
   local file_name = string.gsub(local_path_n_file, esc_lpath, "")
-  
+
   local url_path
   local res, splug = CallPlugin(id, "plugin_update_url")
   if (res == 0) then -- supported
     url_path = string.gsub(fix_url(splug), file_name, "")
   end
-  
+
   return url_path, local_path, file_name
 end
 
@@ -413,13 +413,13 @@ function build_aux_from_detected(id, p_url_path, p_local_path)
 
   -- get paths for aux files
   local t_loc_aux_paths = get_local_aux_data(id, p_url_path, p_local_path)
-  
+
   for i = 1, #G_tlatest[id].taux do
     if (not G_taux_keys[name]) then
     -- if it isn't added to updates already
       local name = G_tlatest[id].taux[i].name
       local lpath = fix_aux_path(G_tlatest[id].taux[i].dest, p_local_path)
-      
+
       if (lpath) then
         local hash = get_file_hash(lpath .. name)
 
@@ -433,14 +433,14 @@ function build_aux_from_detected(id, p_url_path, p_local_path)
           else
             url = p_url_path
           end
-          
+
           taux[name] = {
             url = url,
             lpath = lpath,
             update = true,
           }
         end
-      
+
       else
         Note("> Can't find local path for file " .. name .. " (plugin " .. id .. ")")
       end
@@ -485,7 +485,7 @@ end
 
 
 function fix_url(url)
-  url = string.gsub(url, "dl.dropbox.com/u/65599194/mm%-updater/", "raw.githubusercontent.com/mu3r73/mm%-mushclient%-scripts/master/src/")
+  url = string.gsub(url, "dl.dropbox.com/u/65599194/mm%-updater/", "raw.githubusercontent.com/MateriaMagicaLLC/mm%-mushclient%-scripts/master/src/")
   return url
 end
 
@@ -577,7 +577,7 @@ end
 function get_gmcp_room()
   local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "room.info")
   luastmt = "gmcpdata = " .. gmcparg
-  
+
   assert(loadstring(luastmt or ""))()
 end
 
@@ -595,7 +595,7 @@ function at_idling_location()
         res = true
       end
     end
-  
+
   else
     res = true
   end

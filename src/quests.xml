@@ -47,7 +47,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -128,7 +128,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
 <!-- regular quests -->
 
   <!-- capture -->
-  
+
   <trigger
    enabled="y"
    keep_evaluating="y"
@@ -140,7 +140,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   <send>start_quest_capture()
 </send>
   </trigger>
-  
+
   <trigger
    match="*"
    keep_evaluating="y"
@@ -166,7 +166,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
 
 
   <!-- timers -->
-  
+
   <trigger
    enabled="y"
    keep_evaluating="y"
@@ -429,10 +429,10 @@ function OnPluginInstall()
     Tell("-- " .. GetPluginInfo(GetPluginID(), 1) .. ": type ")
     ColourTell("silver", "black", GetPluginInfo(GetPluginID(), 1) .. " help")
     Note(" to see info about this plugin --")
-    
+
     pursuer_done = false
     nagged = nil
-    
+
     -- give the plugins time to initialize
     wait.time(3)
     detect_plugins()
@@ -477,7 +477,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/quests.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/quests.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -570,14 +570,14 @@ function next_quest_in(sec)
   if (meh_timers_present) then
     set_unique_countdown(0, 0, sec, "quest available", "quests plugin")
     nagged = false
-  
+
   else
     if (next_regular)
     and (sec <= next_regular) then
       return
     end
     next_regular = sec
-    
+
     EnableTrigger("countdown", true)
 
     notify_no_meh_timers()
@@ -664,10 +664,10 @@ function crystal_done()
   if (meh_timers_present) then
     set_unique_countdown(0, 0, 3600, "crystal quest available", "quests plugin")
     nagged = false
-  
+
   else
     next_crystal = 3600
-    
+
     EnableTrigger("countdown", true)
 
     notify_no_meh_timers()
@@ -723,10 +723,10 @@ function pursuer_started(what, where)
   if (meh_timers_present) then
     set_unique_countdown(0, 0, 3600, "pursuer quest available", "quests plugin")
     nagged = false
-  
+
   else
     next_pursuer = 3600
-  
+
     EnableTrigger("countdown", true)
 
     notify_no_meh_timers()
@@ -737,14 +737,14 @@ end
 function pursuer_completed()
   if (not pursuer_done) then
     pursuer_done = true
-    
+
     if (meh_timers_present) then
       set_unique_countdown(0, 0, 3600, "pursuer quest available", "quests plugin")
       nagged = false
-  
+
     else
       next_pursuer = 3600
-      
+
       EnableTrigger("countdown", true)
 
       notify_no_meh_timers()
@@ -780,10 +780,10 @@ function log_available_in()
   if (meh_timers_present) then
     set_unique_countdown(0, 0, 3600, "personal log available", "quests plugin")
     nagged = false
-  
+
   else
     next_log = 3600
-  
+
     EnableTrigger("countdown", true)
 
     notify_no_meh_timers()
@@ -804,11 +804,11 @@ function show_quests_timers()
     if (next_regular) then
       Note("* next regular quest: " .. make_hh_mm_ss(next_regular))
     end
-    
+
     if (next_crystal) then
       Note("* next crystal quest: " .. make_hh_mm_ss(next_crystal))
     end
-    
+
     if (next_pursuer) then
       Note("* next pursuer quest: " .. make_hh_mm_ss(next_pursuer))
     end
@@ -835,7 +835,7 @@ function notify_no_meh_timers()
   -- notify that meh_timers isn't installed, once
   if (not nagged) then
     ColourNote("tomato", "black", "-- quests - warning: meh_timers not installed / enabled! --")
-    
+
     nagged = true
   end
 end

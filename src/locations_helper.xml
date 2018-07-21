@@ -46,7 +46,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -113,7 +113,7 @@ t_varying = {}
 
 function OnPluginInstall()
   Note(GetPluginInfo(GetPluginID(), 1) .. ": type " .. GetPluginInfo(GetPluginID(), 1) .. " help to see info about this plugin")
-  
+
   load_data()
 end
 
@@ -125,7 +125,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/locations_helper.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/locations_helper.xml",
   }
   return (table.concat(t, ","))
 end
@@ -136,10 +136,10 @@ end
 
 function load_data()
   db = assert(sqlite3.open(GetInfo(66) .. "locations.db"))
-  
+
   load_fixed_locations()
   load_varying_locations()
-  
+
   db:close_vm()
 end
 
@@ -247,7 +247,7 @@ function OnPluginBroadcast(msg, id, name, text)
   if (id =="f67c4339ed0591a5b010d05b") then -- GMCP message
     if (text == "room.info") then -- room.info
       get_gmcp_room()
-      
+
       process_room()
     end
   end
@@ -257,7 +257,7 @@ end
 function get_gmcp_room()
   local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "room.info")
   luastmt = "gmcpdata = " .. gmcparg
-  
+
   assert(loadstring(luastmt or ""))()
 end
 
@@ -265,7 +265,7 @@ end
 function process_room()
   if in_vmap() then
     check_if_vmap_location()
-  
+
   else
     check_if_inner_location()
   end
@@ -282,22 +282,22 @@ function check_if_vmap_location()
   local x = fix_coord(gmcpval("coord.x", plane_max.x))
   local y = fix_coord(gmcpval("coord.y", plane_max.y))
   local num = gmcpval("num")
-  
+
   if (t_vmap[zone])
   and (t_vmap[zone][x])
   and (t_vmap[zone][x][y]) then
     local count, tres = find_non_area_exits(num, zone)
-    
+
     if (count > 0) then
       for dir, area in pairs(tres) do
         Execute("sapi say " .. dir .. " leads to " .. area)
       end
-    
+
     else
       Execute("sapi say at " .. t_vmap[zone][x][y].name)
     end
   end
-  
+
   for _, dir in pairs(all_dirs) do
     local dest = gmcpval("exits." .. dir)
     if (dest ~= "")
@@ -328,7 +328,7 @@ function find_nearby_locations()
         find_nearby_in_plane(tdata)
       end
     end
-  
+
   else
     Note("you're not in the wilds!")
   end
@@ -455,9 +455,9 @@ end
 function show_exits_to_other_areas()
   local num = gmcpval("num")
   local zone = gmcpval("zone")
-  
+
   local count, tres = find_non_area_exits(num, zone)
-  
+
   if (count > 0) then
     Note("exits to other areas:")
     for dir, area in pairs(tres) do
@@ -472,18 +472,18 @@ function find_non_area_exits(num, zone)
   local count = 0
 
   db_mapper = assert(sqlite3.open(GetInfo(66) .. "mm_mapper.db"))
-  
+
   for _, dir in pairs(all_dirs) do
     local dest = gmcpval("exits." .. dir)
-    if (dest ~= "") 
+    if (dest ~= "")
     and (zone ~= locate_area(dest)) then
       tres[dir] = locate_area(dest)
       count = count + 1
     end
   end
-  
+
   db_mapper:close_vm()
-  
+
   return count, tres
 end
 
@@ -499,6 +499,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

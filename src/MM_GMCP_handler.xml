@@ -43,7 +43,7 @@ IMPORTANT:
     protocols
     protocols gmcp
   to be sure that it's working properly.
-  
+
 (See _detailed instructions_ on the plugin's homepage.)
 
 
@@ -70,7 +70,7 @@ it is refreshed.
 Authors: Lasher, Ruthgul (maintained by Ruthgul)
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -173,7 +173,7 @@ end
 
 function GMCP_simulate(name, line, wildcards)
   local data = [[char.gecho_notification {"gecho_msg": "\n\r\n\r|WTEST TEST TEST|X\n\r\n\r"}]]
-  
+
   OnPluginTelnetSubnegotiation(GMCP, data)
 end
 
@@ -226,7 +226,7 @@ function OnPluginTelnetSubnegotiation(msg_type, data)
 
 --    local t = json.decode(params)
     local succ, t = pcall(json.decode, params) -- update
-    
+
     if (GMCPDebug > 1) then
       Note("json.decode(params) serialized: " .. serialize.save_simple(t))
     end
@@ -241,10 +241,10 @@ function OnPluginTelnetSubnegotiation(msg_type, data)
 --      for item in string.gmatch(message,"%a+") do
       for item in string.gmatch(message, "[%a%d%-%_]+") do -- MM fix: regex
         -- reset data hacks
---        if (item == "room") or (item == "comm") then 
+--        if (item == "room") or (item == "comm") then
          if (item == "room" and message:sub(1,13) ~= "room.wrongdir") -- update
          -- don't let room.wrongdir erase current room info
-         or item == "comm" or item == "group" then 
+         or item == "comm" or item == "group" then
 
           parent[item] = nil
         end
@@ -338,7 +338,7 @@ function parse_gmcp(t, done, parent)
   and (parent)
   and (type(t) == "table")
   and (type(parent) == "table") then
-  
+
     local function parseone(val)
       if type (val) == "string" then
         return val
@@ -360,10 +360,10 @@ function parse_gmcp(t, done, parent)
         parent[key] = parseone(value) -- might be able to remove last parameter.
       end
     end -- for
-  
+
   else
     if (GMCPDebug > 0) then
-      if (not t) then 
+      if (not t) then
         Note("-- " .. GetPluginInfo(GetPluginID(), 3) .. "nil table passed to parse_gmcp() --")
       end
       if (not parent) then
@@ -398,7 +398,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/MM_GMCP_handler.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/MM_GMCP_handler.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -406,8 +406,8 @@ end
 
 function plugin_update_aux_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/gmcphelper.lua,MUSH/lua",
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/res/sandbox.dune.net.MCL,MUSH/worlds",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/gmcphelper.lua,MUSH/lua",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/res/sandbox.dune.net.MCL,MUSH/worlds",
   }
   return (table.concat(t, ";"))
 end

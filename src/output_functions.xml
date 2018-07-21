@@ -261,7 +261,7 @@ idling = false
 require "wait"
 require "gmcphelper"
 
-  
+
 function OnPluginInstall()
   wait.make(function()
     Note(GetPluginInfo(GetPluginID(), 1) .. ": type " .. GetPluginInfo(GetPluginID(), 1) .. " help to see info about this plugin")
@@ -269,21 +269,21 @@ function OnPluginInstall()
     if (GetVariable("output") == nil) then
       SetVariable("output","1")
     end
-    
+
     -- keystrokes
     if (is_accelerators_present()) then
       for i = 1, 9 do
         add_accelerator("ctrl + " .. tostring(i), "Line_Get " .. tostring(i), "no")
       end
       add_accelerator("ctrl + 0", "Line_Get 10", "no")
-      
+
     else
       for i = 1, 9 do
         Accelerator("ctrl + " .. tostring(i), "Line_Get " .. tostring(i))
       end
       Accelerator("ctrl + 0", "Line_Get 10")
     end
-  
+
     -- give the plugins some time to initialize
     wait.time(3)
     detect_reader()
@@ -389,7 +389,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/output_functions.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/output_functions.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -441,24 +441,24 @@ end
 function LineGet(name, line, wc)
   lines = GetLinesInBufferCount()
   line = nil
-  
+
 --  line = GetLineInfo(lines - wc[1], 1)
-  
+
   local output_line_num = lines
   local count = 0
 
   while (count < tonumber(wc[1])) and (output_line_num > 0) do
     output_line_num = output_line_num - 1
-    
+
     if (Trim(GetLineInfo(output_line_num, 1)) ~= "") then
       count = count + 1
     end
-    
+
     if (count == tonumber(wc[1])) then
       line = GetLineInfo(output_line_num, 1)
     end
   end
-  
+
   wc = wc[1]
   local timeout = 0.4 -- in seconds
   if modes[wc] == nil then
@@ -620,13 +620,13 @@ function is_accelerators_present()
   local plugin_name = GetPluginInfo("f99134f19ea994a0cc0888d1", 1)
 
   local res = false
-  
+
   if (plugin_name == "accelerators") then
     if (GetPluginInfo("f99134f19ea994a0cc0888d1", 17)) then
       res = true
     end
   end
-  
+
   return res
 end
 
@@ -660,16 +660,16 @@ end
 function get_gmcp_room()
   local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "room.info")
   luastmt = "gmcpdata = " .. gmcparg
-  
+
   assert(loadstring(luastmt or ""))()
 end
 
 
 function at_idling_location()
   local res = false
-  
+
   local zone = gmcpval("zone")
-  
+
   if (string.match(zone, "^Chat Rooms")) then
     res = true
   end
@@ -683,13 +683,13 @@ end
 
 function read_text(txt)
   local res
-  
+
   if (reader_present) then
     res = CallPlugin("925cdd0331023d9f0b8f05a7", "say", txt)
   else
     Note(txt)
   end
-  
+
 --  Note(res)
 end
 

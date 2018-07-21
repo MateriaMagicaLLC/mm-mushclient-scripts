@@ -51,7 +51,7 @@ Author: Ruthgul
 
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -121,7 +121,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   <send>show_siphon_or_tpdispel("you", "%&lt;spell&gt;", "%0")
 </send>
   </trigger>
-  
+
 
 <!-- aegis -->
 
@@ -135,7 +135,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
    send_to="14"
    sequence="100"
   >
-  <send>if ("%&lt;who&gt;" ~= "you") then  
+  <send>if ("%&lt;who&gt;" ~= "you") then
   show_other_stuff("%&lt;who&gt;", "AEGIS off", "%0")
 else
   show_important_stuff("you", "AEGIS off", "%0")
@@ -1570,7 +1570,7 @@ end
 
 
 <!-- fire invocation -->
-<!-- 
+<!--
 *+* You begin glowing with a flickering, orange-yellow aura.
 -->
   <trigger
@@ -4352,7 +4352,7 @@ function OnPluginInstall()
     Tell("-- " .. GetPluginInfo(GetPluginID(), 1) .. ": type ")
     ColourTell("silver", "black", GetPluginInfo(GetPluginID(), 1) .. " help")
     Note(" to see info about this plugin --")
-    
+
     -- give the plugins time to initialize
     wait.time(3)
     detect_plugins()
@@ -4396,7 +4396,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/affects_by_name.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/affects_by_name.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -4417,7 +4417,7 @@ function show_affect(who, fgcolor, bgcolor, subtitle, line)
     ColourTell(fgcolor, bgcolor, subtitle)
     ColourTell("darkgray", "black", " > ")
     ColourNote("silver", "black", line)
-  
+
   else
     -- if MushReader is present, SAPI say the subtitles
     local txt = ""
@@ -4425,21 +4425,21 @@ function show_affect(who, fgcolor, bgcolor, subtitle, line)
       txt = who .. ": "
     end
     txt = txt .. subtitle
-    
+
     if (who == "you") and (fgcolor == "white") and (bgcolor == "red") then
     -- lethal stuff, so we need to inform immediately
       local res = sapi_interrupt(txt)
-      
+
       if (res ~= 0) then
       -- speak_interrupt() not present in the plugin
         sapi_say(txt)
       end
-    
+
     else
       sapi_say(txt)
     end
   end
-  
+
   -- add to events mini, if it's present
   add_to_events_world(who, fgcolor, bgcolor, subtitle)
 
@@ -4451,7 +4451,7 @@ function show_affect(who, fgcolor, bgcolor, subtitle, line)
     [4] = subtitle,
   }
   BroadcastPlugin(1, table.concat(t, ";"))
-  
+
   if (debug)
   and ((string.find(subtitle, "off"))
   or (string.find(subtitle, "tick"))) then
@@ -4526,22 +4526,22 @@ end
 
 function sapi_say(text)
   local res
-  
+
   if (use_sapi) then
     res = CallPlugin("463242566069ebfd1b379ec1", "say", text)
   end
-  
+
   return res
 end
 
 
 function sapi_interrupt(text)
   local res
-  
+
   if (use_sapi) then
     res = CallPlugin("463242566069ebfd1b379ec1", "speak_interrupt", text)
   end
-  
+
   return res
 end
 

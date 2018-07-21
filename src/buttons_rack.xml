@@ -64,7 +64,7 @@ Notes:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -302,7 +302,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/buttons_rack.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/buttons_rack.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -315,7 +315,7 @@ end
 
 function on_first_prompt()
   EnableTrigger("first_prompt", false)
-  
+
   do_get_name()
 end
 
@@ -324,7 +324,7 @@ function OnPluginBroadcast(msg, id, pname, text)
   if (id =="97784abf5f30629a0d7e7307")
   and (pname == "global_vars") then -- global_vars
     if (msg == 1) and (text == "name") then
-      -- name broadcasted      
+      -- name broadcasted
       do_get_name()
     end
   end
@@ -333,7 +333,7 @@ end
 
 function do_get_name()
   name = get_global_var("name")
-  
+
   if (name) then
     got_name()
   end
@@ -449,7 +449,7 @@ function calc_button_pos(num)
   local txtwidth = WindowTextWidth(irack, "frack", buttons[num], true)
   local wherextxt = (width - txtwidth) / 2
   local wherey = 10 + (num * 20)
-  
+
   return wherey, wherextxt
 end
 
@@ -470,7 +470,7 @@ end
 
 function redraw_button(title, pressed)
   local i = find_index(cmd)
-  
+
   if (i) then -- there actually is a button by that title
 --    Note("redrawing button #" .. i .. " as " .. how)
     local wherey, wherextxt = calc_button_pos(i)
@@ -481,7 +481,7 @@ function redraw_button(title, pressed)
     else -- default is "released"
       bckgrndcol = buttonbgcol
     end
-    
+
     draw_button(i, wherey, wherextxt, bckgrndcol)
 
     WindowShow(irack, true) -- refresh window
@@ -498,7 +498,7 @@ function mousedown(flags, hs_id)
   cmd = nil
   if (flags == miniwin.hotspot_got_lh_mouse) then
     cmd = hs_id -- just click
-    
+
     redraw_button(cmd, true)
   end
 end

@@ -230,7 +230,7 @@ function OnPluginInstall()
 
   speak = false
   EnableGroup("speech", true)
-  
+
   load_config()
 end
 
@@ -240,7 +240,7 @@ function load_config()
   if (rate) then
     talk.Rate = rate
   end
-  
+
   local volume = tonumber(GetVariable("sapi_volume") or "")
   if (volume) then
     talk.Volume = volume
@@ -250,7 +250,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/Sapi_speaker.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/Sapi_speaker.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -318,13 +318,13 @@ end
 -- set rate
 function set_rate(rate)
   rate = tonumber(rate)
-  
+
   if (rate) then
     talk.Rate = rate
     do_speak("Rate set to " .. rate .. ".")
     SetVariable("sapi_rate", rate)
     SaveState()
-    
+
   else
     do_speak("Rate should be set to a value between -10 and 10 (-10: slowest, 10 fastest).")
   end
@@ -334,7 +334,7 @@ end
 -- set volume
 function set_volume(vol)
   vol = tonumber(vol)
-  
+
   if (vol) then
     talk.Volume = vol
     do_speak("Volume set to " .. vol .. "%")
@@ -350,17 +350,17 @@ end
 -- set voice
 function set_voice(choice)
   choice = Trim(choice)
-  
+
   local voices = talk:GetVoices()
-  
+
   for index, voice in luacom.pairs(voices) do
     -- does the name match?
     local name = voice:GetDescription()
-    
+
     if (string.find(string.lower(name), string.lower(choice))) then
       talk:setVoice(voice)
       do_speak("Voice set to " .. name .. ".")
-      
+
       SetVariable("tts_voice", name)
       SaveState()
       break
@@ -377,13 +377,13 @@ function read_options()
   else
     do_speak("Speaking of MUD output is off.")
   end
-  
+
   -- read rate
   do_speak("The rate is set to " .. talk.Rate .. ".")
-  
+
   -- read volume
   do_speak("The volume is set to " .. talk.Volume .. "%")
-  
+
   -- read voice
   current_voice = GetVariable("sapi_voice")
   if (current_voice) then

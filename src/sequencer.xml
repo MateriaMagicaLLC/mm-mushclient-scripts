@@ -41,14 +41,14 @@ Sends a list of commands to the MUD, 1 at a time, to avoid spamming.
 Syntax:
 
 * sequence commands <;_separated_list>  - eg, sequence commands open north;look north
-  
+
   Note: if you're using ; for command stacking, then you need to double it when you call sequence commands, like this:  sequence commands open north;;look north
 
 
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -126,7 +126,7 @@ function OnPluginInstall()
   Tell("-- " .. GetPluginInfo(GetPluginID(), 1) .. ": type ")
   ColourTell("silver", "black", GetPluginInfo(GetPluginID(), 1) .. " help")
   Note(" to see info about this plugin --")
-  
+
   EnableTrigger("sequence_commands", false)
 end
 
@@ -145,7 +145,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/sequencer.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/sequencer.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -182,7 +182,7 @@ function start_sequence(list)
   else
     Note("sequencing failed - wrong parameter")
   end
-  
+
   t = nil
 end
 
@@ -206,6 +206,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

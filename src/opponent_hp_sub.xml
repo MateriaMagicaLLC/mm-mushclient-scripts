@@ -33,7 +33,7 @@ Shows a numeric estimation of your opponent's health, as a percentage.
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -115,7 +115,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/opponent_hp_sub.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/opponent_hp_sub.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -143,17 +143,17 @@ function subtitle_enemy_hp(desc)
 
   for k, v in ipairs(trigger_style_runs) do
     local newval = string.gsub(v.text, desc, desc .. "[" .. damage[desc] .. "%%%]")
-    ColourTell(RGBColourToName(v.textcolour), 
-               RGBColourToName(v.backcolour), 
-               newval)  
+    ColourTell(RGBColourToName(v.textcolour),
+               RGBColourToName(v.backcolour),
+               newval)
   end -- for each style run
-  
+
   Note("")
 end
 
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

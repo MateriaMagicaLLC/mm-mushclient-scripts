@@ -43,7 +43,7 @@ Usage:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -360,7 +360,7 @@ function OnPluginInstall()
 
     atsea = false
     backed_up = false
-    
+
     wait.time(3)
     use_accelerators = is_accelerators_present()
 
@@ -426,7 +426,7 @@ function OnHelp()
   ColourNote("silver", "black", world.GetPluginInfo(world.GetPluginID(), 3))
   Note("")
   ColourNote("silver", "black", "(this version: " .. os.date("%c", GetPluginInfo(GetPluginID(), 14)) .. ")")
-  
+
   if (use_accelerators) and (config) then
     show_keystrokes()
   else
@@ -437,7 +437,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/ship_kp.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/ship_kp.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -539,7 +539,7 @@ function edit_keystroke(command)
   end -- cancelled
 
   response = string.lower(response)
-  
+
   local success
 
   -- if keystroke changed, notify them
@@ -549,7 +549,7 @@ function edit_keystroke(command)
       success = del_accelerator(old_keystroke, "yes")
       if (success) then
         table.remove(used_keystrokes, find_index(used_keystrokes, old_keystroke))
-      
+
       else
         ColourNote("tomato", "black", "-- ship_kp: couldn't remove the old keystroke '" .. old_keystroke .. "' --")
       end
@@ -561,12 +561,12 @@ function edit_keystroke(command)
         success = add_accelerator(response, command, "yes")
         if (success) then
           used_keystrokes[#used_keystrokes + 1] = response
-          
+
           -- delete old keystroke
           del_accelerator(old_keystroke, "yes")
           table.remove(used_keystrokes, find_index(used_keystrokes, old_keystroke))
         end
-        
+
       else -- new keystroke already in use
         ColourNote("tomato", "black", "-- ship_kp: the keystroke '" .. response .. "' is already in use --")
       end
@@ -702,12 +702,12 @@ end
 function enable_ship_accel()
   if (not backed_up) then
     Note("-- ship_kp: enabling ship accelerators --")
-    
+
     for command, keystroke in pairs(config) do
       backup_keystroke(keystroke)
       add_accelerator(keystroke, command, "yes")
     end
-    
+
     backed_up = true
   end
 end
@@ -716,11 +716,11 @@ end
 function disable_ship_accel()
   if (backed_up) then
     Note("-- ship_kp: disabling ship accelerators --")
-    
+
     for _, keystroke in pairs(config) do
       restore_keystroke(keystroke, "yes")
     end
-    
+
     backed_up = false
   end
 end

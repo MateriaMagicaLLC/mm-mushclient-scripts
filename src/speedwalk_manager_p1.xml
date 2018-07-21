@@ -50,7 +50,7 @@ Edit the variables delay and chunk to change the speedwalk delay (default = 10) 
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -196,7 +196,7 @@ function OnPluginInstall()
   Tell("-- " .. GetPluginInfo(GetPluginID (), 1) .. ": type ")
   ColourTell("silver", "black", GetPluginInfo(GetPluginID (), 1) .. " help")
   Note(" to see the list of available commands --")
-  
+
   init_stuff()
 end
 
@@ -210,7 +210,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/speedwalk_manager_p1.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/speedwalk_manager_p1.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -223,7 +223,7 @@ end
 
 function find_path(room_num)
   local spd = map_path(room_num)
-  
+
   if (spd) then
     evaluate_speedwalk(spd)
   end
@@ -234,7 +234,7 @@ function map_path(dest)
   -- calls a function in MM_GMCP_Mapper_GMCP
 
   local res, val
-  
+
   res, val = CallPlugin("f973af093e715dece34dc25f", "map_path", dest)
 
   if (res ~= 0) then
@@ -272,7 +272,7 @@ end
 
 function evaluate_speedwalk(spd)
   local aux = EvaluateSpeedwalk(spd)
-  
+
   if (string.find(aux, "*") == 1) then
     Note("-- speedwalk_manager_p1 - speedwalk evaluation error --")
 
@@ -294,27 +294,27 @@ shortdir = {
 
 function do_speedwalk(spd)
   wait.make(function()
-    
+
     if (not speeding) then
       local delay = tonumber(GetVariable("delay"))
       SetSpeedWalkDelay(delay)
 
       local chunk = tonumber(GetVariable("chunk"))
-      
+
       local aux = string.gsub(spd, "\r\n", "|")
       local t = utils.split(aux, "|")
-      
+
       init_stuff()
 
       starttime = os.time()
       speeding = true
-      
+
       local i, chunkstop
 
       i = 1
       while (i < #t) do
         chunkstop = (chunk * (1 + math.floor(i / chunk)))
-        
+
         repeat
           if (t[i] ~= "pause") then
             if (shortdir[t[i]]) then
@@ -322,13 +322,13 @@ function do_speedwalk(spd)
             else
               Queue(t[i])
             end
-            
+
             i = i + 1
-          
+
           else
             abort_speedwalk()
           end
-        
+
         until (i > chunkstop) or (i > #t) or (pause) or (abort)
 
         if (i > chunkstop) or (i > #t) then
@@ -339,7 +339,7 @@ function do_speedwalk(spd)
         if (not abort) then
           EnableTrigger("wait_for_where", true)
           Send("where")
-          
+
           while (waiting) do
             wait.time(.5)
           end
@@ -348,7 +348,7 @@ function do_speedwalk(spd)
 
       Note("-- speedwalk_manager_p1: done - elapsed time " .. os.time() - starttime .. "s --")
       init_stuff()
-      
+
     else
       Note("-- speedwalk_manager_p1: you're already speedwalking! - use spd1 abort if you want to cancel it, then try again --")
     end
@@ -381,6 +381,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

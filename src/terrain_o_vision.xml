@@ -49,7 +49,7 @@ Syntax:
 Authors: Elbereth and Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -156,13 +156,13 @@ function choose_mode(mymode)
     EnableTrigger("normalline", false)
     EnableTrigger("forestedline", true)
     Note("-- Terrain-O-Vision: hiding the *Forested* tag (if applicable) --")
-  
+
   elseif (mode == "normal") then
     EnableTrigger("normalline", false)
     EnableTrigger("forestedline", false)
     Note("-- Terrain-O-Vision: scripts disabled (showing lines unchanged) --")
   end
-  
+
   got_gmcp_data = false
 end
 
@@ -175,7 +175,7 @@ function OnPluginBroadcast(msg, id, name, text)
   if (id =="f67c4339ed0591a5b010d05b") then -- GMCP message
     if (text == "room.info") then -- room.info
       get_gmcp_room()
-      
+
       got_gmcp_data = true
       -- using this variable to figure out if we received updated gmcp room.info,
       -- which happens when we enter a room, or when we look at the current room
@@ -189,7 +189,7 @@ end
 function get_gmcp_room()
   local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "room.info")
   luastmt = "gmcpdata = " .. gmcparg
-  
+
   assert(loadstring(luastmt or ""))()
 end
 
@@ -228,7 +228,7 @@ function show_remaining_runs(numstyles, starting_run)
                RGBColourToName(trigger_style_runs[i].backcolour),
                trigger_style_runs[i].text)
   end
-  
+
   Note("") -- end of line
 end
 
@@ -267,19 +267,19 @@ function show_terrain_line(starting_run)
       show_terrain_in_line(terraininfo)
       got_gmcp_data = false
       showed_partial = true
-    
+
     else -- GMCP plugin not installed
       show_original_line() -- because we gagged it!
       showed_partial = false
 
       choose_mode("normal") -- disable scripts
-    end  
+    end
 
   else -- we didn't get gmcp room.info (eg, we looked north, etc.)
     show_terrain_in_line("?") -- we show ? instead
     showed_partial = true
   end
-  
+
   if (showed_partial) then -- gotta show the rest of the line
     show_rest_of_starting_run(starting_run)
 
@@ -333,7 +333,7 @@ function show_original_line()
                RGBColourToName(trigger_style_runs[i].backcolour),
                trigger_style_runs[i].text)
   end
-  
+
   Note("")
 end
 
@@ -359,7 +359,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/terrain_o_vision.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/terrain_o_vision.xml",
   }
   return (table.concat(t, ";"))
 end

@@ -53,7 +53,7 @@ Author: Ruthgul
 Miniwindow code adapted from Fiendish's / Enelya's chat capture plugins
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -174,7 +174,7 @@ function OnPluginInstall()
 
   load_config()
   init_data()
-  
+
   exits_start()
 end
 
@@ -219,7 +219,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/exits_n_mobs_mini.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/exits_n_mobs_mini.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -227,7 +227,7 @@ end
 
 function plugin_update_aux_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/generic_miniwindow.lua,MUSH/lua",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/generic_miniwindow.lua,MUSH/lua",
   }
   return (table.concat(t, ";"))
 end
@@ -240,7 +240,7 @@ end
 
 function load_config()
   show_mini = ((GetVariable("show_mini") or "true") == "true")
-  
+
   show_exits = ((GetVariable("show_exits") or "true") == "true")
   show_mobs = ((GetVariable("show_mobs") or "true") == "true")
 end
@@ -330,10 +330,10 @@ function OnPluginMXPopenTag(name, args, mylist)
   end
 
   local short
-  
+
   if (string.find(name, "pers") == 1) then        -- NPC or player
     short, _ = string.match(name, 'pers, name="(.-)" desc="(.-)"')
-    
+
     tmobs[short] = (tmobs[short] or 0) + 1
   end
 end
@@ -370,14 +370,14 @@ function do_show_exits_n_mobs()
   if (show_mobs) and (tmobs) then
     add_to_mini("cyan", "black", "Mobs: ")
     add_to_mini("silver", "black", "\r\n")
-    
+
     -- sort them alphabetically
     local tsmobs = {}
     for name, _ in pairs(tmobs) do
       tsmobs[#tsmobs + 1] = name
     end
     table.sort(tsmobs)
-    
+
     -- show them
     local name
     for i = 1, #tsmobs do
@@ -420,6 +420,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

@@ -52,7 +52,7 @@ It replaces long names with short names, for mobs and items on the ground.
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -111,7 +111,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/meh_shortnames.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/meh_shortnames.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -131,9 +131,9 @@ function OnPluginPacketReceived(s)
     s = old_s .. s
     old_s = nil
   end
-  
+
   local n1, n2
-  
+
   -- if the number of <get and </get in the current packet doesn't match,
   -- put the current packet on hold (until they do)
   _, n1 = string.gsub(s, "<get", "blah")
@@ -158,7 +158,7 @@ function OnPluginPacketReceived(s)
   if (GetInfo(104)) or (GetInfo(105)) then  -- MXP or Pueblo active
     local prefix
     local suffix = "</font>"
-    
+
     s = strip_parenthesized_stuff(s)
 
     for short, long in string.gmatch(s, '<get name="(.-)" desc=".-">(.-)</get>\n') do
@@ -169,12 +169,12 @@ function OnPluginPacketReceived(s)
 
     for short, long in string.gmatch(s, '<pers name="(.-)" desc=".-">(.-)</pers>\n') do
       prefix = get_color(long)
-      
+
       s = string.gsub(s, escaped_str(long), prefix .. short .. suffix, 1)
     end
 --  Note(s)
   end
-  
+
   return s  -- unchanged if not using MXP
 end -- OnPluginPacketReceived
 
@@ -197,12 +197,12 @@ function get_color(s)
   --	[10] = "lime",
   --	[7] - "silver",
   }
-  
+
   s = string.match(s, "(.-) (.+)")
-  
+
   local color, loc
   local old_loc = 0
-  
+
   for code, name in pairs(ansi2name) do
     loc = string.find(escaped_str(s), "38;5;" .. code .. "m")
     if (loc) and (loc > old_loc) then
@@ -210,7 +210,7 @@ function get_color(s)
       old_loc = loc
     end
   end
-  
+
   loc = (string.find(escaped_str(s), "38;5;10m"))
   if (loc) and (loc > old_loc) then
     color = "lime"
@@ -220,7 +220,7 @@ function get_color(s)
     --if (string.find(escaped_str(s), "38;5;7m")) then
     color = "silver"
   end
-  
+
   color = '<font color="' .. color .. '">'
 
   return color
@@ -234,11 +234,11 @@ function strip_parenthesized_stuff(s)
     "%[38;5;11m%(Gold Aura%) ",
     "%[38;5;9m%(Red Aura%) ",
   }
-  
+
   for i = 1, #subs do
     s = string.gsub(s, subs[i], "")
   end
-  
+
   return s
 end
 
@@ -272,6 +272,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

@@ -39,7 +39,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -189,7 +189,7 @@ function OnPluginInstall()
   Tell("-- " .. GetPluginInfo(GetPluginID (), 1) .. ": type ")
   ColourTell("silver", "black", GetPluginInfo(GetPluginID (), 1) .. " help")
   Note(" to see info about this plugin --")
-  
+
   load_config()
 end
 
@@ -203,7 +203,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/meh_sort.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/meh_sort.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -224,21 +224,21 @@ end
 function toggle_status(status)
   if (status == "on") then
     do_sort = true
-    
+
   elseif (status == "off") then
     do_sort = false
-  
+
   elseif (status == "") then
     do_sort = not do_sort
   end
 
   if (do_sort) then
     Note("-- meh_sort: sorting of marks and bosses ON --")
-  
+
   else
     Note("-- meh_sort: sorting of marks and bosses OFF --")
   end
-  
+
   config_sort()
 end
 
@@ -248,7 +248,7 @@ function config_sort()
     EnableTriggerGroup("(m)", true)
     EnableTrigger("capture_marks", false)
     EnableTrigger("end_marks", false)
-    
+
     EnableTriggerGroup("(b)", true)
     EnableTrigger("capture_bosses", false)
     EnableTrigger("end_bosses", false)
@@ -299,7 +299,7 @@ function sort_marks_end(line)
     if (math.fmod(i, 3) == 0) then
       ColourNote("yellow", "black", Trim(s))
       s = ""
-    end 
+    end
   end
 
   if (s ~= "") then
@@ -367,6 +367,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

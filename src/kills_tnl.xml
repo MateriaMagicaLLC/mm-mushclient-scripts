@@ -45,7 +45,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -152,7 +152,7 @@ function OnPluginInstall()
     Note(" to see info about this plugin --")
 
     init_stuff()
-    
+
     -- give the plugins time to initialize
     wait.time(3)
     detect_plugins()
@@ -196,7 +196,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/kills_tnl.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/kills_tnl.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -209,7 +209,7 @@ end
 
 function init_stuff()
   exp = nil
-  
+
   reset_exp_stats()
 end
 
@@ -260,14 +260,14 @@ function process_exp()
       time = os.time(),
       experience = exp,
     }
-    
+
     local i, f = math.modf(exptnl / exp)
     if (f == 0) then
       do_show(i)
     else
       do_show(i + 1)
     end
-    
+
     exp = nil
   end
 end
@@ -292,12 +292,12 @@ end
 
 function show_exp_stats()
   local current_time = os.time()
-  
+
   -- avg exp during the last hour
   local totexp = 0
   local totkills = 0
   local start_time = current_time
-  
+
   if (#texp > 1) then
     for i = 1, #texp do
       if ((current_time - texp[i].time) <= (60 * 60)) then

@@ -110,6 +110,6 @@ function OnHelp ()
   world.Note (world.GetPluginInfo (world.GetPluginID (), 3))
 end
 ]]>
-</script> 
+</script>
 
 </muclient>

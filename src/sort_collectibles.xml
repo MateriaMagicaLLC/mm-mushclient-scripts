@@ -40,7 +40,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -250,7 +250,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/sort_collectibles.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/sort_collectibles.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -289,12 +289,12 @@ function show_plates()
   for key, val in pairs(ArrayListKeys("aplates")) do
     if (tonumber(val) < 10) then
       ColourNote("silver", "black", "     (#" .. val .. ") " .. ArrayGet("aplates", val))
-    
+
     else
       ColourNote("silver", "black", "    (#" .. val .. ") " .. ArrayGet("aplates", val))
     end
   end
-  
+
   ArrayDelete("aplates")
 
   for k, v in ipairs(trigger_style_runs) do
@@ -302,7 +302,7 @@ function show_plates()
                RGBColourToName(v.backcolour),
                v.text)
   end
-  
+
   Note("")
 
   EnableTriggerGroup("script-collectibles-plates", false)
@@ -332,12 +332,12 @@ function show_plushies()
   for key, val in pairs (ArrayListKeys("aplushies")) do
     if (tonumber(val) < 10) then
       ColourNote("silver", "black", "     (#" .. val .. ") " .. ArrayGet("aplushies", val))
-    
+
     else
       ColourNote("silver", "black", "    (#" .. val .. ") " .. ArrayGet("aplushies", val))
     end
   end
-  
+
   ArrayDelete("aplushies")
 
   for k, v in ipairs(trigger_style_runs) do
@@ -345,7 +345,7 @@ function show_plushies()
                RGBColourToName(v.backcolour),
                v.text)
   end
-  
+
   Note("")
 
   EnableTriggerGroup("script-collectibles-plushies", false)
@@ -375,12 +375,12 @@ function show_stamps()
   for key, val in pairs (ArrayListKeys("astamps")) do
     if (tonumber(val) < 10) then
       ColourNote("silver", "black", "     (#" .. val .. ") " .. ArrayGet("astamps", val))
-    
+
     else
       ColourNote("silver", "black", "    (#" .. val .. ") " .. ArrayGet("astamps", val))
     end
   end
-  
+
   ArrayDelete("astamps")
 
   for k, v in ipairs(trigger_style_runs) do
@@ -388,7 +388,7 @@ function show_stamps()
                RGBColourToName(v.backcolour),
                v.text)
   end
-  
+
   Note("")
 
   EnableTriggerGroup("script-collectibles-stamps", false)

@@ -50,7 +50,7 @@ Author: Ruthgul
 Miniwindow code adapted from Fiendish's / Enelya's chat capture plugins
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -154,7 +154,7 @@ function OnPluginInstall()
   Note(" to see info about this plugin --")
 
   show_mini = ((GetVariable("show_mini") or "true") == "true")
-  
+
   EnableTrigger("first_prompt", true)
 end
 
@@ -204,7 +204,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/worth_mini.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/worth_mini.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -212,7 +212,7 @@ end
 
 function plugin_update_aux_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/generic_miniwindow.lua,MUSH/lua",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/generic_miniwindow.lua,MUSH/lua",
   }
   return (table.concat(t, ";"))
 end
@@ -283,7 +283,7 @@ end
 function get_gmcp_char_worth()
   local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "char.worth")
   luastmt = "gmcpdata = " .. gmcparg
-  
+
   assert(loadstring(luastmt or ""))()
 end
 
@@ -310,17 +310,17 @@ worth_types = { "gold", "bank", "pracs", "qp", "bp", "ru", "gems" }
 
 function handle_my_worth()
   latest_worth = os.time()
-  
+
   worth = {}
-  
+
   for i = 1, #worth_types do
     worth[worth_types[i]] = gmcpval(worth_types[i]) or 0
   end
-  
+
   if (not prev_worth) then
     prev_worth = {}
   end
-  
+
   local changed = false
   for i = 1, #worth_types do
     if (prev_worth[worth_types[i]] ~= worth[worth_types[i]]) then
@@ -328,7 +328,7 @@ function handle_my_worth()
       break
     end
   end
-  
+
   if (not prev_worth["gold"])
   or (changed) then
     worth_redraw()
@@ -366,12 +366,12 @@ worth_renames = {
 
 function do_show_worth()
   local label, txt
-  
+
   for i = 1, #worth_types do
     label = worth_renames[worth_types[i]] or worth_types[i]
 
     txt = label .. ":" .. string.rep(" ", string.len("tourms: ") - string.len(label)) .. string.format("%12s", format_thousands(worth[worth_types[i]] or "?"))
-  
+
     add_to_mini("silver", "black", txt)
     add_to_mini("silver", "black", "\r\n")
   end
@@ -380,20 +380,20 @@ end
 
 function format_thousands(num)
 	num = tonumber(num)
-  
+
   local res = "?"
-  
+
   if (num) then
     local s = string.format("%d", math.floor(num))
     local pos = string.len(s) % 3
-    
+
     if pos == 0 then
       pos = 3
     end
-    
+
     res = string.sub(s, 1, pos) .. string.gsub(string.sub(s, pos + 1), "(...)", ",%1")
   end
-  
+
   return res
 end
 
@@ -423,6 +423,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

@@ -51,7 +51,7 @@ Edit the variables highlight_color and special_highlight_color to change the col
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -68,7 +68,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
 <!-- edit these variables to change the highlights colors -->
   <variable name="highlight_color">tomato</variable>
   <variable name="special_highlight_color">springgreen</variable>
-  
+
 <!-- do not touch this variable -->
   <variable name="char_name">[a-zA-Z0-9 \-\,\.\']+</variable>
 
@@ -168,7 +168,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
 
 
 <!-- non-empty line -->
-  
+
   <trigger
    enabled="y"
    expand_variables="y"
@@ -204,7 +204,7 @@ function OnPluginInstall()
   Tell("-- " .. GetPluginInfo(GetPluginID(), 1) .. ": type ")
   ColourTell("silver", "black", GetPluginInfo(GetPluginID(), 1) .. " help")
   Note(" to see info about this plugin --")
-  
+
   init_highlights()
 end
 
@@ -218,7 +218,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/scan_helper.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/scan_helper.xml",
   }
   return (table.concat(t, ","))
 end
@@ -256,34 +256,34 @@ end
 
 function add_highlight(what)
   what = Trim(string.lower(what))
-  
+
   Tell("-- scan_helper - '")
   ColourTell("silver", "black", what)
-  
+
   if (not find_index(highlights, what)) then
     highlights[#highlights + 1] = what
     Note("' added to my list of highlights --")
-  
+
   else
     Note("' is already in my list of highlights --")
   end
-  
+
   table.sort(highlights)
 end
 
 
 function del_highlight(what)
   what = Trim(string.lower(what))
-  
+
   Tell("-- scan_helper - '")
   ColourTell("silver", "black", what)
-  
+
   local index = find_index(highlights, what)
-  
+
   if (index) then
     table.remove(highlights, index)
     Note("' removed from my list of highlights --")
-  
+
   else
     Note("' is NOT in my list of highlights --")
   end
@@ -292,9 +292,9 @@ end
 
 function add_special_highlight(what)
   what = Trim(string.lower(what))
-  
+
   special_highlight = what
-    
+
   Tell("-- scan_helper - '")
   ColourTell("silver", "black", what)
   Note("' added as a special highlight --")
@@ -317,7 +317,7 @@ function list_highlights()
   Note("-- scan_helper - current highlights --")
   Tell("regular: ")
   Note(serialize.save_simple(highlights))
-  
+
   if (special_highlight) then
     Note("special: " .. special_highlight)
   end
@@ -356,7 +356,7 @@ scan_dist = {
 
 function subtitle_scan(desc, dir)
   local fgcol, txt
-  
+
   for k, v in ipairs(trigger_style_runs) do
     -- highlight?
     if ((special_highlight)
@@ -367,22 +367,22 @@ function subtitle_scan(desc, dir)
     else
       fgcol = RGBColourToName(v.textcolour)
     end
-    
+
     -- add subtitle for distance, if applicable
     txt = string.gsub(v.text, desc, desc .. "[" .. scan_dist[desc] .. "]")
-    
+
     -- show the line
     ColourTell(fgcol,
                RGBColourToName(v.backcolour),
                txt)
   end
-  
+
   Note("")
 end
 
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

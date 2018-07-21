@@ -49,7 +49,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -159,7 +159,7 @@ function OnPluginInstall()
       show_sextant = false,
     }
     EnableTrigger("a_prompt", false)
-    
+
     -- give the plugins time to initialize
     wait.time(3)
     detect_plugins()
@@ -208,7 +208,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/faux_sextant.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/faux_sextant.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -223,7 +223,7 @@ function OnPluginBroadcast(msg, id, name, text)
   if (id =="f67c4339ed0591a5b010d05b") then -- GMCP message
     if (text == "room.info") then -- room.info
       get_gmcp_room()
-      
+
       if (not sextant_started) then
         sextant_started = true -- we start on first GMCP room package
 
@@ -238,7 +238,7 @@ end
 function get_gmcp_room()
   local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "room.info")
   luastmt = "gmcpdata = " .. gmcparg
-  
+
   assert(loadstring(luastmt or ""))()
 end
 
@@ -272,7 +272,7 @@ end
 function toggle_coords_to(status)
   if (sextant_started) then
     config.show_sextant = do_toggle(config.show_sextant, status)
-    
+
     save_config()
 
     config_coords()
@@ -334,7 +334,7 @@ function show_coords()
     -- both MushReader and a SAPI plugin are present
     -- so read the coords using SAPI
       sapi_say(posx .. ", " .. posy)
-    
+
     else
     -- show coords on screen
       Tell("[")
@@ -343,7 +343,7 @@ function show_coords()
       ColourTell("silver", "black", posy)
       Note("]")
     end
-    
+
     if (config.log_coords) then
       WriteLog("[" .. posx .. "," .. posy .. "]")
       -- include coords in logfile, if logging

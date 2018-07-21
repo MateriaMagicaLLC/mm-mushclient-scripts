@@ -79,7 +79,7 @@ Changes added by Ruthgul:
    sequence="100"
   >
   </alias>
-  
+
   <alias
    match="tts_interrupt *"
    enabled="y"
@@ -111,7 +111,7 @@ Changes added by Ruthgul:
    sequence="100"
   >
   </alias>
-  
+
 
 <!--  Plugin help  -->
 
@@ -248,7 +248,7 @@ function OnPluginInstall()
   say("mush reader initialized")
 
   Note(GetPluginInfo(GetPluginID(), 1) .. ": type " .. GetPluginInfo(GetPluginID(), 1) .. " help to see info about this plugin")
-  
+
   if (is_accelerators_present()) then
     add_accelerator("ctrl + shift + f12", "tts", "no")
   else
@@ -271,7 +271,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/MushReader.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/MushReader.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -364,13 +364,13 @@ function is_accelerators_present()
   local plugin_name = GetPluginInfo("f99134f19ea994a0cc0888d1", 1)
 
   local res = false
-  
+
   if (plugin_name == "accelerators") then
     if (GetPluginInfo("f99134f19ea994a0cc0888d1", 17)) then
       res = true
     end
   end
-  
+
   return res
 end
 
@@ -388,8 +388,8 @@ function add_accelerator(keystroke, command, override)
 end
 
 
-]]>            
+]]>
 
-</script> 
+</script>
 
 </muclient>

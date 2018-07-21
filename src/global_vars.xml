@@ -71,7 +71,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -155,7 +155,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/global_vars.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/global_vars.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -205,7 +205,7 @@ end
 
 function set_global_var(name, value)
   local aux
-  
+
   if (value) then
     aux = SetVariable(name, value)
   else

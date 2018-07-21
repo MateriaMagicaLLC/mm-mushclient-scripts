@@ -45,7 +45,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -80,7 +80,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
    enabled="y"
   >
   </alias>
-  
+
 </aliases>
 
 
@@ -120,7 +120,7 @@ function OnPluginInstall()
   Tell("-- " .. GetPluginInfo(GetPluginID(), 1) .. ": type ")
   ColourTell("silver", "black", GetPluginInfo(GetPluginID(), 1) .. " help")
   Note(" to see info about this plugin --")
-  
+
   load_config()
 end
 
@@ -134,7 +134,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/vitals_changes.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/vitals_changes.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -160,16 +160,16 @@ function toggle_logging(what)
   if (what == "hp") then
     log_hp = not log_hp
     notify_toggle("hp", log_hp)
-  
+
   elseif (what == "sp") then
     log_sp = not log_sp
     notify_toggle("sp", log_sp)
-  
+
   elseif (what == "st") then
     log_st = not log_st
     notify_toggle("st", log_st)
   end
-  
+
   save_config()
 end
 
@@ -198,7 +198,7 @@ function show_changes(hp, sp, st)
 
     log_stuff(hpdiff, spdiff, stdiff)
   end
-  
+
   oldhp = hp
   oldsp = sp
   oldst = st
@@ -226,19 +226,19 @@ end
 
 function log_stuff(hpdiff, spdiff, stdiff)
   local hpstr, spstr, ststr
-  
+
   if (log_hp) then
     hpstr = hpdiff
   end
-  
+
   if (log_sp) then
     spstr = spdiff
   end
-  
+
   if (log_st) then
     ststr = stdiff
   end
-  
+
   if (hpstr) or (spstr) or (ststr) then
     local str = (hpstr or "-") .. ", " .. (spstr or "-") .. ", " .. (ststr or "-")
     AppendToNotepad("vitals changes", str .. "\r\n")
@@ -248,6 +248,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

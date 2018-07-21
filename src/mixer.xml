@@ -52,7 +52,7 @@ Note: You can edit these variables
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -65,7 +65,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
 <!--  Variables  -->
 
 <variables>
-  
+
   <variable name="total_results">5</variable>
 
   <variable name="total_time">3</variable>
@@ -235,7 +235,7 @@ function OnPluginInstall()
   Tell("-- " .. GetPluginInfo(GetPluginID(), 1) .. ": type ")
   ColourTell("silver", "black", GetPluginInfo(GetPluginID(), 1) .. " help")
   Note(" to see info about this plugin --")
-  
+
   init_containers() -- edit this function if you wanna set default containers!
 end
 
@@ -249,7 +249,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/mixer.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/mixer.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -323,14 +323,14 @@ end
 
 function find_index(t, item)
   res = nil
-  
+
   for i = 1, #t do
     if (t[i] == item) then
       res = i
       break
     end
   end
-  
+
   return res
 end
 
@@ -354,7 +354,7 @@ function set_container(type, name)
   if (type == "mixer") then
     mycontainer = name
     ColourTell("silver", "black", mycontainer)
-  
+
   else -- type is sedum
     mysedumcontainer = name
     ColourTell("silver", "black", mysedumcontainer)
@@ -372,7 +372,7 @@ end
 function show_recipes(param)
   if (mycontainer) then
     param = Trim(string.lower(param))
-    
+
     local done = false
     reverse = false
     sedum = false
@@ -402,7 +402,7 @@ function show_recipes(param)
     end
 
     mymix = param
-    
+
     if (mixes[mymix]) then -- we know the mix's power boundaries
       sedum_counted = true
       if (sedum) then -- we're going to use sedum
@@ -410,7 +410,7 @@ function show_recipes(param)
           if (mysedumcontainer ~= mycontainer) then
             sedum_counted = false -- => got to count them separately
           end
-        
+
         else -- sedum's in the same container
           mysedumcontainer = mycontainer
         end
@@ -419,7 +419,7 @@ function show_recipes(param)
       have_sprigs = {}
       have_sedum = 0
       no_sprigs = true
-      
+
       count_sprigs(mycontainer)
       --fake_sprigs()
 
@@ -429,7 +429,7 @@ function show_recipes(param)
       ColourTell("silver", "black", mymix)
       Note(" --")
     end
-  
+
   else
     Note("")
     Tell("-- mixer: you must set a container for sprigs first, using ")
@@ -444,7 +444,7 @@ function count_sprigs(container)
   EnableTrigger("container_start", true)
   EnableTrigger("container_continue", true)
   EnableTrigger("container_abort", true)
-  
+
   Send("look in '" .. container .. "'")
 end
 
@@ -459,7 +459,7 @@ function fake_sprigs()
     ["verbena"] = 10,
     ["sedum rosea"] = 1,
   }
-  
+
   no_sprigs = false
 
   calc_recipes(mymix)
@@ -481,14 +481,14 @@ function count_line(num, sprig)
   else
     num = tonumber(num)
   end
-  
+
   sprig = string.gsub(sprig, "a sprig of ", "")
-  
+
   if (sprig_values[sprig]) then -- it's a sprig
     if (sprig == "sedum rosea") then
       have_sedum = num
 --      have_sedum = (have_sedum or 0) + num
-    
+
     else
       have_sprigs[sprig] = num
 --      have_sprigs[sprig] = (have_sprigs[sprig] or 0) + num
@@ -503,13 +503,13 @@ function end_counting()
   EnableTrigger("container_empty", false)
   EnableTrigger("container_line", false)
   EnableTrigger("container_end", false)
-  
+
   --show_container_totals()
-  
+
   if (sedum) and (not sedum_counted) then
     sedum_counted = true
     count_sprigs(mysedumcontainer)
-  
+
   else
     calc_recipes(mymix)
   end
@@ -551,12 +551,12 @@ function calc_recipes(mix)
     -- (or 6 if we're already including sedum)
     max_sprigs = 7
     local lmix = ""
-    
+
     if (sedum) then
       if (have_sedum > 0) then
         lmix = "sedum rosea"
         max_sprigs = 6
-    
+
       else
         Note("-- mixer: no sedum sprigs available, will show recipes without it --")
       end
@@ -573,7 +573,7 @@ function calc_recipes(mix)
 
     SetStatus("Ready")
     list_results()
-  
+
   else
     Note("")
     Tell("-- mixer: there aren't any sprigs in the container '")
@@ -585,19 +585,19 @@ end
 
 function find_power(mix)
   local minp, maxp
-  
+
   if (mixes[mix]) then
     minp = mixes[mix].minp
     maxp = mixes[mix].maxp
   end
-  
+
   return minp, maxp
 end
 
 
 function rec_mixes(lhave, lmix, minp, maxp)
   local power = calc_power(lmix)
-  
+
   if (is_right_range(power, minp, maxp))
   and (ok_sprigs(lmix)) then
     lmix = sort_list(lmix)
@@ -610,21 +610,21 @@ function rec_mixes(lhave, lmix, minp, maxp)
       else
         same_power_mixes = same_power_mixes .. ";" .. lmix
       end
-      
+
       ArraySet("amixes", power, same_power_mixes)
       total = total + 1
     end
 
   elseif (power < minp) then
     local tmix = utils.split(lmix, ",")
-    
+
     if (#tmix < max_sprigs) then
       total_results = tonumber(GetVariable("total_results") or 5)
       total_time = tonumber(GetVariable("total_time") or 3)
 
       if (total < total_results) then
         local thave = utils.split(Trim(lhave), ",")
-        
+
         for i = 1, #thave do
           if (os.time() >= (start_time + total_time)) then
           -- we ran out of time
@@ -636,13 +636,13 @@ function rec_mixes(lhave, lmix, minp, maxp)
             local new_lhave, new_lmix
 
             new_lhave, new_lmix = add_sprig_to_mix(lhave, lmix, thave[i])
-            
+
             SetStatus("trying: " .. new_lmix)
 
             rec_mixes(new_lhave, new_lmix, minp, maxp)
           end
         end
-      
+
       else
         res_done = true
       end
@@ -690,17 +690,17 @@ function already_added(smixes, lmix)
 
     res = find_index(tmixes, lmix)
   end
-  
+
   return res
 end
 
 
 function calc_power(lmix)
   local power = 0
-  
+
   if (lmix ~= "") then
     tmix = utils.split(lmix, ",")
-    
+
     for i = 1, #tmix do
       power = power + sprig_values[tmix[i]]
     end
@@ -713,7 +713,7 @@ end
 function sort_list(lmix)
   if (lmix ~= "") then
     local tmix = utils.split(lmix, ",")
-    
+
     table.sort(tmix) -- alphabetical list
 
     return table.concat(tmix, ",")
@@ -726,20 +726,20 @@ end
 
 function sort_by_power(t)
   local taux = {}
-  
+
   local tstart, tend, tstep
 
   if (not reverse) then -- use high power sprigs first...
     tstart = 1
     tend = #sprigs_by_power
     tstep = 1
-  
+
   else -- use low power sprigs first...
     tstart = #sprigs_by_power
     tend = 1
     tstep = -1
   end
-  
+
   for i = tstart, tend, tstep do
     if (t[sprigs_by_power[i]]) then
       for j = 1, t[sprigs_by_power[i]] do
@@ -754,9 +754,9 @@ end
 
 function add_sprig_to_mix(lhave, lmix, sprig)
   local new_lhave, new_lmix
-  
+
   local thave = utils.split(lhave, ",")
-  
+
   local i = find_index(thave, sprig)
 
   if (i) then
@@ -765,15 +765,15 @@ function add_sprig_to_mix(lhave, lmix, sprig)
 
   new_lhave = table.concat(thave, ",")
 
-  if (lmix ~= "") then  
+  if (lmix ~= "") then
     local tmix = utils.split(lmix, ",")
-    
+
     tmix[#tmix + 1] = sprig
-    
+
     table.sort(tmix)
-    
+
     new_lmix = table.concat(tmix, ",")
-  
+
   else
     new_lmix = sprig
   end
@@ -784,7 +784,7 @@ end
 
 function list_results()
   local smixes, tmixes, lmix, tmix, fmix, short_name
-  
+
   Note("")
   if (ArrayListKeys("amixes")) then
 
@@ -793,16 +793,16 @@ function list_results()
     Note(" (sorted by power): ")
     for key, power in pairs(ArrayListKeys("amixes")) do
       smixes = ArrayGet("amixes", power)
-    
+
       tmixes = utils.split(smixes, ";")
-      
+
       for i = 1, #tmixes do
         lmix = tmixes[i]
 
         for i = 1, #sprigs_by_power do
           lmix = string.gsub(lmix, sprigs_by_power[i], string.match(sprigs_by_power[i], "(%a+)"))
         end
-        
+
         tmix = utils.split(lmix, ",")
 
         for i = 1, #tmix do
@@ -811,11 +811,11 @@ function list_results()
 
         lmix = string.gsub(lmix, ",", " ")
         tmix[#tmix + 1] = "mix " .. lmix
-        
+
         lmix = table.concat(tmix, ",")
-        
+
         fmix = format_output(tmixes[i])
-        
+
         fmix = string.gsub(fmix, ",", " + ")
 
         Tell("* mix: ")
@@ -823,7 +823,7 @@ function list_results()
         Note(" - power: " .. power .. " - sprigs: " .. #tmix - 1)
       end
     end
-  
+
   else
     Tell("No results found for ")
     ColourTell("silver", "black", mymix)
@@ -834,26 +834,26 @@ end
 
 function format_output(lmix)
   local taux = {}
-  
+
   local tmix = utils.split(lmix, ",")
-  
+
   for i = 1, #tmix do
     taux[tmix[i]] = (taux[tmix[i]] or 0) + 1  -- counting
   end
-  
+
   local formatted = {}
   for k, v in pairs(taux) do
     formatted[#formatted + 1] = v .. " " .. k
     -- making it into a list <num> <sprig>
   end
-  
+
   return table.concat(formatted, ",")
 end
 
 
 function domix(commands)
   local tcommands = utils.split(commands, ",")
-  
+
   for i = 1, #tcommands do
     Execute(tcommands[i])
   end
@@ -870,6 +870,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

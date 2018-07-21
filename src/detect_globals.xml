@@ -103,7 +103,7 @@ It currently keeps track of name, race, class path, and current weapon.
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -171,7 +171,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
 </send>
   </trigger>
 
-  
+
 <!-- here on multiclass or respec -->
 
   <trigger
@@ -278,7 +278,7 @@ function OnPluginInstall()
   ColourTell("silver", "black", GetPluginInfo(GetPluginID (), 1) .. " help")
   Note(" to see info about this plugin --")
 
-  
+
   init_stuff()
 end
 
@@ -297,7 +297,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/detect_globals.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/detect_globals.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -339,7 +339,7 @@ end
 
 function init_stuff()
   EnableTrigger("first_prompt", true)
-  
+
   weapon = nil
 end
 
@@ -360,7 +360,7 @@ end
 
 function on_first_prompt()
   EnableTrigger("first_prompt", false)
-  
+
   detect_char_base()
   send_id()
 end
@@ -374,7 +374,7 @@ end
 function get_gmcp_char_base(name)
   local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "char.base")
   luastmt = "gmcpdata = " .. gmcparg
-  
+
   assert(loadstring(luastmt or ""))()
 end
 
@@ -387,9 +387,9 @@ function got_gmcp_char_base()
   local race = gmcpval("race")
 --  Note(race)
   set_global_var("race", race)
-  
+
   local path, a_class
-  
+
   for i = 1, 4 do
     a_class = gmcpval("class" .. i)
     if (a_class) then
@@ -398,19 +398,19 @@ function got_gmcp_char_base()
       else
         path = path .. "/" .. a_class
       end
-      
+
     else
       break
     end
   end
-  
+
   a_class = gmcpval("current-class")
   if (a_class == "archon") then
     path = path .. "/archon"
   end
 
 --  Note(path)
-  
+
   set_global_var("path", path)
 end
 
@@ -426,12 +426,12 @@ function OnPluginBroadcast(msg, id, pname, txt)
   and (txt == "char.base") then
     get_gmcp_char_base()
     got_gmcp_char_base()
-  
+
   elseif (id =="97784abf5f30629a0d7e7307")
   and (pname == "global_vars") then
     if (msg == 1) and (txt == "detect_weapon") then
       detect_weapon = (get_global_var("detect_weapon") == "true")
-      
+
       if (detect_weapon) then
         enable_weapon_detection()
       else
@@ -474,12 +474,12 @@ end
 
 function set_weapon(wtype, wname)
   EnableTrigger("weapon_dmg", false)
-  
+
   weapon = {
     type = wtype,
     name = wname,
   }
-  
+
   set_global_var("weapon", wtype .. "/" .. wname)
 end
 
@@ -487,6 +487,6 @@ end
 ]]>
 
 
-</script> 
+</script>
 
 </muclient>

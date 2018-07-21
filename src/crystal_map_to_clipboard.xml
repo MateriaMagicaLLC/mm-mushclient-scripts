@@ -73,7 +73,7 @@ Author: Ruthgul
   <send>looked_at_map()
 </send>
   </trigger>
-  
+
   <trigger
    enabled="y"
    keep_evaluating="y"
@@ -97,7 +97,7 @@ Author: Ruthgul
   <send>got_header()
 </send>
   </trigger>
-  
+
 end of old stuff -->
 
   <trigger
@@ -175,7 +175,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/crystal_map_to_clipboard.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/crystal_map_to_clipboard.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -190,7 +190,7 @@ end
 function looked_at_map()
   EnableTrigger("start_map_capture", true)
   EnableTrigger("map_end", true)
-  
+
   crystal_map = ""
   map_lines = 0
 end
@@ -206,7 +206,7 @@ end
 function looked_at_map_no_lore()
   EnableTrigger("map_line", true)
   EnableTrigger("map_end", true)
-  
+
   crystal_map = ""
   map_lines = 0
 end
@@ -230,6 +230,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

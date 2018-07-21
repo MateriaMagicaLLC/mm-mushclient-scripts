@@ -79,7 +79,7 @@ Syntax:
 
 * update plugins ALL  - update all installed plugins, if they're supported
 
-* update plugin <id>  - updates the specified plugin, by PluginID, 
+* update plugin <id>  - updates the specified plugin, by PluginID,
 
 * update plugin <partial_name>  - shows a list of installed plugins matching <partial_name>, with hyperlinks to update the supported ones - eg, update plugin mapper
 
@@ -89,7 +89,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -193,7 +193,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/plugins_updater.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/plugins_updater.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -206,13 +206,13 @@ end
 function list_plugins(partial)
   local tplugins = {}
   local aux, name, author, id, found
-  
+
   -- using a table to sort them alphabetically by name
   for k, v in pairs(GetPluginList()) do
     name = GetPluginInfo(v, 1)
     author = GetPluginInfo(v, 2)
     aux = string.lower(name) .. ";" .. v .. ";" .. name .. " (by " .. author .. ")"
-    
+
     if ((partial) and (string.find(string.lower(name), string.lower(partial))))
     or (not partial) then
       tplugins[#tplugins + 1] = aux
@@ -221,13 +221,13 @@ function list_plugins(partial)
   table.sort(tplugins)
 
   found = #tplugins
-  
+
   if (partial) then
     Note("\r\n-- plugins updater: list of plugins matching '" .. partial .. "' --")
   else
     Note("\r\n-- plugins updater: list of installed plugins --")
   end
-  
+
   for i = 1, #tplugins do
     aux = utils.split(tplugins[i], ";")
     id = aux[2]
@@ -236,9 +236,9 @@ function list_plugins(partial)
     if (partial) then
       Note("")
     end
-    
+
     Tell("* " .. name)
-    
+
     local res, s = CallPlugin(id, "plugin_update_url")
     if (res == 0) then -- supported
       if (not partial) then
@@ -273,7 +273,7 @@ function list_plugins(partial)
     end
     Note("")
   end
-  
+
   if (found == 1) then
     SetClipboard(id)
   end
@@ -303,12 +303,12 @@ end
 -- update stuff
 -----------------
 
---mydbpath = "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/"
+--mydbpath = "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/"
 
 function update_plugin(id)
   if (IsPluginInstalled(id)) then
     update_sth("plugin", Trim(id), "plugin_update_url")
-  
+
   else
     list_plugins(id)
   end
@@ -402,11 +402,11 @@ end
 function parse_location(id, spath, pluginpath)
   local url, ldir, lfile
   local tpath = utils.split(spath, ",")
-  
+
   local proxy_url = "http://freeproxyx.appspot.com/"
 
   url = tpath[1]
-  url = string.gsub(url, "dl.dropbox.com/u/65599194/mm-updater/", "raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/")
+  url = string.gsub(url, "dl.dropbox.com/u/65599194/mm-updater/", "raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/")
   url = string.gsub(url, "http://", proxy_url)
   url = string.gsub(url, "https://", proxy_url)
 

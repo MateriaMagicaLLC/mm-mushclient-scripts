@@ -34,7 +34,7 @@ Edit the variables col1 & col2 to change colors.
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -47,7 +47,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
 <!--  Variables  -->
 
 <variables>
-  
+
   <variable name="col1">|C</variable>
 
   <variable name="col2">|D</variable>
@@ -192,7 +192,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/ct_qrewards.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/ct_qrewards.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -245,7 +245,7 @@ end
 
 function crystal_end_capture()
   EnableTriggerGroup("capture_crystal", false)
-  
+
 --  require "serialize"
 --  Note(serialize.save_simple(crystal))
   report_rewards("Tadamir", crystal.qp, crystal.exp, "", "", "", crystal.pp, crystal.gp)
@@ -307,19 +307,19 @@ end
 
 function pick_color(num)
   local col
-  
+
   if (math.fmod(num, 2) ~= 0) then -- even
     col = GetVariable("col1")
   else -- odd
     col = GetVariable("col2")
   end
-  
+
   return col
 end
 
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

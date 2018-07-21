@@ -122,7 +122,7 @@ Syntax:
 Authors: Nick Gammon, Ruthgul (maintained by Ruthgul)
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -1086,7 +1086,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/MM_GMCP_Mapper_GMCP.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/MM_GMCP_Mapper_GMCP.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -1094,7 +1094,7 @@ end
 
 function plugin_update_aux_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/mm_mapper.lua,MUSH/lua",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/mm_mapper.lua,MUSH/lua",
   }
   return (table.concat(t, ";"))
 end
@@ -1196,7 +1196,7 @@ end
 function get_gmcp_room()
   local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "room.info")
   luastmt = "gmcpdata = " .. gmcparg
-  
+
   assert(loadstring(luastmt or ""))()
 end
 
@@ -2153,7 +2153,7 @@ end
 function map_bookmarks(name, line, wildcards)
   if (compatibility) then
     ColourNote("tomato", "black", "GMCP Mapper: I can't find bookmarks in compatibility mode. Please upgrade your database.")
-  
+
   else
     local rooms = {}
     local count = 0
@@ -2188,7 +2188,7 @@ end
 function map_find_bookmark(book)
   if (compatibility) then
     ColourNote("tomato", "black", "GMCP Mapper: I can't find bookmarks in compatibility mode. Please upgrade your database.")
-  
+
   else
     local sbook = "%" .. string.upper(book) .. "%"
     local t = {}
@@ -3160,7 +3160,7 @@ function room_exits(uid)
   if (room) then
     res = serialize.save_simple(room.exits or {})
   end
-  
+
   return res
 end
 
@@ -3556,7 +3556,7 @@ function map_del_room(id)
   local room = load_room_from_database(id)
 
   if (room) then -- room is in the map
-    
+
     if (count_exits(room.exits) == 0) then -- the room has no "from" links
       db:exec("BEGIN TRANSACTION;")
 
@@ -3566,7 +3566,7 @@ function map_del_room(id)
       if (notes) then
         del_bookmark_from_database(id)
       end
-      
+
       local tags = load_tags_from_database(uid)
       if (tags) then
         del_tags_from_database(id)
@@ -4511,7 +4511,7 @@ end
 
 function purge_list(list, name, unlink)
   local t = utils.split(list, " ")
-  
+
   purge_stuff(t, name, unlink)
 end
 
@@ -4567,7 +4567,7 @@ function nuke_room(uid)
   if (notes) then
     del_bookmark_from_database(uid)
   end
-  
+
   local tags = load_tags_from_database(uid)
   if (tags) then
     del_tags_from_database(uid)

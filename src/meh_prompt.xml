@@ -61,7 +61,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -522,7 +522,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/meh_prompt.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/meh_prompt.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -540,11 +540,11 @@ function OnPluginBroadcast(msg, id, name, text)
         gmcp = true
         load_config()
       end
-      
+
       get_gmcp_room()
       process_room()
     end
-  
+
   elseif (id =="97784abf5f30629a0d7e7307")
   and (pname == "global_vars") then -- global_vars
     if (msg == 1) and (text == "name") then
@@ -590,7 +590,7 @@ end
 function get_gmcp_room()
   local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "room.info")
   luastmt = "gmcpdata = " .. gmcparg
-  
+
   assert(loadstring(luastmt or ""))()
 end
 
@@ -616,7 +616,7 @@ function init_stuff()
   name = nil
   race = nil
   got_affects = nil
-  
+
   EnableTrigger("first_prompt", true)
 end
 
@@ -627,7 +627,7 @@ function on_first_prompt()
 
     -- give the plugins time to initialize
     wait.time(3)
-    
+
     do_get_name()
     do_get_race()
   end)

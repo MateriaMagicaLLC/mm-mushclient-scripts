@@ -52,7 +52,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -165,7 +165,7 @@ function OnPluginInstall()
     Note(" to see info about this plugin --")
 
     sound_file = GetVariable("sound_file")
-    
+
     timers = {}
 
     -- give the plugins time to install
@@ -212,7 +212,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/meh_timers.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/meh_timers.xml",
   }
   return (table.concat(t, ";"))
 end

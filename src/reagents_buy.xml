@@ -62,7 +62,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -392,7 +392,7 @@ function OnPluginInstall()
   Note(" to see info about this plugin --")
 
   available = {}
-  
+
   load_config()
 
   EnableTrigger("first_prompt", true)
@@ -421,7 +421,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/reagents_buy.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/reagents_buy.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -453,10 +453,10 @@ end
 function on_first_prompt()
   wait.make(function()
     EnableTrigger("first_prompt", false)
-  
+
     -- give the plugins time to initialize
     wait.time(3)
-  
+
     do_get_name()
   end)
 end
@@ -466,7 +466,7 @@ function OnPluginBroadcast(msg, id, pname, text)
   if (id =="97784abf5f30629a0d7e7307")
   and (pname == "global_vars") then -- global_vars
     if (msg == 1) and (text == "name") then
-      -- name broadcasted      
+      -- name broadcasted
       do_get_name()
     end
   end
@@ -475,7 +475,7 @@ end
 
 function do_get_name()
   name = get_global_var("name")
-  
+
   if (name) then
     got_name()
   end
@@ -833,13 +833,13 @@ function toggle_hints(state)
 
   elseif (state == "on") then
     show_hints = true
-  
+
   elseif (state == "off") then
     show_hints = false
   end
-  
+
   save_config()
-  
+
   if (show_hints) then
     Note("-- reagents_buy: will now show hints for shops --")
   else
@@ -855,7 +855,7 @@ end
 
 function save_config()
   SetVariable("show_hints", tostring(show_hints))
-  
+
   SaveState()
 end
 

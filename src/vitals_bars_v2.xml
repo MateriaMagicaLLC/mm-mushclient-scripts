@@ -54,7 +54,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -237,7 +237,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/vitals_bars_v2.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/vitals_bars_v2.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -377,7 +377,7 @@ end
 function get_gmcp_char()
   local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "char")
   luastmt = "gmcpdata = " .. gmcparg
-  
+
   assert(loadstring(luastmt or ""))()
 end
 
@@ -435,7 +435,7 @@ end
 
 function handle_my_max_vitals()
   latest_maxes = os.time()
-  
+
   max_hp = tonumber(gmcpval("maxstats.maxhp") or 0)
   max_sp = tonumber(gmcpval("maxstats.maxsp") or 0)
   max_st = tonumber(gmcpval("maxstats.maxst") or 0)
@@ -521,7 +521,7 @@ end
 
 function handle_my_status()
   latest_status = os.time()
-  
+
   tnl = tonumber(gmcpval("status.tnlpct") or 0)
   if (tnl < 0) then
     tnl = 0

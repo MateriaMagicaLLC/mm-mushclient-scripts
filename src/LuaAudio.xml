@@ -133,7 +133,7 @@ function OnPluginInstall()
     SetVariable("vol", "100")
     SaveState()
   end
-  
+
   if (is_accelerators_present()) then
     add_accelerator("ctrl + f12", "sound_toggle", "no")
   else
@@ -149,7 +149,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/LuaAudio.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/LuaAudio.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -186,7 +186,7 @@ end
 
 
 function split(str, pat)
-  local t = {}  
+  local t = {}
   local fpat = "(.-)" .. pat
   local last_end = 1
   local s, e, cap = str:find(fpat, 1)
@@ -202,7 +202,7 @@ function split(str, pat)
     table.insert(t, cap)
   end
   return t
-end 
+end
 
 
 -- mapping of loops to ids
@@ -471,13 +471,13 @@ function is_accelerators_present()
   local plugin_name = GetPluginInfo("f99134f19ea994a0cc0888d1", 1)
 
   local res = false
-  
+
   if (plugin_name == "accelerators") then
     if (GetPluginInfo("f99134f19ea994a0cc0888d1", 17)) then
       res = true
     end
   end
-  
+
   return res
 end
 
@@ -495,8 +495,8 @@ function add_accelerator(keystroke, command, override)
 end
 
 
-]]>            
+]]>
 
-</script> 
+</script>
 
 </muclient>

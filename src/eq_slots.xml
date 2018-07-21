@@ -39,7 +39,7 @@ Shows a list of empty equipment slots.
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -387,7 +387,7 @@ function OnPluginInstall()
   Tell("-- " .. GetPluginInfo(GetPluginID (), 1) .. ": type ")
   ColourTell("silver", "black", GetPluginInfo(GetPluginID (), 1) .. " help")
   Note(" to see info about this plugin --")
-  
+
   init_stuff()
 end
 
@@ -406,7 +406,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/eq_slots.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/eq_slots.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -461,7 +461,7 @@ function OnPluginBroadcast(msg, id, pname, text)
       race = get_global_var("race")
     end
   end
-end  
+end
 
 
 function start_detect_gear()
@@ -621,7 +621,7 @@ function show_empty_slots()
       ColourTell("silver", "black", " " .. normal_slots[i])
     end
   end
-  
+
   for i = 1, #extra_slots_races do
     if (race == extra_slots_races[i]) then
       for j = 1, #extra_slots[extra_slots_races[i]] do
@@ -657,6 +657,6 @@ extra_slots = {
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

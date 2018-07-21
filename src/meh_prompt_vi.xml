@@ -53,7 +53,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -239,9 +239,9 @@ function OnPluginInstall()
 
     threshold = tonumber(GetVariable("threshold") or 10)
     old_room = nil
-    
+
     EnableTrigger("first_prompt", true)
-    
+
     -- give the plugins time to initialize
     wait.time(3)
     detect_plugins()
@@ -257,7 +257,7 @@ end
 function detect_plugins()
   sapi_present = sapi_plugin_present()
   reader_present = reader_plugin_present()
-  
+
   use_reader = GetVariable("use_reader") or "sapi"
   fix_reader()
 end
@@ -288,7 +288,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/meh_prompt_vi.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/meh_prompt_vi.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -302,7 +302,7 @@ end
 function on_first_prompt()
   EnableTrigger("first_prompt", false)
   SendNoEcho("set extended-prompt on")
-  
+
   grab_maxes()
 end
 
@@ -352,9 +352,9 @@ function capture_prompt(flags_etc, my_hp, my_sp, my_st)
   hp = tonumber(my_hp)
   sp = tonumber(my_sp)
   st = tonumber(my_st)
-  
+
   check_if_warn_low_hp()
-  
+
   if (string.find(flags_etc, "SAFE")) then
     check_if_notify_safe()
   end
@@ -388,10 +388,10 @@ end
 
 function set_low_hp_threshold(thold)
   thold = tonumber(thold)
-  
+
   if (thold > 100) then
     Note("-- meh_prompt_vi: threshold must be a number between 0 and 100 --")
-  
+
   else
     threshold = thold
     SetVariable("threshold", threshold)
@@ -406,7 +406,7 @@ warn_frequency = 10
 
 function check_if_warn_low_hp()
   local hppc = hp * 100 / max_hp
-  
+
   if (hppc < threshold)
   and (hppc > 0)
   and (os.time() > ((last_warn_hp or 0) + warn_frequency)) then
@@ -446,12 +446,12 @@ end
 
 function check_if_we_moved()
   local room = gmcpval("num")
-  
+
   if (room ~= old_room) then
     res = true
     old_room = room
     we_moved = true
-  
+
   else
     we_moved = false
   end
@@ -461,7 +461,7 @@ end
 function get_gmcp_room()
   local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "room.info")
   luastmt = "gmcpdata = " .. gmcparg
-  
+
   assert(loadstring(luastmt or ""))()
 end
 
@@ -473,10 +473,10 @@ end
 
 function pick_reader(reader)
   use_reader = reader
-  
+
   SetVariable("use_reader", use_reader)
   SaveState()
-  
+
   fix_reader()
 end
 
@@ -492,7 +492,7 @@ function fix_reader()
       use_reader = nil
     end
   end
-  
+
   if (use_reader == "mushreader") and (not reader_present) then
     if (sapi_present) then
       use_reader = "sapi"
@@ -500,7 +500,7 @@ function fix_reader()
       use_reader = nil
     end
   end
-  
+
   if (not use_reader) then
     Note("meh_prompt_vi warning: neither Sapi_speaker nor MushReader are present - please install one of them and then reload this plugin --")
   end
@@ -514,7 +514,7 @@ end
 
 function read_text(txt)
   local res
-  
+
   if (use_reader == "mushreader") then
 --    Note("reading with mushreader")
     res = reader_say(txt)
@@ -530,14 +530,14 @@ end
 
 function sapi_say(text)
   local res = CallPlugin("463242566069ebfd1b379ec1", "speak_interrupt", text)
-  
+
   return res
 end
 
 
 function reader_say(text)
   local res = CallPlugin("925cdd0331023d9f0b8f05a7", "interrupt", text)
-  
+
   return res
 end
 
@@ -554,6 +554,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

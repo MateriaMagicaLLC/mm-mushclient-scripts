@@ -92,7 +92,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -224,7 +224,7 @@ else
 end
 </send>
   </alias>
-  
+
   <alias
    enabled="y"
    match="^add[ ]+mem[ ]+set\:(?P&lt;set&gt;[a-zA-Z\_ ]+)[ ]+spell\:(?P&lt;spell&gt;[a-zA-Z ]+)$"
@@ -239,7 +239,7 @@ else
 end
 </send>
   </alias>
-  
+
 
   <alias
    enabled="y"
@@ -466,7 +466,7 @@ end
   <send>spellbook_detected("%&lt;name&gt;")
 </send>
   </trigger>
-  
+
   <trigger
    group="detect_spells"
    keep_evaluating="y"
@@ -614,11 +614,11 @@ function OnPluginInstall()
 
     EnableTrigger("first_prompt", true)
     name = nil
-    
+
     -- first_run is checked to always run make_mems_sequence the first time,
     -- to deal with savestate file corruption
     first_run = true
-  
+
     -- give the plugins time to initialize
     wait.time(3)
     detect_plugins()
@@ -674,7 +674,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/mems_helper.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/mems_helper.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -830,7 +830,7 @@ function create_tables()
       spell         TEXT NOT NULL,   -- spell name
       date_added    INTEGER
     );
-    
+
     CREATE TABLE IF NOT EXISTS mems_sets(
       id            INTEGER PRIMARY KEY AUTOINCREMENT,
       char_name     TEXT NOT NULL,   -- character name
@@ -1382,7 +1382,7 @@ function add_mem_to_set(set, spell)
     else
       ColourNote("tomato", "black", "-- mems_helper: '" .. spell .. "' is already in your '" .. set .. "' mems set --")
     end
-    
+
   else
     add_mem(spell)
   end
@@ -1401,7 +1401,7 @@ function del_mem_from_set(set, spell)
     else
       ColourNote("tomato", "black", "-- mems_helper: '" .. spell .. "' is not in your '" .. set .. "' mems set --")
     end
-    
+
   else
     del_mem(spell)
   end
@@ -1410,7 +1410,7 @@ end
 
 function list_mems_in_set(set)
   set = string.lower(Trim(set))
-  
+
   local tres
   if (set ~= "default") then
     tres = get_mems_in_set(set)
@@ -1440,7 +1440,7 @@ function list_mems_sets()
     Tell("= ")
     ColourNote("silver", "black", tres[i])
   end
-  
+
   Note("(use 'list mems' to see your default set, or 'list mems set:<set_name>' to see a different set)")
 end
 
@@ -1466,7 +1466,7 @@ function get_list_of_sets()
   if (#tdefault > 0) then
     tres[#tres + 1] = "default"
   end
-  
+
   -- other sets
   for row in db:nrows(string.format("SELECT * FROM mems_sets WHERE char_name = %s", fixsql(name))) do
     if (not find_index(tres, row.set_name)) then
@@ -1543,11 +1543,11 @@ end
 
 function memorize_set(set)
   set = string.lower(Trim(set))
-  
+
   if (set ~= "default") then
     local mems = make_mems(set)
     do_mems(mems)
-    
+
   else
     memorize()
   end
@@ -1571,7 +1571,7 @@ function make_mems(set)
   local tres = make_mems_sequence(to_mem, sorted_mems)
 
   local res = table.concat(tres, ";")
-  
+
   if (GetAlphaOption("command_stack_character") == ";") then
     res = string.gsub(res, ";", ";;");
   end
@@ -1679,7 +1679,7 @@ function make_mems_sequence(to_mem, sorted_mems)
 
     tres[#tres + 1] = "put " .. quoted_spellbooks .. " " .. quoted_container
   end
-  
+
   return tres
 end
 
@@ -1710,11 +1710,11 @@ end
 
 function purge_set(set)
   set = string.lower(Trim(set))
-  
+
   local seq = make_purge_sequence(set)
-  
+
   ColourNote("silver", "black", seq)
-  
+
   if (seq ~= "") then
     Note("-- mems_helper: trying to execute your memorization purge sequence --")
 
@@ -1728,20 +1728,20 @@ end
 
 function make_purge_sequence(set)
   Note("-- mems_helper: reworking your memorization purge sequence --")
-  
+
   local tpurges
   if (set ~= "default") then
     tpurges = get_mems_in_set(set)
   else
     tpurges = get_mems()
   end
-  
+
   local tseq = {}
-  
+
   for i = 1, #tpurges do
     tseq[#tseq + 1] = "mem '" .. tpurges[i] .. "'"
   end
-  
+
   return table.concat(tseq, ";")
 end
 

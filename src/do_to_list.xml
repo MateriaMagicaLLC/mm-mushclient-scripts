@@ -41,7 +41,7 @@ Does an action, sequentially, to a list of players.
 * automail <item>  - sequentially emails the item to a list of players that you copied to your clipboard (must be 1 player name per line) - eg, automail invitation
 
 * autodo  - sequentially does the action defined in the 'doaction' alias, to a list of players that you copied to your clipboard (must be 1 player name per line)
-  
+
   NOTICE: autodo REQUIRES that you create a 'doaction *' alias, like this:
     alias: autodo *
     send: mail invitation %1
@@ -65,7 +65,7 @@ Author: Ruthgul
 <!-- Variables -->
 
 <variables>
-  
+
   <variable name="wait_delay">0.5</variable>   <!-- frequency, in seconds -->
 
 </variables>
@@ -142,7 +142,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/do_to_list.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/do_to_list.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -156,9 +156,9 @@ end
 function seq_automail(item)
   wait.make(function()
     local list = GetClipboard()
-    
+
     local wait_delay = tonumber(GetVariable("wait_delay")) or 0.5
-  
+
     for name in string.gmatch(list, "%a+") do
       Send("mail " .. item .. " " .. name)
       wait.time(wait_delay)
@@ -170,9 +170,9 @@ end
 function seq_autodo()
   wait.make(function()
     local list = GetClipboard()
-    
+
     local wait_delay = tonumber(GetVariable("wait_delay")) or 0.5
-    
+
     for name in string.gmatch(list, "%a+") do
       Execute("doaction " .. name)
       wait.time(wait_delay)
@@ -183,6 +183,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

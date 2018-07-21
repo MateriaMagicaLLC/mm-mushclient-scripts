@@ -78,7 +78,7 @@ Plugin created by Ruthgul
 
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 
 ]]>
@@ -101,7 +101,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   >
   <send>close down</send>
   </alias>
-  
+
   <alias
    enabled="y"
    match="cle"
@@ -110,7 +110,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   >
   <send>close east</send>
   </alias>
-  
+
   <alias
    enabled="y"
    match="cln"
@@ -128,7 +128,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   >
   <send>close northeast</send>
   </alias>
-  
+
   <alias
    enabled="y"
    match="clnw"
@@ -137,7 +137,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   >
   <send>close northwest</send>
   </alias>
-  
+
   <alias
    enabled="y"
    match="cls"
@@ -146,7 +146,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   >
   <send>close south</send>
   </alias>
-  
+
   <alias
    enabled="y"
    match="clse"
@@ -155,7 +155,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   >
   <send>close southeast</send>
   </alias>
-  
+
   <alias
    enabled="y"
    match="clsw"
@@ -164,7 +164,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   >
   <send>close southwest</send>
   </alias>
-  
+
   <alias
    enabled="y"
    match="clu"
@@ -173,7 +173,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   >
   <send>close up</send>
   </alias>
-  
+
   <alias
    enabled="y"
    match="clw"
@@ -182,7 +182,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   >
   <send>close west</send>
   </alias>
-  
+
   <alias
    enabled="y"
    match="od"
@@ -191,7 +191,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   >
   <send>open down</send>
   </alias>
-  
+
   <alias
    enabled="y"
    match="oe"
@@ -200,7 +200,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   >
   <send>open east</send>
   </alias>
-  
+
   <alias
    enabled="y"
    match="on"
@@ -209,7 +209,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   >
   <send>open north</send>
   </alias>
-  
+
   <alias
    enabled="y"
    match="one"
@@ -218,7 +218,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   >
   <send>open northeast</send>
   </alias>
-  
+
   <alias
    enabled="y"
    match="onw"
@@ -227,7 +227,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   >
   <send>open northwest</send>
   </alias>
-  
+
   <alias
    enabled="y"
    match="os"
@@ -284,7 +284,7 @@ http://github.com/mu3r73/mm-mushclient-scripts
   >
   <send>say fly down</send>
   </alias>
-  
+
   <alias
    enabled="y"
    match="fle"
@@ -497,7 +497,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/vi_laptop_pack.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/vi_laptop_pack.xml",
   }
   return (table.concat(t, ";"))
 end

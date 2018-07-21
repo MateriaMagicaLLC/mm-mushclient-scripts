@@ -39,7 +39,7 @@ This plugin is intended for small screens. It helps save screen space, by showin
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 
 ]]>
@@ -87,7 +87,7 @@ function OnPluginInstall()
     Tell("-- " .. GetPluginInfo(GetPluginID (), 1) .. ": type ")
     ColourTell("silver", "black", GetPluginInfo(GetPluginID (), 1) .. " help")
     Note(" to see info about this plugin --")
-    
+
     switch_warned = false
     switch_started = false
 
@@ -140,7 +140,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/switch_maps.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/switch_maps.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -155,11 +155,11 @@ function OnPluginBroadcast(msg, id, name, text)
   if (id =="f67c4339ed0591a5b010d05b") then -- GMCP message
     if (text == "room.info") then -- room.info
       get_gmcp_room()
-      
+
       if (not switch_started) then
         start_switching() -- we start on first GMCP room package
       end
-      
+
       if (switch_started) then
         process_room()
       end
@@ -171,7 +171,7 @@ end
 function get_gmcp_room()
   local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "room.info")
   luastmt = "gmcpdata = " .. gmcparg
-  
+
   assert(loadstring(luastmt or ""))()
 end
 
@@ -185,7 +185,7 @@ function start_switching()
   -- if imap and the GMCP mapper are installed, start the switching script
   -- otherwise, show a warning (once)
   switch_started = (imap_present) and (mapper_present)
-  
+
   if (not switch_started) and (not switch_warned) then
     switch_warned = true
 
@@ -212,11 +212,11 @@ end
 
 function process_room()
   local area_code = gmcpval("coord.code")
-  
+
   if (area_code ~= "") then -- vmap room
     mapper_hide()
     imap_show()
-  
+
   else -- non-vmap room
     imap_hide()
     mapper_show()
@@ -263,6 +263,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

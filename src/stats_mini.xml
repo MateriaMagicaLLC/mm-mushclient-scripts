@@ -52,7 +52,7 @@ Author: Ruthgul
 Miniwindow code adapted from Fiendish's / Enelya's chat capture plugins
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -180,7 +180,7 @@ function OnPluginInstall()
   Note(" to see info about this plugin --")
 
   show_mini = ((GetVariable("show_mini") or "true") == "true")
-  
+
   EnableTrigger("first_prompt", true)
 end
 
@@ -230,7 +230,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/stats_mini.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/stats_mini.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -238,7 +238,7 @@ end
 
 function plugin_update_aux_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/generic_miniwindow.lua,MUSH/lua",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/generic_miniwindow.lua,MUSH/lua",
   }
   return (table.concat(t, ";"))
 end
@@ -254,7 +254,7 @@ function on_first_prompt()
 
   grab_maxes()
   grab_stats()
-  
+
   stats_start()
 end
 
@@ -297,7 +297,7 @@ function OnPluginBroadcast(msg, id, pname, text)
     if (text == "char.stats") then
       get_gmcp_char()
       handle_my_stats()
-      
+
     elseif (text == "char.maxstats") then
       get_gmcp_char()
       handle_my_maxes()
@@ -314,7 +314,7 @@ end
 function get_gmcp_char()
   local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "char")
   luastmt = "gmcpdata = " .. gmcparg
-  
+
   assert(loadstring(luastmt or ""))()
 end
 
@@ -338,7 +338,7 @@ end
 
 function handle_my_maxes()
   max_stats = {}
-  
+
   latest_maxes = os.time()
   for i = 1, #stats_types do
     max_stats[stats_types[i]] = tonumber(gmcpval("maxstats." .. stats_types[i]) or 0)
@@ -369,25 +369,25 @@ stats_types = { "agility", "courage", "knowledge", "luck", "personality", "sanit
 function handle_my_stats()
   wait.make(function()
     latest_stats = os.time()
-    
+
     stats = {}
-    
+
     for i = 1, #stats_types do
       stats[stats_types[i]] = tonumber(gmcpval("stats." .. stats_types[i]) or 0)
     end
-    
+
     while (not max_stats) do
       wait.time(.5)
     end
-    
+
     for i = 1, #stats_types do
       stats[stats_types[i]] = stats[stats_types[i]] .. "/" .. max_stats[stats_types[i]]
     end
-    
+
     if (not prev_stats) then
       prev_stats = {}
     end
-    
+
     local changed = false
     for i = 1, #stats_types do
       if (prev_stats[stats_types[i]] ~= stats[stats_types[i]]) then
@@ -395,7 +395,7 @@ function handle_my_stats()
         break
       end
     end
-    
+
     if (not prev_stats["agility"])
     or (changed) then
       stats_redraw()
@@ -404,7 +404,7 @@ function handle_my_stats()
         prev_stats[stats_types[i]] = stats[stats_types[i]]
       end
     end
-    
+
     handle_my_saves(changed)
   end)
 end
@@ -415,7 +415,7 @@ saves_types = { "savingbreath", "savingparalysis", "savingpetri", "savingrod", "
 
 function handle_my_saves(changed)
   saves = {}
-  
+
   for i = 1, #saves_types do
     saves[saves_types[i]] = tonumber(gmcpval("stats." .. saves_types[i]) or 0)
   end
@@ -423,7 +423,7 @@ function handle_my_saves(changed)
   if (not prev_saves) then
     prev_saves = {}
   end
-  
+
   if (not changed) then
     for i = 1, #saves_types do
       if (prev_saves[saves_types[i]] ~= saves[saves_types[i]]) then
@@ -473,27 +473,27 @@ saves_renames = {
 
 function do_show_stats()
   local label, txt
-  
+
   if (stats) then
     for i = 1, #stats_types do
       label = stats_types[i]
 
       txt = label .. ":" .. string.rep(" ", string.len("personality: ") - string.len(label)) .. string.format("%5s", (stats[stats_types[i]] or "?"))
-    
+
       add_to_mini("silver", "black", txt)
       add_to_mini("silver", "black", "\r\n")
     end
   end
-  
+
   if (saves) then
     add_to_mini("silver", "black", " ")
     add_to_mini("silver", "black", "\r\n")
-  
+
     for i = 1, #saves_types do
       label = saves_renames[saves_types[i]] or saves_types[i]
 
       txt = label .. ":" .. string.rep(" ", string.len("personality: ") - string.len(label)) .. string.format("%5s", (saves[saves_types[i]] or "?"))
-    
+
       add_to_mini("silver", "black", txt)
       add_to_mini("silver", "black", "\r\n")
     end
@@ -526,6 +526,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>

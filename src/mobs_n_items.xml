@@ -79,7 +79,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -418,7 +418,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/mobs_n_items.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/mobs_n_items.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -431,7 +431,7 @@ end
 
 function init_vars()
   gmcp_initialized = false
-  
+
   load_config()
 
   mobs_locations_cache = {}
@@ -454,10 +454,10 @@ function toggle_add_mxp(status)
 
   if (config.addMXP) then
     Note("-- mobs_n_items: will now auto-add mobs and items via MXP --")
-  
+
   else
     Note("-- mobs_n_items: will no longer auto-add mobs and items via MXP --")
-    
+
     -- clear caches
     mobs_locations_cache = {}
     items_locations_cache = {}
@@ -471,7 +471,7 @@ function toggle_add_mxp_1stock(status)
 
   if (config.addMXP1stock) then
     Note("-- mobs_n_items: will now auto-add 1-stock shop items via MXP --")
-  
+
   else
     Note("-- mobs_n_items: will no longer auto-add 1-stock shop items via MXP --")
   end
@@ -484,7 +484,7 @@ function toggle_add_mxp_ground(status)
 
   if (config.addMXPground) then
     Note("-- mobs_n_items: will now auto-add items on the ground via MXP --")
-  
+
   else
     Note("-- mobs_n_items: will no longer auto-add items on the ground via MXP --")
   end
@@ -653,7 +653,7 @@ function OnPluginBroadcast(msg, id, name, text)
       end
 
       get_gmcp_room()
-      
+
       if (config.addMXP) then
         process_room()
       end
@@ -665,7 +665,7 @@ end
 function get_gmcp_room()
   local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "room.info")
   luastmt = "gmcpdata = " .. gmcparg
-  
+
   assert(loadstring(luastmt or ""))()
 end
 
@@ -679,7 +679,7 @@ function process_room()
   if (not oldzone) then -- first run
     oldzone = room.zone
     load_area_hits(room.zone)
-  
+
   elseif (oldzone ~= room.zone) then -- area changed
     update_hits()
     oldzone = room.zone
@@ -769,7 +769,7 @@ function add_npc_if_new()
         if (mobs_locations_cache[hash][room.zone .. '|' .. room.name]) then
           mobs_locations_cache[hash][room.zone .. '|' .. room.name].hits = mobs_locations_cache[hash][room.zone .. '|' .. room.name].hits + 1
           mobs_locations_cache[hash][room.zone .. '|' .. room.name].changed = true
-        
+
         else
           add_mob_location(hash, room.zone, room.name, true)
           mobs_locations_cache[hash][room.zone .. '|' .. room.name] = {
@@ -788,7 +788,7 @@ function add_npc_if_new()
         }
       end
     end
-    
+
     entity = nil
   end
 end
@@ -798,16 +798,16 @@ function add_item_if_stock(amount)
 -- shop items are checked vs stock, to avoid ading items sold by players
   if (config.addMXP) then
 --    Note(amount)
-    
+
     local num = string.gsub(amount, ",", "")
     num = tonumber(num)
-    
+
     if (amount == "No limit")
     or (config.addMXP1stock)
     or ((num) and (num > 1)) then
 --      Note("add_item_if_stock()")
       add_item_if_new()
-    
+
     elseif (num == 1) then
       entity = nil
     end
@@ -820,12 +820,12 @@ function add_item_if_new()
     if (not is_player_built_area(room.zone))
     and (not is_donation(room.num)) then
       local hash = Hash(entity.short .. entity.long .. room.zone)
-      
+
       if (items_locations_cache[hash]) then
         if (items_locations_cache[hash][room.zone .. '|' .. room.name]) then
           items_locations_cache[hash][room.zone .. '|' .. room.name].hits = items_locations_cache[hash][room.zone .. '|' .. room.name].hits + 1
           items_locations_cache[hash][room.zone .. '|' .. room.name].changed = true
-          
+
         else
           add_item_location(hash, room.zone, "", room.name, true)
           items_locations_cache[hash][room.zone .. '|' .. room.name] = {
@@ -833,7 +833,7 @@ function add_item_if_new()
             changed = true,
           }
         end
-        
+
       else
         add_item(hash, entity.short, entity.long, true)
         add_item_location(hash, room.zone, "", room.name, true)
@@ -844,7 +844,7 @@ function add_item_if_new()
         }
       end
     end
-    
+
     entity = nil
   end
 end
@@ -919,11 +919,11 @@ function load_mob_from_database(id)
         room = row.room,
         hits = row.hits or 0,
       }
-      
+
       mob.locations = insert_sorted(mob.locations, loc)
     end
   end
-  
+
   if (mob) and (config.addMXP) then
     add_mob_to_locations_cache(mob)
   end
@@ -951,10 +951,10 @@ function load_item_from_database(id)
       room = row.room,
       hits = row.hits or 0,
     }
-    
+
     item.locations = insert_sorted(item.locations, loc)
   end
-  
+
   if (item) and (config.addMXP) then
     add_item_to_locations_cache(item)
   end
@@ -966,7 +966,7 @@ end
 function insert_sorted(locations, aloc)
 -- inserts aloc in the locations table, sorted by hits (reverse order)
   local inserted = false
-  
+
   for i = 1, #locations do
     if (aloc.hits > locations[i].hits) then
       table.insert(locations, i, aloc)
@@ -974,11 +974,11 @@ function insert_sorted(locations, aloc)
       break
     end
   end
-  
+
   if (not inserted) then -- append it
     table.insert(locations, aloc)
   end
-  
+
   return locations
 end
 
@@ -1004,12 +1004,12 @@ end
 
 function add_mob_to_locations_cache(mob)
   mobs_locations_cache[mob.mobid] = {}
-  
+
   local loc
-  
+
   for i = 1, #mob.locations do
     loc = mob.locations[i]
-    
+
     mobs_locations_cache[mob.mobid][(loc.area or "") .. '|' .. (loc.room or "")] = {
       hits = loc.hits or 0,
       changed = false,
@@ -1020,13 +1020,13 @@ end
 
 function add_item_to_locations_cache(item)
   items_locations_cache[item.itemid] = {}
-  
+
   local loc
-  
+
   for i = 1, #item.locations do
     if (area ~= "") or (room ~= "") then
       loc = item.locations[i]
-    
+
       items_locations_cache[item.itemid][(loc.area or "") .. '|' .. (loc.room or "")] = {
         hits = loc.hits or 0,
         changed = false,
@@ -1044,14 +1044,14 @@ end
 
 function load_mobs_hits(zone)
   -- mobs_n_items: loading mobs locations hits for the area... --
-  
+
   mobs_locations_cache = {}
-  
+
   for row in db:nrows(string.format("SELECT * FROM mobsloc WHERE area = %s", fixsql(zone))) do
     if (not mobs_locations_cache[row.mobid]) then
       mobs_locations_cache[row.mobid] = {}
     end
-    
+
     mobs_locations_cache[row.mobid][(row.area or "") .. '|' .. (row.room or "")] = {
       hits = row.hits or 0,
       changed = false,
@@ -1059,18 +1059,18 @@ function load_mobs_hits(zone)
   end
 end
 
-  
+
 function load_items_hits(zone)
   Note("-- mobs_n_items: loading items locations hits for the area... --")
-  
+
   items_locations_cache = {}
-  
+
   for row in db:nrows(string.format("SELECT * FROM itemsloc WHERE area = %s", fixsql(zone))) do
     if (row.area ~= "") or (row.room ~= "") then
       if (not items_locations_cache[row.itemid]) then
         items_locations_cache[row.itemid] = {}
       end
-      
+
       items_locations_cache[row.itemid][(row.area or "") .. '|' .. (row.room or "")] = {
         hits = row.hits or 0,
         changed = false,
@@ -1505,16 +1505,16 @@ end
 
 function update_mobs_hits()
   --Note(serialize.save_simple(mobs_locations_cache))
-  
+
   local t
 
   Note("-- mobs_n_items: updating mobs locations hits... --")
-  
+
   db:exec("BEGIN TRANSACTION;")
 
   for mobid, val in pairs(mobs_locations_cache) do
     SetStatus("... updating locations hits for mob #" .. mobid .. "...")
-    
+
     for where, hits in pairs(val) do
       if (hits.changed) then
         t = utils.split(where, "|")
@@ -1524,7 +1524,7 @@ function update_mobs_hits()
   end
 
   db:exec("COMMIT;")
-  
+
   SetStatus ("Ready")
   Note("... done!")
 end
@@ -1536,12 +1536,12 @@ function update_items_hits()
   local t
 
   Note("-- mobs_n_items: updating items locations hits... --")
-  
+
   db:exec("BEGIN TRANSACTION;")
 
   for itemid, val in pairs(items_locations_cache) do
     SetStatus("... updating locations hits for item #" .. itemid .. "...")
-    
+
     for where, hits in pairs(val) do
       if (hits.changed) then
         t = utils.split(where, "|")
@@ -1551,7 +1551,7 @@ function update_items_hits()
   end
 
   db:exec("COMMIT;")
-  
+
   SetStatus ("Ready")
   Note("... done!")
 end
@@ -1722,7 +1722,7 @@ function find_npc(name, area, fuzzy)
   else
     ColourNote("lightgreen", "black", ":")
   end
-  
+
   for i = 1, #results do
     show_npc_info(results[i], area)
   end
@@ -1867,7 +1867,7 @@ function show_npc_info(id, area)
               Hyperlink("mapper wheree " .. npc.locations[i].room, npc.locations[i].room, "", fontcol, bgcol, false)
             end
           end
-          
+
           if (npc.locations[i].hits) and (npc.locations[i].hits > 0) then
             Tell(" (" .. npc.locations[i].hits .. " hit(s))")
           end
@@ -1945,7 +1945,7 @@ function show_item_info(id, area)
           else
             Hyperlink("mob wheree " .. mob.name, mob.name, "", mobcol, bgcol, false)
           end
-          
+
         elseif (item.locations[i].room ~= "") then
           Tell(" - in room: ")
           if (area ~= "") then
@@ -1953,7 +1953,7 @@ function show_item_info(id, area)
           else
             Hyperlink("mapper wheree " .. item.locations[i].room, item.locations[i].room, "", fontcol, bgcol, false)
           end
-          
+
           if (item.locations[i].hits) and (item.locations[i].hits > 0) then
             Tell(" (" .. item.locations[i].hits .. " hit(s))")
           end

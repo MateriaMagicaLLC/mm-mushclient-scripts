@@ -57,7 +57,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -248,21 +248,21 @@ function OnPluginInstall()
   Tell("-- " .. GetPluginInfo(GetPluginID (), 1) .. ": type ")
   ColourTell("silver", "black", GetPluginInfo(GetPluginID (), 1) .. " help")
   Note(" to see the list of available commands --")
-  
+
   -- open database on disk
   local path = GetInfo(66)
   local filename = "spdman2_locations.db"
-  
+
   local res = 0
-  
+
   if (not file_exists(path .. filename)) then
     local res = get_database(path, filename)
-    
+
     if (res ~= 0) then
       Note("-- " .. GetPluginInfo(GetPluginID(), 1) .. ": error downloading database --")
     end
   end
-  
+
   if (res == 0) then
     db = assert(sqlite3.open(path .. filename))
   end
@@ -278,7 +278,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/speedwalk_manager_gmcp_p2.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/speedwalk_manager_gmcp_p2.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -331,7 +331,7 @@ function get_database(path, filename)
   Note("-- " .. GetPluginInfo(GetPluginID(), 1) .. ": downloading database --")
 
   local res = 0
-  local url = "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/" .. filename
+  local url = "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/" .. filename
 
   SetStatus ("Downloading file: " .. url .. " to: " .. path .. filename .. "...")
 
@@ -385,7 +385,7 @@ function OnPluginBroadcast (msg, id, name, text)
     if (text == "room.info") then -- room.info
       if (speeding) then -- are we speedwalking?
         get_gmcp_room()
-        
+
         if (ignore_next_room == 0) then
           -- we actually moved
           speed_step()
@@ -403,7 +403,7 @@ end
 function get_gmcp_room()
   local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "room.info")
   luastmt = "gmcpdata = " .. gmcparg
-  
+
   assert(loadstring(luastmt or ""))()
 end
 
@@ -467,7 +467,7 @@ function speedwalk(wildcards)
   local firstdir = string.sub(speedwalk_eval, 1, 1)
   if (firstdir == "*") then -- it's not a "valid" speedwalk
     Note("-- speedwalk_manager_p2: error - speedwalk contains invalid directions --")
-    
+
   else -- it's an ok "immediate" (passed-by-paramater) speedwalk
     free_walk = nil
     starttime = os.time()
@@ -489,14 +489,14 @@ function speed_step_repeat_last(how)
     if (how == "open") then
       Send("open " .. last_command .. " door")
       opened = true
-      
+
     else
       if (opened) then
         opened = nil
       elseif (combat) then
         combat = nil
       end
-        
+
       Send(last_command)
     end
     last_step_time = os.time()
@@ -551,11 +551,11 @@ end
 function show_roomids(place, what)
   if (db) then
     local plane = get_gmcp_plane()
-    
+
     local tuids = find_matching_places(what, plane, place)
-    
+
     show_matching_places(tuids, what, plane, place)
-  
+
   else
     ColourNote("tomato", "black", "-- speedwalk_manager_p2: no database - please reinstall the plugin --")
   end
@@ -573,7 +573,7 @@ function get_gmcp_plane()
   if (not plane) or (plane == "_empty") then
     plane = "Alyria"
   end
-  
+
   return plane
 end
 
@@ -589,26 +589,26 @@ function find_matching_places(what, plane, place)
   for row in db:nrows(string.format("SELECT uid, desc FROM locations WHERE type = %s AND plane = %s AND UPPER(desc) like %s", what, plane, place)) do
     tuids[#tuids + 1] = row.desc .. "Ø" .. row.uid
   end -- finding rooms
-  
+
   -- sort it alphabetically
   table.sort(tuids)
-  
+
   return tuids
 end
 
 
 function show_matching_places(tuids, what, plane, place)
   local t
-  
+
   local label
   if (what == "areas") then
     label = "area: "
   elseif (what == "docks") then
     label = "dock: "
   end
-  
+
   Note("-- speedwalk manager: results for '" .. place .. "' in " .. plane .. ": --")
-  
+
   if (#tuids > 0) then
     for i = 1, #tuids do
       t = utils.split(tuids[i], "Ø")
@@ -617,9 +617,9 @@ function show_matching_places(tuids, what, plane, place)
       Tell(" - id: ")
       ColourNote("silver", "black", t[2])
     end
-    
+
     Note("Click on an area's name or type 'mapper goto <id>' to speedwalk to the place, if possible.")
-  
+
   else
     Note("no matches")
   end
@@ -634,16 +634,16 @@ end
 function walk_or_find(place)
   if (db) then
     local tuids = find_exact_match(place)
-    
+
     if (#tuids == 1) then
       Execute("mapper goto " .. tuids[1])
-      
+
     else
       tuids = find_by_desc(place)
-      
+
       show_results(tuids, place)
     end
-    
+
   else
     ColourNote("tomato", "black", "-- speedwalk_manager_p2: no database - please reinstall the plugin --")
   end
@@ -673,27 +673,27 @@ function find_by_desc(place)
   for row in db:nrows(string.format("SELECT desc, shortcut FROM locations WHERE UPPER(desc) like %s", place)) do
     tuids[#tuids + 1] = row.desc .. "Ø" .. row.shortcut
   end -- finding rooms
-  
+
   -- sort it alphabetically
   table.sort(tuids)
-  
+
   return tuids
 end
 
 
 function show_results(tuids, place)
   local t
-  
+
   Note("-- speedwalk manager: abbreviations matching '" .. place .. "': --")
-  
+
   if (#tuids > 0) then
     for i = 1, #tuids do
       t = utils.split(tuids[i], "Ø")
       ColourNote("silver", "black", t[2] .. " - " .. t[1])
     end
-    
+
     Note("type 'spdn <abbreviation>' to speedwalk to the place, if possible.")
-  
+
   else
     Note("no matches")
   end
@@ -749,7 +749,7 @@ function load_location_from_database(shortcut)
       plane = row.plane,
       uid = row.uid,
       desc = row.desc,
-      shortcut = row.shortcut,      
+      shortcut = row.shortcut,
     }
   end
 
@@ -759,7 +759,7 @@ end
 
 function save_location_to_database(type, plane, uid, desc, shortcut)
   db:exec("BEGIN TRANSACTION;")
-  
+
   dbcheck(db:execute(string.format(
     "INSERT INTO locations(type, plane, uid, desc, shortcut, date_added) VALUES(%s, %s, %s, %s, %s, DATETIME('NOW'));",
       fixsql(type),
@@ -768,9 +768,9 @@ function save_location_to_database(type, plane, uid, desc, shortcut)
       fixsql(desc),
       fixsql(shortcut)
   )))
-  
+
   db:exec("COMMIT;")
-  
+
   Note("-- speedwalk_manager_p2: added abbreviation " .. shortcut .. " to the db --")
 end
 
@@ -788,7 +788,7 @@ function update_location_database_info(type, plane, uid, desc, shortcut)
   )))
 
   db:exec("COMMIT;")
-  
+
   Note("-- speedwalk_manager_p2: updated db info for abbreviation " .. shortcut .. " --")
 end
 
@@ -811,7 +811,7 @@ function delete_location_from_database(shortcut)
       )))
 
   db:exec("COMMIT;")
-  
+
   Note("-- speedwalk_manager_p2: removed abbreviation " .. shortcut .. " from the db --")
 end
 

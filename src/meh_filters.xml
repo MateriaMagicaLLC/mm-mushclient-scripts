@@ -59,7 +59,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -691,7 +691,7 @@ add_to_score("ru", "%&lt;ru&gt;")
    sequence="100"
   >
   </trigger>
-  
+
   <trigger
    group="score"
    keep_evaluating="y"
@@ -1119,7 +1119,7 @@ add_to_log("hangman losses", "&lt;%losses&gt;")
   </trigger>
 
 <!-- non-empty line -->
-  
+
   <trigger
    group="scan"
    expand_variables="y"
@@ -1168,7 +1168,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/meh_filters.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/meh_filters.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -1206,7 +1206,7 @@ function on_prompt()
   elseif (checking == "log") then
     end_log_capture()
     show_log()
-    
+
   elseif (checking == "scan") then
     end_scan()
   end
@@ -1230,7 +1230,7 @@ end
 
 function show_htable(t)
   local tres = {}
-  
+
   for key, value in pairs(t) do
     if (type(value) ~= "table") then
       tres[#tres + 1] = key .. ": " .. value
@@ -1238,9 +1238,9 @@ function show_htable(t)
       tres[#tres + 1] = key .. ": [" .. subht_as_string(value) .. "]"
     end
   end
-  
+
   table.sort(tres)
-  
+
   for i = 1, #tres do
     Note(tres[i])
   end
@@ -1587,7 +1587,7 @@ function check_gmcp_char(name)
     Execute("sendgmcp char.worth")
 
     gmcpdata = nil
-    
+
     while (not gmcpdata) do
       wait.time(.5)
       get_gmcp_char()
@@ -1623,7 +1623,7 @@ end
 function get_gmcp_char()
   local res, gmcparg = CallPlugin("f67c4339ed0591a5b010d05b", "gmcpval", "char")
   luastmt = "gmcpdata = " .. gmcparg
-  
+
   assert(loadstring(luastmt or ""))()
 end
 
@@ -1658,7 +1658,7 @@ function process_scan(line, what, dist)
     ["in the distance"] = "6",
     ["almost out of sight"] = "7"
   }
-  
+
   local dist_as_num, desc
 
   if (string.find(string.lower(what), scan_checking)) then
@@ -1669,7 +1669,7 @@ function process_scan(line, what, dist)
       else
         desc = " rooms away"
       end
-      
+
       line = string.gsub(line, dist, dist_as_num .. desc)
     end
 

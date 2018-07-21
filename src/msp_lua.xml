@@ -164,7 +164,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/msp_lua.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/msp_lua.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -268,7 +268,7 @@ function OnPluginMXPopenTag(name, args, mylist)
 
     --sample MXP tag:
     -- "name: sound,fname='mm_knock2.*' v='100' l='1' p='50' t='misc'"
-    
+
     --where:
     -- fname = file name, or "Off" - if off, turn off sound
     -- v = volume, default is 100
@@ -277,9 +277,9 @@ function OnPluginMXPopenTag(name, args, mylist)
     -- c = continue, default is 1 - if requested again, 0 = restart, 1 = continue
     -- t = type, default is subfolder for fname - MUD specific
     -- u = url for a sound file, default is none - optional parameter
-    
+
     --only using fname and v for now (v, if the bass library is present)
-    
+
     return 1
   end
 end

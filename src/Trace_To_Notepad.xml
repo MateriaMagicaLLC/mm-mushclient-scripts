@@ -70,7 +70,7 @@ Changes added by Ruthgul:
 
 function OnPluginInstall()
   Note(GetPluginInfo(GetPluginID(), 1) .. ": type " .. GetPluginInfo(GetPluginID(), 1) .. " help to see info about this plugin")
-  
+
   buffer = {}
 end
 
@@ -89,7 +89,7 @@ function OnPluginGetFocus()
     for i, buffered in ipairs(buffer) do
       AppendToNotepad("Trace", buffered .. "\r\n")
     end
-    
+
     buffer = {}
   end
 end
@@ -102,7 +102,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/Trace_To_Notepad.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/Trace_To_Notepad.xml",
   }
   return (table.concat(t, ";"))
 end

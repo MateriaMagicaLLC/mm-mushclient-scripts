@@ -63,7 +63,7 @@ Syntax:
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -215,7 +215,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/accelerators.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/accelerators.xml",
   }
   return (table.concat(t, ","))
 end
@@ -361,7 +361,7 @@ function export_accelerators_list()
     line = "add accel " .. ks .. " " .. cmd
     AppendToNotepad("exported keystrokes", line .. "\r\n")
   end
-  
+
   NotepadSaveMethod ("exported keystrokes", 2)
 end
 
@@ -378,10 +378,10 @@ function backup_accelerator(keystroke)
   backup_keystrokes = {}
 
   assert(loadstring(GetVariable("backup_keystrokes") or ""))()
-  
+
 --  Tell("backup_accelerator - loaded backup_keystrokes: ")
 --  Note(serialize.save_simple(backup_keystrokes))
-  
+
   -- update the keystroke, only if there isn't a previous backup
   if (not backup_keystrokes[keystroke]) then
     backup_keystrokes[keystroke] = use_keystrokes[keystroke]
@@ -411,9 +411,9 @@ function restore_accelerator(keystroke, override)
   -- update the keystroke
   if (backup_keystrokes[keystroke]) then
     add_accelerator(keystroke, backup_keystrokes[keystroke], override)
-    
+
     backup_keystrokes[keystroke] = nil
-    
+
     SetVariable("backup_keystrokes", "backup_keystrokes = " .. serialize.save_simple(backup_keystrokes))
     SaveState()
 

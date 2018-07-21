@@ -53,7 +53,7 @@ Numpad5 : say stop
 Author: Ruthgul
 
 Latest version:
-http://github.com/mu3r73/mm-mushclient-scripts
+http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 ]]>
 
@@ -206,7 +206,7 @@ end
 
 function plugin_update_url()
   local t = {
-    "https://raw.githubusercontent.com/mu3r73/mm-mushclient-scripts/master/src/transport_kp.xml",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/src/transport_kp.xml",
   }
   return (table.concat(t, ";"))
 end
@@ -233,7 +233,7 @@ transport_config = {
   ["numpad4"] = "say fly west",
   ["subtract"] = "say fly up",
   ["add"] = "say fly down",
-  
+
   ["numpad5"] = "say stop",
   ["numpad0"] = "stand",
 }
@@ -242,12 +242,12 @@ transport_config = {
 function enable_transport_accel()
   if (not backed_up) then
     Note("-- transport_kp: enabling transport accelerators --")
-    
+
     for keystroke, command in pairs(transport_config) do
       backup_keystroke(keystroke)
       add_accelerator(keystroke, command, "yes")
     end
-    
+
     backed_up = true
   end
 end
@@ -256,11 +256,11 @@ end
 function disable_transport_accel()
   if (backed_up) then
     Note("-- transport_kp: desabling transport accelerators --")
-    
+
     for keystroke, _ in pairs(transport_config) do
       restore_keystroke(keystroke, "yes")
     end
-    
+
     backed_up = false
   end
 end
@@ -359,6 +359,6 @@ end
 
 ]]>
 
-</script> 
+</script>
 
 </muclient>
