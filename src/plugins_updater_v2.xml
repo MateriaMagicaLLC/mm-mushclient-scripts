@@ -486,6 +486,7 @@ end
 
 function fix_url(url)
   url = string.gsub(url, "dl.dropbox.com/u/65599194/mm%-updater/", "raw.githubusercontent.com/MateriaMagicaLLC/mm%-mushclient%-scripts/master/src/")
+  url = string.gsub(url, "raw.githubusercontent.com/mu3r73/mm%-mushclient%-scripts/master/src/", "raw.githubusercontent.com/MateriaMagicaLLC/mm%-mushclient%-scripts/master/src/")
   return url
 end
 
