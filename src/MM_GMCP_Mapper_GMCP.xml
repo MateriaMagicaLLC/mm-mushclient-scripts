@@ -464,7 +464,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
     enabled="y"
-    match="^mapper[ ]+goto[ ]+(?P&lt;id&gt;[0-9]+)$"
+    match="^mapper[ ]+goto[ ]+(?P&lt;id&gt;[0-9A-F]+)$"
     regexp="y"
     send_to="12"
     sequence="100"
