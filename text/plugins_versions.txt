@@ -31,7 +31,7 @@ id = 1d71bf1797912d451784ca21  hash = FAA74ADED4B48737E5806889CD8B9A8E
 id = 97784abf5f30629a0d7e7307  hash = 1FB4EBDE61F109C1D0C2815E38EDA006
 id = 1df4fa3b486a36ededa19433  hash = FC54AE743D363630742D64F924DB1749
 id = 8755063a5cf00f3312b113e6  hash = CAC04FD1F75677C76C8F544445773A89
-id = f973af093e715dece34dc25f  hash = FEC8C7B0BBBF7C4BFBC707ED7EFF6552  aux_files = {   [1] = {     name = "mm_mapper.lua",     dest = "MUSH/lua",     },   }
+id = f973af093e715dece34dc25f  hash = 4E00FA9D1663EEFD151437C9CE176B20  aux_files = {   [1] = {     name = "mm_mapper.lua",     dest = "MUSH/lua",     },   }
 id = 9ced43d0a7b4a60116794096  hash = 6B631E6EC080C9D78FE24E6004DC1B3B  aux_files = {   [1] = {     name = "generic_miniwindow.lua",     dest = "MUSH/lua",     },   }
 id = 522cd3350766f852d36c5e5c  hash = 8259C5781FBA31ED482E9410FBC8B9DD
 id = bb2a97fe72b34a0cd5135bcf  hash = 4EC4093F5BE5BC40CE73E53E9DFF9B2E
