@@ -30,7 +30,7 @@ def read_plugins_info(path):
 
             plugins[id] = {}
             plugins[id]["name"] = name
-            plugins[id]["md5"] = md5sum(PLUGINS_PATH + name)
+            plugins[id]["md5"] = md5sum(PLUGINS_PATH + name).upper()
 
 def md5sum(path):
     with open(path, mode="rb") as f:
@@ -63,11 +63,11 @@ def parse_plugins_dot_txt(path):
                 name = match.group(1)
 
             if id and hash and rest:
-                print("id = {}  hash = {} {}".format(id, hash, rest))
+                print("id = {}  hash = {} {}".format(id, plugins[id]["md5"], rest))
                 continue
 
             if id and hash:
-                print("id = {}  hash = {}".format(id, hash))
+                print("id = {}  hash = {}".format(id, plugins[id]["md5"]))
                 continue
 
             if name and hash:
