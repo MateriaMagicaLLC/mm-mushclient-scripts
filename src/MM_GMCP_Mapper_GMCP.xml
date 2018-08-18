@@ -4705,7 +4705,7 @@ function rebuild_lookup()
   end
 
   for row in db:nrows(string.format("SELECT uid, name, %s FROM rooms", use_column)) do
-    SetStatus("Recreating rooms_lookup entry for room " .. uid)
+    SetStatus("Recreating rooms_lookup entry for room " .. row.uid)
 
     local use_field = row.area
     if (compatibility) then
