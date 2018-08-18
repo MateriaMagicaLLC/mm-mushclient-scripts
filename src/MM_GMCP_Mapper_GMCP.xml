@@ -294,7 +294,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
     enabled="y"
-    match="^mapper[ ]+peek[ ]+(?P&lt;id&gt;[0-9]+)$"
+    match="^mapper[ ]+peek[ ]+(?P&lt;id&gt;[0-9A-F]+)$"
     regexp="y"
     send_to="12"
     sequence="100"
@@ -442,7 +442,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
     enabled="y"
-    match="^mapper[ ]+path[ ]+(?P&lt;id&gt;[0-9]+)$"
+    match="^mapper[ ]+path[ ]+(?P&lt;id&gt;[0-9A-F]+)$"
     regexp="y"
     send_to="12"
     sequence="100"
@@ -453,7 +453,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
     enabled="y"
-    match="^mapper[ ]+path[ ]+(?P&lt;id1&gt;[0-9]+)[ ]+(?P&lt;id2&gt;[0-9]+)$"
+    match="^mapper[ ]+path[ ]+(?P&lt;id1&gt;[0-9A-F]+)[ ]+(?P&lt;id2&gt;[0-9A-F]+)$"
     regexp="y"
     send_to="12"
     sequence="100"
@@ -579,7 +579,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 <!-- maintenance - queries -->
 
   <alias
-    match="^mapper[ ]+roominfo(|[ ]+(?P&lt;id&gt;[0-9]+))$"
+    match="^mapper[ ]+roominfo(|[ ]+(?P&lt;id&gt;[0-9A-F]+))$"
     enabled="y"
     regexp="y"
     send_to="12"
@@ -615,7 +615,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 <!-- maintenance - additions -->
 
   <alias
-    match="^mapper[ ]+addroom[ ]+(?P&lt;id&gt;[0-9]+)[ ]+n\:(?P&lt;name&gt;.+) a\:(?P&lt;area&gt;.+) f\:(?P&lt;flags&gt;.+) t\:(?P&lt;terrain&gt;.+) ti\:(?P&lt;terraininfo&gt;.+)$"
+    match="^mapper[ ]+addroom[ ]+(?P&lt;id&gt;[0-9A-F]+)[ ]+n\:(?P&lt;name&gt;.+) a\:(?P&lt;area&gt;.+) f\:(?P&lt;flags&gt;.+) t\:(?P&lt;terrain&gt;.+) ti\:(?P&lt;terraininfo&gt;.+)$"
     enabled="y"
     regexp="y"
     send_to="12"
@@ -626,7 +626,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
   </alias>
 
   <alias
-    match="^mapper[ ]+addexit[ ]+(?P&lt;dir&gt;[a-z]+)(|[ ]+f\:(?P&lt;fromid&gt;[0-9]+)) t\:(?P&lt;toid&gt;[0-9]+)$"
+    match="^mapper[ ]+addexit[ ]+(?P&lt;dir&gt;[a-z]+)(|[ ]+f\:(?P&lt;fromid&gt;[0-9A-F]+)) t\:(?P&lt;toid&gt;[0-9A-F]+)$"
     enabled="y"
     regexp="y"
     send_to="12"
@@ -637,7 +637,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
   </alias>
 
   <alias
-    match="^mapper[ ]+addbm(|[ ]+(?P&lt;roomid&gt;[0-9]+))(|[ ]+b\:(?P&lt;book&gt;.+))$"
+    match="^mapper[ ]+addbm(|[ ]+(?P&lt;roomid&gt;[0-9A-F]+))(|[ ]+b\:(?P&lt;book&gt;.+))$"
     enabled="y"
     regexp="y"
     send_to="12"
@@ -651,7 +651,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 <!-- maintenance - deletions -->
 
   <alias
-    match="^mapper[ ]+delroom[ ]+(?P&lt;id&gt;[0-9]+)$"
+    match="^mapper[ ]+delroom[ ]+(?P&lt;id&gt;[0-9A-F]+)$"
     enabled="y"
     regexp="y"
     send_to="12"
@@ -662,7 +662,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
   </alias>
 
   <alias
-    match="^mapper[ ]+delexit[ ]+(?P&lt;dir&gt;[a-z]+)(|[ ]+f\:(?P&lt;fromid&gt;[0-9]+))$"
+    match="^mapper[ ]+delexit[ ]+(?P&lt;dir&gt;[a-z]+)(|[ ]+f\:(?P&lt;fromid&gt;[0-9A-F]+))$"
     enabled="y"
     regexp="y"
     send_to="12"
@@ -673,7 +673,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
   </alias>
 
   <alias
-    match="^mapper[ ]+delexits[ ]+(?P&lt;fromid&gt;[0-9]+)$"
+    match="^mapper[ ]+delexits[ ]+(?P&lt;fromid&gt;[0-9A-F]+)$"
     enabled="y"
     regexp="y"
     send_to="12"
@@ -684,7 +684,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
   </alias>
 
   <alias
-    match="^mapper[ ]+delbm(|[ ]+(?P&lt;roomid&gt;[0-9]+))$"
+    match="^mapper[ ]+delbm(|[ ]+(?P&lt;roomid&gt;[0-9A-F]+))$"
     regexp="y"
     enabled="y"
     send_to="12"
@@ -698,7 +698,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 <!-- maintenance - tags -->
 
   <alias
-    match="^mapper[ ]+dt(|[ ]+(?P&lt;id&gt;[0-9]+))$"
+    match="^mapper[ ]+dt(|[ ]+(?P&lt;id&gt;[0-9A-F]+))$"
     enabled="y"
     regexp="y"
     send_to="12"
@@ -709,7 +709,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
   </alias>
 
   <alias
-    match="^mapper[ ]+trap(|[ ]+(?P&lt;id&gt;[0-9]+))$"
+    match="^mapper[ ]+trap(|[ ]+(?P&lt;id&gt;[0-9A-F]+))$"
     enabled="y"
     regexp="y"
     send_to="12"
@@ -720,7 +720,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
   </alias>
 
   <alias
-    match="^mapper[ ]+no(|\-)speed(|[ ]+(?P&lt;id&gt;[0-9]+))$"
+    match="^mapper[ ]+no(|\-)speed(|[ ]+(?P&lt;id&gt;[0-9A-F]+))$"
     enabled="y"
     regexp="y"
     send_to="12"
@@ -731,7 +731,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
   </alias>
 
   <alias
-    match="^mapper[ ]+shop(|[ ]+(?P&lt;id&gt;[0-9]+))$"
+    match="^mapper[ ]+shop(|[ ]+(?P&lt;id&gt;[0-9A-F]+))$"
     enabled="y"
     regexp="y"
     send_to="12"
@@ -742,7 +742,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
   </alias>
 
   <alias
-    match="^mapper[ ]+train(|er)(|[ ]+(?P&lt;id&gt;[0-9]+))$"
+    match="^mapper[ ]+train(|er)(|[ ]+(?P&lt;id&gt;[0-9A-F]+))$"
     enabled="y"
     regexp="y"
     send_to="12"
@@ -832,7 +832,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
     enabled="y"
-    match="^mapper[ ]+hyper[ ]+(?P&lt;id&gt;[0-9]+)$"
+    match="^mapper[ ]+hyper[ ]+(?P&lt;id&gt;[0-9A-F]+)$"
     regexp="y"
     send_to="12"
     sequence="100"
