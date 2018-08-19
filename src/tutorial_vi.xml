@@ -347,7 +347,7 @@ The MM_GMCP_Mapper plugin, by using the GMCP protocol, keeps track of your curre
 
 It will auto-map all towns, dungeons, and any non-wilderness areas in general.  By default, it won't map the wilds, except for the roads and piers.
 
-We've included a partial maps database, which has most starter areas pre-mapped.  Notice this database is missing most of the room flags, so as you visit rooms for the first time, you will probably lag a bit, as the mapper updates its information on disk.  The next time you visit those rooms, this won't happen, and you'll be able to move faster.
+We've included a partial maps database, which has most starter areas pre-mapped.
 
 * To search for a room within your current area, type mapper find followed by a partial room name.  For example, mapper find theater.  If any results are found, they will be shown as room name, followed by room id, followed by its distance.
 
@@ -386,13 +386,13 @@ We are using the abbreviation "SigReag" to name the shop.  You can name it anyth
 
 3. Press Ctrl + Alt + Spacebar to go to the Output window.
 
-4. Pres up arrow until you find  "room: Samantha's Source of Power - id: 28003 - area: Sigil"
+4. Pres up arrow until you find  "room: Samantha's Source of Power - id: 095BE3E62B0677B387639F5EB1B9B6C80B4BBA93 - area: Sigil"
 
-5. Select the number after id, omit any spaces or letters. Press Ctrl + C to copy it.
+5. Select the number after id, omit any spaces. Press Ctrl + C to copy it.
 
 6. Press Ctrl + Alt + Spacebar to return to the world window.
 
-7. Type "add abbreviation SigReag 28003 Sigil reagents shop", without the quotes.  (Instead of typing the number, press Ctrl + V to paste it, since we copied it in a previous step.)
+7. Type "add abbreviation SigReag 095BE3E62B0677B387639F5EB1B9B6C80B4BBA93 Sigil reagents shop", without the quotes.  (Instead of typing the number, press Ctrl + V to paste it, since we copied it in a previous step.)
 
 8. Press Enter.
 
