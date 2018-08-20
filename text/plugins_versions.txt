@@ -24,14 +24,14 @@ id = d54ccc4800e5df1ad0ed0aac  hash = 4621EB3AF63B0B777056D7F11D5FA14B
 id = 226fb67b0722e0f0ddc3a235  hash = 18E699E79A31D4417919489EDF74C41B
 id = cab11fa55cae7d04b2fe8b70  hash = A442C8EDAE3341BF1E4A474D2D102280
 id = 118122989b315b5a97526fcc  hash = E9FA534023D945C443870D6F832903A9
-id = 0c85b0fa3ab1503d1eb123b4  hash = CAF1D4E4A72AB96E4A8FC29FC41CEF0B  aux_files = {   [1] = {     name = "mm_boil.mp3",     dest = "MUSH/sounds/msp",     },   [2] = {     name = "mm_stream.mp3",     dest = "MUSH/sounds/msp",     },   }
+id = 0c85b0fa3ab1503d1eb123b4  hash = 1F140BEE57797748F801A878DF97A9B0  aux_files = {   [1] = {     name = "mm_boil.mp3",     dest = "MUSH/sounds/msp",     },   [2] = {     name = "mm_stream.mp3",     dest = "MUSH/sounds/msp",     },   }
 id = 57ba85788195beece2a1a171  hash = F20CAE9FDAF57FA789806ED3EA72347B
 id = 4e2bf9f75646bf678cf620dd  hash = 1626D02B0E60B9A5ECD1B573FAEE170D  aux_files = {   [1] = {     name = "ping.mp3",     dest = "MUSH/sounds",     },   }
 id = 1d71bf1797912d451784ca21  hash = FAA74ADED4B48737E5806889CD8B9A8E
 id = 97784abf5f30629a0d7e7307  hash = 1FB4EBDE61F109C1D0C2815E38EDA006
 id = 1df4fa3b486a36ededa19433  hash = FC54AE743D363630742D64F924DB1749
 id = 8755063a5cf00f3312b113e6  hash = CAC04FD1F75677C76C8F544445773A89
-id = f973af093e715dece34dc25f  hash = 4E00FA9D1663EEFD151437C9CE176B20  aux_files = {   [1] = {     name = "mm_mapper.lua",     dest = "MUSH/lua",     },   }
+id = f973af093e715dece34dc25f  hash = 87087C98193BD871418A6C517FD2F095  aux_files = {   [1] = {     name = "mm_mapper.lua",     dest = "MUSH/lua",     },   }
 id = 9ced43d0a7b4a60116794096  hash = 6B631E6EC080C9D78FE24E6004DC1B3B  aux_files = {   [1] = {     name = "generic_miniwindow.lua",     dest = "MUSH/lua",     },   }
 id = 522cd3350766f852d36c5e5c  hash = 8259C5781FBA31ED482E9410FBC8B9DD
 id = bb2a97fe72b34a0cd5135bcf  hash = 4EC4093F5BE5BC40CE73E53E9DFF9B2E
@@ -79,7 +79,7 @@ id = 7daf1d7890d9db73d74a8188  hash = D76B7EE02EE2A3C2F5D23F9B274D94E4
 id = a6ef71f61368df7da2fcf5a6  hash = 7AC96AA0929EB975E892E7A6AEF46BB9
 id = e8db9e0976d964b82332096b  hash = 1B48B3C74D0B077F457713E4C2633340
 id = 84cc0397252aec0dbd589eaa  hash = F0AFB1723D2AE53FA615773488AEECE1
-id = 71b23c59cf79acc8521fc4a9  hash = CC5CBA48C60940BF3F02AB25A62B82A5
+id = 71b23c59cf79acc8521fc4a9  hash = A1EED93A89B62809C4AD049CE5FEF149
 id = 366aa79676f9fb1941eb5f69  hash = 559B677EBBFF0C67D154256671D7D558
 id = da9c885cd98fd213dd8f719a  hash = 37159BDD68C7591F971A155BB4B95DCA
 id = aedf0cb0be5bf045860d54b7  hash = 492249E859B0A62E0F445D16386732FA
