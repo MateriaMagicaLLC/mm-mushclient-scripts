@@ -113,7 +113,7 @@ end
 
   <alias
    enabled="y"
-   match="^spdn[ ]+(?P&lt;place&gt;.+)$"
+   match="^spdn[ ]+(?P&lt;place&gt;.+)|^spdn$"
    regexp="y"
    send_to="12"
    sequence="100"
@@ -149,7 +149,7 @@ end
 
   <alias
    script="OnHelp"
-   match="^speedwalk\_manager_p2(|( |\:)help)$"
+   match="^speedwalk\_manager_p2(|( |\:)help)$|^spdn$"
    enabled="y"
    regexp="y"
   >
