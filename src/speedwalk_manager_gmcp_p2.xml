@@ -49,7 +49,7 @@ Syntax:
 
 * spdn <abbreviation or place>  - tries to run to <abbreviation> (eg, spdn NRN), or lists abbreviations matching the place (eg, spdn New Rigel)  (Note that, when searching for a place, the % symbol can be used as a wildcard.)
 
-*  spdn all - lists all of the available paths and their abbreviations
+* spdn all - lists all of the available paths and their abbreviations
 
 * add abbreviation <name> <room id> <description>  - adds a new abbreviation to the database, where <name> cannot contain spaces, and <num> must be a valid GMCP room number (eg, add abbreviation TemTS 46670 Templeton Town Square)
 
