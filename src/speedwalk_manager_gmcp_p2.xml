@@ -49,6 +49,8 @@ Syntax:
 
 * spdn <abbreviation or place>  - tries to run to <abbreviation> (eg, spdn NRN), or lists abbreviations matching the place (eg, spdn New Rigel)  (Note that, when searching for a place, the % symbol can be used as a wildcard.)
 
+*  spdn all - lists all of the available paths and their abbreviations
+
 * add abbreviation <name> <room id> <description>  - adds a new abbreviation to the database, where <name> cannot contain spaces, and <num> must be a valid GMCP room number (eg, add abbreviation TemTS 46670 Templeton Town Square)
 
 * del abbreviation <name>  - removes an abbreviation from the database (eg, del abbreviation TemTS); where <name> is case sensitive
@@ -69,6 +71,28 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 <!--  Aliases  -->
 
 <aliases>
+
+<alias
+  enabled="y"
+  match="^spdn$"
+  regexp="y"
+  send_to="12"
+  sequence="100"
+  >
+  <send>Note("Type 'spdn all' to see a list of all available paths, or 'spdn help' for help.")
+ </send>
+ </alias>
+
+ <alias
+  enabled="y"
+  match="^spdn all$"
+  regexp="y"
+  send_to="12"
+  sequence="100"
+  >
+  <send>walk_or_find("%")
+ </send>
+</alias>
 
   <alias
    enabled="y"
@@ -154,6 +178,14 @@ end
    regexp="y"
   >
   </alias>
+
+  <alias
+   script="OnHelp"
+   match="^spdn help$"
+   enabled="y"
+   regexp="y"
+   >
+ </alias>
 
 </aliases>
 
