@@ -130,7 +130,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
    enabled="y"
    group="script-wsidhe"
    keep_evaluating="y"
-   match="^It is (?P&lt;hour&gt;.+?)\:(.+?) (?P&lt;ampm&gt;(am|pm)) on (.+?)$"
+   match="^It is([ \[(Day|Night)\]]*) (?P&lt;hour&gt;.+?)\:(.+?) (?P&lt;ampm&gt;(am|pm)) on (.+?)$"
    regexp="y"
    send_to="12"
    sequence="100"
