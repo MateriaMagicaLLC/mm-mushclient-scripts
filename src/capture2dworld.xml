@@ -369,6 +369,20 @@ capture_stuff("%&lt;who&gt;", "tell", "%0", true)
 </send>
   </trigger>
 
+    <trigger
+   enabled="y"
+   keep_evaluating="y"
+   expand_variables="y"
+   match="^(?P&lt;who&gt;(@!char_name)) impresses upon you \'(.+)\'$"
+   regexp="y"
+   send_to="14"
+   sequence="100"
+  >
+  <send>trigger_style_runs = TriggerStyleRuns
+capture_stuff("%&lt;who&gt;", "tell", "%0", true)
+ </send>
+   </trigger>
+
   <trigger
    enabled="y"
    keep_evaluating="y"
@@ -1745,6 +1759,7 @@ function capture_announce(who, line)
     "has been slain by",
     "has reduced my integrity by",
     "Feel my demise in your heart",
+	"An election official for the Towne of Rune announces",
   }
 
   for i = 1, #omit_from_announce do
@@ -1856,6 +1871,10 @@ function capture_yell(who, line)
     "A masculine voice yells",
     "Ferry is now docked at",
     "The ship Merdraco be docked at",
+    "Step right up, step right up!",
+    "If you'd like information on quests, please visit me at the Shrine of St. Wisehart!",
+    "Unbreakable, level-scaling weapons for sale in the village's main street, near the Shrine!",
+    "Come visit the Crystal Guild's hall near the cemetery",
   }
 
   for i = 1, #omit_from_yell do
