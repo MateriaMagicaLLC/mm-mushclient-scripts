@@ -180,7 +180,7 @@ http://www.mushclient.com/scripts/doc.php
 |w
 |D[ |RImportant |D]
 |w
-Many of the |Rplugins and scripts |win this bundle |Rwon't work properly if you run move than one character in the same MUSHclient window|w.
+Many of the |Rplugins and scripts |win this bundle |Rwon't work properly if you run more than one character in the same MUSHclient window|w.
 |w
 |CStart a new MUSHclient instance for each character that you're running |w(as opposed to running them "tabbed" within the same MUSHclient window.)
 |w
