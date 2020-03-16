@@ -31,8 +31,6 @@ a326b480b3f02b3ff6d58e7d generic_buy.xml
 97784abf5f30629a0d7e7307 global_vars.xml
 164db33914b912da8aac6ecc kills_tnl.xml
 29aff4e19e96d79f40ffcbd6 latest_daily.xml
-8e6a05d3e8bbd72d1f6a7ae9 lessons.xml
-0c85b0fa3ab1503d1eb123b5 lessons_vi.xml
 ce9475a5d7acf80d07396cac locations_helper.xml
 0084625af85a3786d14c5b8d log_events.xml
 6e79c67fd99121b8b383e377 meh_filters.xml
