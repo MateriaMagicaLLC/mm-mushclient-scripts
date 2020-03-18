@@ -12,7 +12,7 @@
    author="Ruthgul"
    id="8e6a05d3e8bbd72d1f6a7ae8"
    language="Lua"
-   purpose="a tutorial for the Materia Magica MUSHclient bundle"
+   purpose="a set of lessons for the Materia Magica MUSHclient bundle"
    date_written="2013-12-20 09:15:50"
    date_modified="2016-12-22 06:03:10"
    requires="4.71"
@@ -24,15 +24,15 @@
 <![CDATA[
 
 .------------.
- | tutorial |
+ | lesson |
 `------------'
 
-A series of 1-page tutorials to show the basic operation of the MUSHclient bundle for Materia Magica.
+A series of 1-page lessons to show the basic operation of the MUSHclient bundle for Materia Magica.
 
 
 Syntax:
 
-* tutorial
+* lesson
 
 
 Author: Ruthgul
@@ -53,7 +53,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 <aliases>
 
   <alias
-   match="^tutorial$"
+   match="^lesson$"
    enabled="y"
    regexp="y"
    send_to="12"
@@ -64,7 +64,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
   </alias>
 
   <alias
-   match="^tutorial[ ]+(?P&lt;num&gt;[0-9]+)$"
+   match="^lesson[ ]+(?P&lt;num&gt;[0-9]+)$"
    enabled="y"
    regexp="y"
    send_to="12"
@@ -79,7 +79,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
    enabled="y"
-   match="^tutorial( |\:)help$"
+   match="^lesson( |\:)help$"
    regexp="y"
    script="OnHelp"
   >
@@ -133,7 +133,7 @@ end
 
 
 -------------------
--- tutorial pages
+-- lesson pages
 -------------------
 
 pages = {
@@ -141,21 +141,21 @@ pages = {
 |w
 |D~ |GMUSHclient Bundle for Materia Magica, ToC |D~
 |w
-|D* |Wtutorial 0   |w-  Overview
-|D* |Wtutorial 1   |w-  Configuration, MSP
-|D* |Wtutorial 2   |w-  Captures, Repeat command
-|D* |Wtutorial 3   |w-  Maps
-|D* |Wtutorial 4   |w-  Speedwalks
-|D* |Wtutorial 5   |w-  The area Mapper
-|D* |Wtutorial 6   |w-  The area Mapper (cont.)
-|D* |Wtutorial 7   |w-  Aliases
-|D* |Wtutorial 8   |w-  Aliases (examples)
-|D* |Wtutorial 9   |w-  Triggers
-|D* |Wtutorial 10  |w-  Example: making a highlight trigger
-|D* |Wtutorial 11  |w-  Example: making a trigger to gag stuff from screen
-|D* |Wtutorial 12  |w-  Command Stacking, The Commands Sequencer
-|D* |Wtutorial 13  |w-  Making aliases that work with and without a target
-|D* |Wtutorial 14  |w-  Pre-installed stuff
+|D* |Wlesson 0   |w-  Overview
+|D* |Wlesson 1   |w-  Configuration, MSP
+|D* |Wlesson 2   |w-  Captures, Repeat command
+|D* |Wlesson 3   |w-  Maps
+|D* |Wlesson 4   |w-  Speedwalks
+|D* |Wlesson 5   |w-  The area Mapper
+|D* |Wlesson 6   |w-  The area Mapper (cont.)
+|D* |Wlesson 7   |w-  Aliases
+|D* |Wlesson 8   |w-  Aliases (examples)
+|D* |Wlesson 9   |w-  Triggers
+|D* |Wlesson 10  |w-  Example: making a highlight trigger
+|D* |Wlesson 11  |w-  Example: making a trigger to gag stuff from screen
+|D* |Wlesson 12  |w-  Command Stacking, The Commands Sequencer
+|D* |Wlesson 13  |w-  Making aliases that work with and without a target
+|D* |Wlesson 14  |w-  Pre-installed stuff
 |w
 ]],
 
@@ -610,7 +610,7 @@ Then, once you've added it:
 |w
 |D* |Wswitch_maps |w- auto-toggles IMap and the GMCP area Mapper on / off depending on your current location, to save screen space.
 |w
-|D* |Wtutorial |w - this plugin!
+|D* |Wlesson |w - this plugin!
 |w
 ]],
 
