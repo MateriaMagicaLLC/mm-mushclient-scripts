@@ -12,7 +12,7 @@
    author="Ruthgul, Jeneya"
    id="0c85b0fa3ab1503d1eb123b4"
    language="Lua"
-   purpose="a tutorial for the Materia Magica MUSHclient bundle"
+   purpose="a set of lessons for the Materia Magica MUSHclient VI bundle"
    date_written="2013-12-31 06:47:39"
    date_modified="2017-07-22 18:52:02"
    requires="4.71"
@@ -23,14 +23,14 @@
 
 <![CDATA[
 
-~ tutorial_vi ~
+~ lesson_vi ~
 
-A series of 1-page tutorials to show the basic operation of the MUSHclient bundle for Materia Magica.
+A series of 1-page lessons to show the basic operation of the MUSHclient bundle for Materia Magica.
 
 
 Syntax:
 
-* tutorial
+* lesson
 
 
 Authors: Ruthgul, Jeneya, Iyara
@@ -51,7 +51,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 <aliases>
 
   <alias
-   match="^tutorial$"
+   match="^lesson$"
    enabled="y"
    regexp="y"
    send_to="12"
@@ -62,7 +62,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
   </alias>
 
   <alias
-   match="^tutorial[ ]+(?P&lt;num&gt;[0-9]+)$"
+   match="^lesson[ ]+(?P&lt;num&gt;[0-9]+)$"
    enabled="y"
    regexp="y"
    send_to="12"
@@ -77,7 +77,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
    enabled="y"
-   match="^tutorial(|\_vi)( |\:)help$"
+   match="^lesson(|\_vi)( |\:)help$"
    regexp="y"
    script="OnHelp"
   >
@@ -127,7 +127,7 @@ end
 
 
 -------------------
--- tutorial pages
+-- lesson pages
 -------------------
 
 pages = {
@@ -137,34 +137,34 @@ pages = {
 
 [ Table of Contents ]
 
-tutorial 0  -  Overview
-tutorial 1  -  Setup, Repeat command
-tutorial 2  -  Screen readers and SAPI
-tutorial 3  -  Speedwalks, Sextant readings
-tutorial 4  -  Captures
-tutorial 5  -  Example: Using speedwalk manager to locate and walk to a location, by Jeneya
-tutorial 6  -  The area Mapper
-tutorial 7  -  Example: Adding an abbreviation to a new location, by Jeneya
-tutorial 8  -  Aliases
-tutorial 9  -  Example: Making an alias to reach a captures notepad, by Jeneya
-tutorial 10 -  Aliases, other examples (alias to shorten mapper where, alias for hide + backstab)
-tutorial 11 -  Triggers
-tutorial 12 -  Example: Creating a simple SAPI trigger, by Jeneya
-tutorial 13 -  Triggers, other examples (SAPI interrupt, adding gags)
-tutorial 14 -  Command stacking, the Commands Sequencer
-tutorial 15 -  MUD Sound Protocol (MSP), Other sounds
-tutorial 16 -  Reading captures without changing focus
-tutorial 17 -  Dealing with combat spam: Sbrief
-tutorial 18 -  Filters for spammy commands
-tutorial 19 -  The keystrokes manager
-tutorial 20 -  Example: Adding a keystroke to stop SAPI speech, by Jeneya
-tutorial 21 -  Example: Adding keystrokes to read your vitals and use the check commands, by Jeneya
-tutorial 22 -  Example: Adding a keystroke to read captures without leaving the world window, by Jeneya
-tutorial 23 -  Making aliases that work with and without a target
-tutorial 24 -  How to install and uninstall plugins
-tutorial 25 -  How to update plugins
-tutorial 26 -  Macro keystrokes and output
-tutorial 27 -  Pre-installed plugins and features
+lesson 0  -  Overview
+lesson 1  -  Setup, Repeat command
+lesson 2  -  Screen readers and SAPI
+lesson 3  -  Speedwalks, Sextant readings
+lesson 4  -  Captures
+lesson 5  -  Example: Using speedwalk manager to locate and walk to a location, by Jeneya
+lesson 6  -  The area Mapper
+lesson 7  -  Example: Adding an abbreviation to a new location, by Jeneya
+lesson 8  -  Aliases
+lesson 9  -  Example: Making an alias to reach a captures notepad, by Jeneya
+lesson 10 -  Aliases, other examples (alias to shorten mapper where, alias for hide + backstab)
+lesson 11 -  Triggers
+lesson 12 -  Example: Creating a simple SAPI trigger, by Jeneya
+lesson 13 -  Triggers, other examples (SAPI interrupt, adding gags)
+lesson 14 -  Command stacking, the Commands Sequencer
+lesson 15 -  MUD Sound Protocol (MSP), Other sounds
+lesson 16 -  Reading captures without changing focus
+lesson 17 -  Dealing with combat spam: Sbrief
+lesson 18 -  Filters for spammy commands
+lesson 19 -  The keystrokes manager
+lesson 20 -  Example: Adding a keystroke to stop SAPI speech, by Jeneya
+lesson 21 -  Example: Adding keystrokes to read your vitals and use the check commands, by Jeneya
+lesson 22 -  Example: Adding a keystroke to read captures without leaving the world window, by Jeneya
+lesson 23 -  Making aliases that work with and without a target
+lesson 24 -  How to install and uninstall plugins
+lesson 25 -  How to update plugins
+lesson 26 -  Macro keystrokes and output
+lesson 27 -  Pre-installed plugins and features
 
 ]],
 
@@ -1072,7 +1072,7 @@ control alt <numberpad>	will flee that direction
 
 [ Pre-installed plugins and features ]
 
-* Pre-installed plugins; Accelerators, Bazaar Walk, Capture2dworld, Capture2notepads, Detect Globals, Faux Sextant, Global Vars, Lua Audio, Meh Filters, Meh Prompt VI, MM GMCP handler, MM GMCP Mapper, MSP Lua, MushReader, Output Functions, Play Sounds, Plugins Updater, Read Captures, Repeat Command, SAPI speaker, SBrief, Sequencer, Speedwalk Manager GMCP P2, this Tutorial.
+* Pre-installed plugins; Accelerators, Bazaar Walk, Capture2dworld, Capture2notepads, Detect Globals, Faux Sextant, Global Vars, Lua Audio, Meh Filters, Meh Prompt VI, MM GMCP handler, MM GMCP Mapper, MSP Lua, MushReader, Output Functions, Play Sounds, Plugins Updater, Read Captures, Repeat Command, SAPI speaker, SBrief, Sequencer, Speedwalk Manager GMCP P2, this set of lessons.
 
 * MSP Sound pack for Materia Magica (MP3 format).
 
