@@ -349,7 +349,7 @@ end
 
 function send_id()
   if (game_version ~= "4.50") then
-    SendNoEcho("protocol register MM_MUSHclient_bundle")
+    SendNoEcho("protocol register MM_MUSHclient_bundle_other")
   end
 end
 
