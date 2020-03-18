@@ -257,7 +257,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
    enabled="y"
    keep_evaluating="y"
    expand_variables="y"
-   match="^(?P&lt;who&gt;(@!char_name)) (says|whispers) something to (.+)\.$"
+   match="^(?P&lt;who&gt;(@!char_name)) (says|whispers|communicates) something to (.+)\.$"
    regexp="y"
    send_to="14"
    sequence="100"
@@ -271,7 +271,7 @@ capture_stuff("%&lt;who&gt;", "say", "%0", true)
    enabled="y"
    keep_evaluating="y"
    expand_variables="y"
-   match="^(?P&lt;who&gt;(You|(@!char_name))) (ask(| (.+))|asks(| you)|exclaim(| to (.+))|exclaims(| to you)|(say|whisper)(| to (.+))|(says|whispers)(| to you))\, \'(.+)\'$"
+   match="^(?P&lt;who&gt;(You|(@!char_name))) (ask(| (.+))|asks(| you)|exclaim(| to (.+))|exclaims(| to you)|(say|whisper|communicate)(| to (.+))|(says|whispers|communicates)(| to you))\, \'(.+)\'$"
    regexp="y"
    send_to="14"
    sequence="100"
@@ -284,7 +284,7 @@ capture_stuff("%&lt;who&gt;", "say", "%0", true)
   <trigger
    enabled="y"
    keep_evaluating="y"
-   match="^\'(.+)\' (?P&lt;who&gt;(you|(.+))) (ask(| (.+))|asks(| you)|exclaim(| to (.+))|exclaims(| to you)|say(| to (.+))|says(| to you))\. \'(.+)\'$"
+   match="^\'(.+)\' (?P&lt;who&gt;(you|(.+))) (ask(| (.+))|asks(| you)|exclaim(| to (.+))|exclaims(| to you)|say(| to (.+))|says(| to you)|communicate(| to (.+))|communicates(| to you))\. \'(.+)\'$"
    regexp="y"
    send_to="14"
    sequence="100"
@@ -297,7 +297,7 @@ capture_stuff("%&lt;who&gt;", "say", "%0", true)
   <trigger
    enabled="y"
    keep_evaluating="y"
-   match="^\'(.+)\' (?P&lt;who&gt;(you|(.+))) (ask(| (.+))|asks(| you)|exclaim(| to (.+))|exclaims(| to you)|say(| to (.+))|says(| to you))\.$"
+   match="^\'(.+)\' (?P&lt;who&gt;(you|(.+))) (ask(| (.+))|asks(| you)|exclaim(| to (.+))|exclaims(| to you)|say(| to (.+))|says(| to you)|communicate(| to (.+))|communicates(| to you))\.$"
    regexp="y"
    send_to="14"
    sequence="100"
@@ -395,6 +395,21 @@ capture_stuff("%&lt;who&gt;", "tell", "%0", true)
 capture_stuff("you", "tell", "%0", true)
 </send>
   </trigger>
+
+  <trigger
+   enabled="y"
+   keep_evaluating="y"
+   match="^You impress upon [^ ]+ \'(.+)\'$"
+   regexp="y"
+   send_to="14"
+   sequence="100"
+  >
+  <send>trigger_style_runs = TriggerStyleRuns
+capture_stuff("you", "tell", "%0", true)
+</send>
+  </trigger>
+
+
 
   <trigger
    enabled="y"
