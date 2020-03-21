@@ -12,7 +12,7 @@
    author="Ruthgul, Jeneya"
    id="0c85b0fa3ab1503d1eb123b4"
    language="Lua"
-   purpose="lessons for the Materia Magica MUSHclient bundle"
+   purpose="a set of lessons for the Materia Magica MUSHclient VI bundle"
    date_written="2013-12-31 06:47:39"
    date_modified="2017-07-22 18:52:02"
    requires="4.71"
@@ -127,7 +127,7 @@ end
 
 
 -------------------
--- tutorial pages
+-- lesson pages
 -------------------
 
 pages = {
@@ -1072,7 +1072,7 @@ control alt <numberpad>	will flee that direction
 
 [ Pre-installed plugins and features ]
 
-* Pre-installed plugins; Accelerators, Bazaar Walk, Capture2dworld, Capture2notepads, Detect Globals, Faux Sextant, Global Vars, Lua Audio, Meh Filters, Meh Prompt VI, MM GMCP handler, MM GMCP Mapper, MSP Lua, MushReader, Output Functions, Play Sounds, Plugins Updater, Read Captures, Repeat Command, SAPI speaker, SBrief, Sequencer, Speedwalk Manager GMCP P2, this Tutorial.
+* Pre-installed plugins; Accelerators, Bazaar Walk, Capture2dworld, Capture2notepads, Detect Globals, Faux Sextant, Global Vars, Lua Audio, Meh Filters, Meh Prompt VI, MM GMCP handler, MM GMCP Mapper, MSP Lua, MushReader, Output Functions, Play Sounds, Plugins Updater, Read Captures, Repeat Command, SAPI speaker, SBrief, Sequencer, Speedwalk Manager GMCP P2, this set of lessons.
 
 * MSP Sound pack for Materia Magica (MP3 format).
 

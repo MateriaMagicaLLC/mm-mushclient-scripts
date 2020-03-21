@@ -1,4 +1,4 @@
-id = b2772cad800b33a6073d9377  hash = EE4018D5EA11B4BEB62DE0167FE4D702  aux_files = {   [1] = {     name = "captures.MCL",     dest = "MUSH/worlds",     },   [2] = {     name = "announce.mp3",     dest = "MUSH/sounds",     },   }
+id = b2772cad800b33a6073d9377  hash = 1A954242DD7D93D4CFB40B0107B2A789  aux_files = {   [1] = {     name = "captures.MCL",     dest = "MUSH/worlds",     },   [2] = {     name = "announce.mp3",     dest = "MUSH/sounds",     },   }
 id = 6010f6bda5ebf2210998613d  hash = A08F7F32B8216AE9FA0EEA4FA372D902
 id = cd8aa6f67b9f78ab77e67ae3  hash = A9B82909AE7E14F28B6790339DC32D4E  aux_files = {   [1] = {     name = "generic_miniwindow.lua",     dest = "MUSH/lua",     },   }
 id = 632048f8236c5a1319306ff6  hash = 62A4C2D8E7E13133C4742DD244E10224
@@ -24,7 +24,7 @@ id = d54ccc4800e5df1ad0ed0aac  hash = 4621EB3AF63B0B777056D7F11D5FA14B
 id = 226fb67b0722e0f0ddc3a235  hash = 18E699E79A31D4417919489EDF74C41B
 id = cab11fa55cae7d04b2fe8b70  hash = A442C8EDAE3341BF1E4A474D2D102280
 id = 118122989b315b5a97526fcc  hash = E9FA534023D945C443870D6F832903A9
-id = 0c85b0fa3ab1503d1eb123b4  hash = FA86CBDF640930E9BA9438D7B6743861  aux_files = {   [1] = {     name = "mm_boil.mp3",     dest = "MUSH/sounds/msp",     },   [2] = {     name = "mm_stream.mp3",     dest = "MUSH/sounds/msp",     },   }
+id = 0c85b0fa3ab1503d1eb123b4  hash = 8BD518A8DE453BE6864F3BF508F233A5  aux_files = {   [1] = {     name = "mm_boil.mp3",     dest = "MUSH/sounds/msp",     },   [2] = {     name = "mm_stream.mp3",     dest = "MUSH/sounds/msp",     },   }
 id = 57ba85788195beece2a1a171  hash = F20CAE9FDAF57FA789806ED3EA72347B
 id = 4e2bf9f75646bf678cf620dd  hash = 1626D02B0E60B9A5ECD1B573FAEE170D  aux_files = {   [1] = {     name = "ping.mp3",     dest = "MUSH/sounds",     },   }
 id = 1d71bf1797912d451784ca21  hash = FAA74ADED4B48737E5806889CD8B9A8E
@@ -62,7 +62,7 @@ id = 15160c25503baa781f667459  hash = CA92B58A780859FBD94348F0E524E863
 id = a326b480b3f02b3ff6d58e7d  hash = 1FDEEDA61179DF786CE9F23BE2E259C1
 id = 9249299865b9d174ff96adbe  hash = DBC6B587BE548A26EFB1D262B5E212DB
 id = 463242566069ebfd1b379ec1  hash = 661C7BA2F78BCE66507A5DFD619F0BC1
-id = 8e6a05d3e8bbd72d1f6a7ae8  hash = 70C4E06B7119EA3CF344D0717C8B6850  aux_files = {   [1] = {     name = "mm_boil.mp3",     dest = "MUSH/sounds/msp",     },   [2] = {     name = "mm_stream.mp3",     dest = "MUSH/sounds/msp",     },   }
+id = 8e6a05d3e8bbd72d1f6a7ae8  hash = 74FF0EF2A2893CE2C98F225C92941BA4  aux_files = {   [1] = {     name = "mm_boil.mp3",     dest = "MUSH/sounds/msp",     },   [2] = {     name = "mm_stream.mp3",     dest = "MUSH/sounds/msp",     },   }
 id = efe96b7604c453d0a92110e0  hash = 7F097EBC98703C8249F8B2C8E23739A7
 id = 98e6a55b66fa94328c5dc168  hash = 3EB5CCEE313C521E0AE33D9DF561E3B9
 id = ad02c292bb640b7aee9e4df0  hash = 320AED42A4E31EE4309E460160FF14B4

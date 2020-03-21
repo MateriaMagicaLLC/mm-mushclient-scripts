@@ -12,7 +12,7 @@
    author="Ruthgul"
    id="8e6a05d3e8bbd72d1f6a7ae8"
    language="Lua"
-   purpose="lessons for the Materia Magica MUSHclient bundle"
+   purpose="a set of lessons for the Materia Magica MUSHclient bundle"
    date_written="2013-12-20 09:15:50"
    date_modified="2016-12-22 06:03:10"
    requires="4.71"
@@ -23,9 +23,11 @@
 
 <![CDATA[
 
-.--------------------.
- | tutorial lessons |
-`--------------------'
+
+.------------.
+ | lesson |
+`------------'
+
 
 A series of 1-page lessons to show the basic operation of the MUSHclient bundle for Materia Magica.
 
@@ -133,7 +135,7 @@ end
 
 
 -------------------
--- tutorial pages
+-- lesson pages
 -------------------
 
 pages = {
@@ -180,7 +182,7 @@ http://www.mushclient.com/scripts/doc.php
 |w
 |D[ |RImportant |D]
 |w
-Many of the |Rplugins and scripts |win this bundle |Rwon't work properly if you run move than one character in the same MUSHclient window|w.
+Many of the |Rplugins and scripts |win this bundle |Rwon't work properly if you run more than one character in the same MUSHclient window|w.
 |w
 |CStart a new MUSHclient instance for each character that you're running |w(as opposed to running them "tabbed" within the same MUSHclient window.)
 |w
