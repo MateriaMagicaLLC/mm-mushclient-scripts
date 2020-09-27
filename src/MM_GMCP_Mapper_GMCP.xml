@@ -13,17 +13,17 @@
 <muclient>
 
 <plugin
-   name="MM_GMCP_Mapper_GMCP"
-   author="Nick Gammon, Ruthgul"
-   id="f973af093e715dece34dc25f"
-   language="Lua"
-   purpose="GMCP Mapper for Materia Magica"
-   save_state="y"
-   date_written="2012-02-03 20:26:09"
-   date_modified="2017-01-21 23:20:21"
-   requires="4.71"
-   version="1.0"
-   >
+  name="MM_GMCP_Mapper"
+  author="Nick Gammon, Ruthgul"
+  id="f973af093e715dece34dc25f"
+  language="Lua"
+  purpose="GMCP Mapper for Materia Magica"
+  save_state="y"
+  date_written="2012-02-03 20:26:09"
+  date_modified="2020-09-27 10:32:46"
+  requires="4.71"
+  version="1.0"
+>
 
 <description trim="y">
 
@@ -67,13 +67,15 @@ Syntax:
 
 * mapper color terrain [on|off]  - toggle PK vs terrain coloring (off by default)
 * mapper show flags [on|off]  - toggle showing room flags on/off (off by default)
+* mapper show bookmarks [on|off]  - toggle showing room bookmarks on/off (off by default)
 * mapper show numbers [on|off]  - toggle showing/logging room numbers on/off (off by default)
 * mapper show road exits [on|off]  - toggle showing on-road exits on/off (off by default)
 * mapper show unmapped exits [on|off]  - toggle showing unmapped exits on/off (off by default)
 * mapper draw other floors [on|off]  - toggle drawing other floors on/off (on by default)
 
-* mapper auto-open [on|off]  - toggle auto-open doors on/off (on by default)
-* mapper safewalk [on|off]  - toggle avoid PK rooms and DTs on/off (off by default, only works for mapper goto, not for clicking on a room in the map, not for mapper path)
+* mapper use no-speed [on|off]  - toggle using rooms and exits tagged as no-speed on speedwalks on/off (on by default)
+* mapper use grappling [on|off]  - toggle using grappling on speedwalks on/off (off by default)
+* mapper safewalk [on|off]  - toggle avoid PK rooms and DTs on/off (off by default)
 
 * mapper peek [<room#>]  - redraw the map centered on any room, by its room number
 
@@ -86,6 +88,8 @@ Syntax:
 * mapper flags <flags>  - search by room flags
 * mapper notflags <flags>  - search by negated room flags
 * mapper adjacent <full_room_name>  - show adjacent rooms with different names
+
+* mapper signposts  - show nearby rooms with signposts
 
 * mapper safes  - show nearby safe rooms
 * mapper cpks  - show nearby CPK rooms
@@ -151,13 +155,11 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
     enabled="y"
-    match="^mapper[ ]+show[ ]+database[ ]+mods(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    match="^mapper[ ]+show[ ]+database[ ]+mods(|[ ]+(?<status>on|off))$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="toggle_show_database_mods_to"
   >
-  <send>toggle_show_database_mods_to("%&lt;status&gt;")
-</send>
   </alias>
 
   <alias
@@ -189,8 +191,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
     send_to="12"
     sequence="100"
   >
-  <send>mapper_hide(true)
-</send>
+  <send>mapper_hide(true)</send>
   </alias>
 
   <alias
@@ -200,107 +201,106 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
     send_to="12"
     sequence="100"
   >
-  <send>mapper_show(true)
-</send>
+  <send>mapper_show(true)</send>
   </alias>
 
   <alias
     enabled="y"
-    match="^mapper[ ]+colo(|u)r[ ]+terrain(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    match="^mapper[ ]+colo(|u)r[ ]+terrain(|[ ]+(?<status>on|off))$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="toggle_terrain_to"
   >
-  <send>toggle_terrain_to("%&lt;status&gt;")
-</send>
   </alias>
 
   <alias
     enabled="y"
-    match="^mapper[ ]+show[ ]+flags(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    match="^mapper[ ]+show[ ]+flags(|[ ]+(?<status>on|off))$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="toggle_vis_flags_to"
   >
-  <send>toggle_vis_flags_to("%&lt;status&gt;")
-</send>
   </alias>
 
   <alias
     enabled="y"
-    match="^mapper[ ]+show[ ]+numbers(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    match="^mapper[ ]+show[ ]+bookmarks(|[ ]+(?<status>on|off))$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="toggle_vis_bookmarks_to"
   >
-  <send>toggle_vis_number_to("%&lt;status&gt;")
-</send>
   </alias>
 
   <alias
     enabled="y"
-    match="^mapper[ ]+show[ ]+road[ ]+exits(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    match="^mapper[ ]+show[ ]+numbers(|[ ]+(?<status>on|off))$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="toggle_vis_number_to"
   >
-  <send>toggle_vis_road_exits_to("%&lt;status&gt;")
-</send>
   </alias>
 
   <alias
     enabled="y"
-    match="^mapper[ ]+show[ ]+unmapped[ ]+exits(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    match="^mapper[ ]+show[ ]+road[ ]+exits(|[ ]+(?<status>on|off))$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="toggle_vis_road_exits_to"
   >
-  <send>toggle_vis_unmapped_to("%&lt;status&gt;")
-</send>
   </alias>
 
   <alias
     enabled="y"
-    match="^mapper[ ]+draw[ ]+other[ ]+floors(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    match="^mapper[ ]+show[ ]+unmapped[ ]+exits(|[ ]+(?<status>on|off))$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="toggle_vis_unmapped_to"
   >
-  <send>toggle_draw_other_floors_to("%&lt;status&gt;")
-</send>
   </alias>
 
   <alias
     enabled="y"
-    match="^mapper[ ]+auto\-open(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    match="^mapper[ ]+draw[ ]+other[ ]+floors(|[ ]+(?<status>on|off))$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="toggle_draw_other_floors_to"
   >
-  <send>toggle_auto_open_to("%&lt;status&gt;")
-</send>
   </alias>
 
   <alias
     enabled="y"
-    match="^mapper[ ]+safewalk(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    match="^mapper[ ]+use[ ]+no(|\-)speed(|[ ]+(?<status>on|off))$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="toggle_use_nospeed_to"
   >
-  <send>toggle_safewalk_to("%&lt;status&gt;")
-</send>
   </alias>
 
   <alias
     enabled="y"
-    match="^mapper[ ]+peek[ ]+(?P&lt;id&gt;[0-9A-F]+)$"
+    match="^mapper[ ]+use[ ]+grappling(|[ ]+(?<status>on|off))$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="toggle_use_grappling_to"
   >
-  <send>peek_room("%&lt;id&gt;")
-</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+safewalk(|[ ]+(?<status>on|off))$"
+    regexp="y"
+    sequence="100"
+    script="toggle_safewalk_to"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+peek[ ]+(?<id>[0-9A-F]+)$"
+    regexp="y"
+    sequence="100"
+    script="peek_room"
+  >
   </alias>
 
 
@@ -308,88 +308,83 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
     enabled="y"
-    match="^mapper[ ]+where[ ]+(?P&lt;name&gt;[^\:]+)$"
-    regexp="y"
-    send_to="12"
-    sequence="100"
-  >
-  <send>map_where("%&lt;name&gt;")
-</send>
-  </alias>
-
-  <alias
-    enabled="y"
-    match="^mapper[ ]+wheree[ ]+(?P&lt;name&gt;[^\:]+)(| a\:(?P&lt;area&gt;[^\:]+))$"
-    regexp="y"
-    send_to="12"
-    sequence="100"
-  >
-  <send>map_wheree("%&lt;name&gt;", "%&lt;area&gt;")
-</send>
-  </alias>
-
-  <alias
-    enabled="y"
-    match="^mapper[ ]+find[ ]+(?P&lt;what&gt;[a-zA-Z0-9 \,\.\'\-]+)$"
-    regexp="y"
-    send_to="12"
-    sequence="100"
-  >
-  <send>map_find("%&lt;what&gt;")
-</send>
-  </alias>
-
-  <alias
-    enabled="y"
-    match="^mapper[ ]+(bm|book(|mark(|s)))$"
+    match="^mapper[ ]+where[ ]+(?<rname>[^\:]+)$"
     regexp="y"
     sequence="100"
-    script="map_bookmarks"
+    script="map_where"
   >
   </alias>
 
   <alias
     enabled="y"
-    match="^mapper[ ]+findbm[ ]+(?P&lt;bm&gt;[a-zA-Z0-9 \,\.\'\-]+)$"
+    match="^mapper[ ]+wheree[ ]+(?<rname>[^\:]+)(| a\:(?<area>[^\:]+))$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="map_wheree"
   >
-  <send>map_find_bookmark("%&lt;bm&gt;")
-</send>
   </alias>
 
   <alias
     enabled="y"
-    match="^mapper[ ]+flags[ ]+(?P&lt;flags&gt;[a-z \-]+)$"
+    match="^mapper[ ]+find[ ]+(?<keywords>[a-zA-Z0-9 \,\.\'\-]+)$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="map_find"
   >
-  <send>map_list_by_flags("%&lt;flags&gt;")
-</send>
   </alias>
 
   <alias
     enabled="y"
-    match="^mapper[ ]+notflags[ ]+(?P&lt;flags&gt;[a-z \-]+)$"
+    match="^mapper[ ]+(bms|bookmarks)$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="map_find_bookmarks"
   >
-  <send>map_list_by_not_flags("%&lt;flags&gt;")
-</send>
   </alias>
 
   <alias
     enabled="y"
-    match="^mapper[ ]+adjacent[ ]+(?P&lt;name&gt;[^\:]+)$"
+    match="^mapper[ ]+findbm(|[ ]+(?<bm>[a-zA-Z0-9 \,\.\'\-]+))$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="map_where_bookmark"
   >
-  <send>map_show_adjacent_rooms("%&lt;name&gt;")
-</send>
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+flags[ ]+(?<flags>[a-z \-]+)$"
+    regexp="y"
+    sequence="100"
+    script="map_where_flags"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+notflags[ ]+(?<flags>[a-z \-]+)$"
+    regexp="y"
+    sequence="100"
+    script="map_where_by_not_flags"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+adjacent[ ]+(?<name>[^\:]+)$"
+    regexp="y"
+    sequence="100"
+    script="map_show_adjacent_rooms"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+(sps|signposts)$"
+    regexp="y"
+    sequence="100"
+    script="map_signposts"
+  >
   </alias>
 
   <alias
@@ -442,35 +437,29 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
     enabled="y"
-    match="^mapper[ ]+path[ ]+(?P&lt;id&gt;[0-9A-F]+)$"
+    match="^mapper[ ]+path[ ]+(?<id>[0-9A-F]+)$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="map_path"
   >
-  <send>map_path("%&lt;id&gt;")
-</send>
   </alias>
 
   <alias
     enabled="y"
-    match="^mapper[ ]+path[ ]+(?P&lt;id1&gt;[0-9A-F]+)[ ]+(?P&lt;id2&gt;[0-9A-F]+)$"
+    match="^mapper[ ]+path[ ]+(?<id1>[0-9A-F]+)[ ]+(?<id2>[0-9A-F]+)$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="map_path_from_to"
   >
-  <send>map_path2("%&lt;id1&gt;", "%&lt;id2&gt;")
-</send>
   </alias>
 
   <alias
     enabled="y"
-    match="^mapper[ ]+goto[ ]+(?P&lt;id&gt;[0-9A-F]+)$"
+    match="^mapper[ ]+goto[ ]+(?<id>[0-9A-F]+)$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="map_goto_room"
   >
-  <send>map_goto("%&lt;id&gt;")
-</send>
   </alias>
 
   <alias
@@ -505,13 +494,11 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
     enabled="y"
-    match="^mapper[ ]+map[ ]+wilds(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    match="^mapper[ ]+map[ ]+wilds(|[ ]+(?<status>on|off))$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="toggle_wilds_mapping"
   >
-  <send>toggle_wilds_mapping("%&lt;status&gt;")
-</send>
   </alias>
 
 
@@ -519,24 +506,20 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
     enabled="y"
-    match="^mapper[ ]+purge[ ]+area[ ]+(?P&lt;areaid&gt;[a-zA-Z0-9 \,\.\'\-]+)$"
+    match="^mapper[ ]+purge[ ]+area[ ]+(?<name>[a-zA-Z0-9 \,\.\'\-]+)$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="purge_entire_area"
   >
-  <send>purge_entire_area("%&lt;areaid&gt;")
-</send>
   </alias>
 
   <alias
     enabled="y"
-    match="^mapper[ ]+purge[ ]+wilds[ ]+(?P&lt;planeid&gt;[a-zA-Z ]+)$"
+    match="^mapper[ ]+purge[ ]+wilds[ ]+(?<plane>[a-zA-Z ]+)$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="purge_wilds"
   >
-  <send>purge_wilds("%&lt;planeid&gt;")
-</send>
   </alias>
 
   <alias
@@ -579,177 +562,174 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 <!-- maintenance - queries -->
 
   <alias
-    match="^mapper[ ]+roominfo(|[ ]+(?P&lt;id&gt;[0-9A-F]+))$"
+    match="^mapper[ ]+roominfo(|[ ]+(?<id>[0-9A-F]+))$"
     enabled="y"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="show_room_info"
   >
-  <send>show_room_info("%&lt;id&gt;")
-</send>
   </alias>
 
   <alias
-    match="^mapper[ ]+export[ ]+rooms[ ]+(?P&lt;name&gt;.+)$"
+    match="^mapper[ ]+export[ ]+rooms[ ]+(?<name>.+)$"
     enabled="y"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="export_rooms"
   >
-  <send>export_rooms("%&lt;name&gt;")
-</send>
   </alias>
 
   <alias
-    match="^mapper[ ]+export[ ]+area[ ]+(?P&lt;name&gt;.+)$"
+    match="^mapper[ ]+export[ ]+area[ ]+(?<name>.+)$"
     enabled="y"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="export_area"
   >
-  <send>export_area("%&lt;name&gt;")
-</send>
   </alias>
 
 
 <!-- maintenance - additions -->
 
   <alias
-    match="^mapper[ ]+addroom[ ]+(?P&lt;id&gt;[0-9A-F]+)[ ]+n\:(?P&lt;name&gt;.+) a\:(?P&lt;area&gt;.+) f\:(?P&lt;flags&gt;.+) t\:(?P&lt;terrain&gt;.+) ti\:(?P&lt;terraininfo&gt;.+)$"
+    match="^mapper[ ]+addroom[ ]+(?<id>[0-9A-F]+)[ ]+n\:(?<name>.+)[ ]+a\:(?<area>.+)[ ]+f\:(?<flags>.+)[ ]+t\:(?<terrain>.+)[ ]+ti\:(?<terraininfo>.+)$"
     enabled="y"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="map_add_room"
   >
-  <send>map_add_room("%&lt;id&gt;", "%&lt;name&gt;", "%&lt;area&gt;", "%&lt;flags&gt;", "%&lt;terrain&gt;", "%&lt;terraininfo&gt;")
-</send>
   </alias>
 
   <alias
-    match="^mapper[ ]+addexit[ ]+(?P&lt;dir&gt;[a-z]+)(|[ ]+f\:(?P&lt;fromid&gt;[0-9A-F]+)) t\:(?P&lt;toid&gt;[0-9A-F]+)$"
+    match="^mapper[ ]+addexit[ ]+(?<dir>[a-z]+)(|[ ]+f\:(?<fromid>[0-9A-F]+))[ ]+t\:(?<toid>[0-9A-F]+)$"
     enabled="y"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="map_add_exit"
   >
-  <send>map_add_exit("%&lt;dir&gt;", "%&lt;fromid&gt;", "%&lt;toid&gt;")
-</send>
   </alias>
 
   <alias
-    match="^mapper[ ]+addbm(|[ ]+(?P&lt;roomid&gt;[0-9A-F]+))(|[ ]+b\:(?P&lt;book&gt;.+))$"
+    match="^mapper[ ]+addbm(|[ ]+(?<id>[0-9A-F]+))(|[ ]+b\:(?<bm>.+))$"
     enabled="y"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="map_add_bookmark"
   >
-  <send>map_add_bookmark("%&lt;roomid&gt;", "%&lt;book&gt;")
-</send>
   </alias>
 
 
 <!-- maintenance - deletions -->
 
   <alias
-    match="^mapper[ ]+delroom[ ]+(?P&lt;id&gt;[0-9A-F]+)$"
+    match="^mapper[ ]+delroom[ ]+(?<id>[0-9A-F]+)$"
     enabled="y"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="map_del_room"
   >
-  <send>map_del_room("%&lt;id&gt;")
-</send>
   </alias>
 
   <alias
-    match="^mapper[ ]+delexit[ ]+(?P&lt;dir&gt;[a-z]+)(|[ ]+f\:(?P&lt;fromid&gt;[0-9A-F]+))$"
+    match="^mapper[ ]+delexit[ ]+(?<dir>[a-z]+)(|[ ]+f\:(?<fromid>[0-9A-F]+))$"
     enabled="y"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="map_del_exit"
   >
-  <send>map_del_exit("%&lt;dir&gt;", "%&lt;fromid&gt;")
-</send>
   </alias>
 
   <alias
-    match="^mapper[ ]+delexits[ ]+(?P&lt;fromid&gt;[0-9A-F]+)$"
+    match="^mapper[ ]+delexits[ ]+(?<fromid>[0-9A-F]+)$"
     enabled="y"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="map_del_exits"
   >
-  <send>map_del_exits("%&lt;fromid&gt;")
-</send>
   </alias>
 
   <alias
-    match="^mapper[ ]+delbm(|[ ]+(?P&lt;roomid&gt;[0-9A-F]+))$"
+    match="^mapper[ ]+delbm(|[ ]+(?<id>[0-9A-F]+))$"
     regexp="y"
     enabled="y"
-    send_to="12"
     sequence="100"
+    script="map_del_bookmark_from"
   >
-  <send>map_del_bookmark("%&lt;roomid&gt;")
-</send>
   </alias>
 
 
 <!-- maintenance - tags -->
 
   <alias
-    match="^mapper[ ]+dt(|[ ]+(?P&lt;id&gt;[0-9A-F]+))$"
     enabled="y"
+    match="^mapper[ ]+autotag[ ]+signposts(|[ ]+(?<status>on|off))$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="toggle_autotag_signposts_to"
   >
-  <send>map_toggle_tag("%&lt;id&gt;", "dt")
-</send>
   </alias>
 
   <alias
-    match="^mapper[ ]+trap(|[ ]+(?P&lt;id&gt;[0-9A-F]+))$"
+    match="^mapper[ ]+(sp|signpost)(|[ ]+(?<id>[0-9A-F]+))$"
     enabled="y"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="map_toggle_signpost"
   >
-  <send>map_toggle_tag("%&lt;id&gt;", "trap")
-</send>
   </alias>
 
   <alias
-    match="^mapper[ ]+no(|\-)speed(|[ ]+(?P&lt;id&gt;[0-9A-F]+))$"
+    match="^mapper[ ]+dt(|[ ]+(?<id>[0-9A-F]+))$"
     enabled="y"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="map_toggle_dt"
   >
-  <send>map_toggle_tag("%&lt;id&gt;", "no-speed")
-</send>
   </alias>
 
   <alias
-    match="^mapper[ ]+shop(|[ ]+(?P&lt;id&gt;[0-9A-F]+))$"
+    match="^mapper[ ]+trap(|[ ]+(?<id>[0-9A-F]+))$"
     enabled="y"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="map_toggle_trap"
   >
-  <send>map_toggle_tag("%&lt;id&gt;", "shop")
-</send>
   </alias>
 
   <alias
-    match="^mapper[ ]+train(|er)(|[ ]+(?P&lt;id&gt;[0-9A-F]+))$"
+    match="^mapper[ ]+no(|\-)speed(|[ ]+(?<id>[0-9A-F]+))$"
     enabled="y"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="map_toggle_nospeed"
   >
-  <send>map_toggle_tag("%&lt;id&gt;", "trainer")
-</send>
+  </alias>
+
+  <alias
+    match="^mapper[ ]+shop(|[ ]+(?<id>[0-9A-F]+))$"
+    enabled="y"
+    regexp="y"
+    sequence="100"
+    script="map_toggle_shop"
+  >
+  </alias>
+
+  <alias
+    match="^mapper[ ]+train(|er)(|[ ]+(?<id>[0-9A-F]+))$"
+    enabled="y"
+    regexp="y"
+    sequence="100"
+    script="map_toggle_trainer"
+  >
+  </alias>
+
+  <alias
+    match="^mapper[ ]+no(|\-)speed[ ]+exit[ ]+(?<dir>[a-z]+)(|[ ]+f\:(?<fromid>[0-9A-F]+))$"
+    enabled="y"
+    regexp="y"
+    sequence="100"
+    script="map_toggle_nospeed_exit"
+  >
   </alias>
 
 
@@ -778,7 +758,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
     match="^mapper[ ]+purge[ ]+bookmarks$"
     regexp="y"
     sequence="100"
-    script="purge_notes"
+    script="purge_bookmarks"
   >
   </alias>
 
@@ -787,13 +767,11 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
     enabled="y"
-    match="^mapper[ ]+(?P&lt;cmd&gt;(recreate|upgrade))[ ]+database$"
+    match="^mapper[ ]+(?<cmd>recreate|upgrade)[ ]+database$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="recreate_database"
   >
-  <send>recreate_database("%&lt;cmd&gt;")
-</send>
   </alias>
 
   <alias
@@ -812,33 +790,27 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
     enabled="y"
     match="^tprt$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="notify_teleport"
   >
-  <send>notify_teleport()
-</send>
   </alias>
 
   <alias
     enabled="y"
     match="^prtl$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="notify_portal"
   >
-  <send>notify_portal()
-</send>
   </alias>
 
   <alias
     enabled="y"
-    match="^mapper[ ]+hyper[ ]+(?P&lt;id&gt;[0-9A-F]+)$"
+    match="^mapper[ ]+hyper[ ]+(?<id>[0-9A-F]+)$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="map_hyperlink"
   >
-  <send>map_hyperlink("%&lt;id&gt;")
-</send>
   </alias>
 
 
@@ -866,43 +838,11 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
   <trigger
     enabled="y"
     keep_evaluating="y"
-    match="^  Visible Exits\: (?P&lt;exits&gt;.+)$"
+    match="^[ ]+Visible Exits\: (?<exits>.+)$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="on_visible_exits"
   >
-  <send>visible_exits = "%&lt;exits&gt;"
-check_if_show_room_number("%&lt;exits&gt;")
-check_if_show_road_exits()
-check_if_show_unmapped_exits()
-</send>
-  </trigger>
-
-
-<!-- auto-open doors -->
-
-  <trigger
-    enabled="y"
-    keep_evaluating="y"
-    match="^(The (.+) (is|are) closed|A strange force blocks your passage)\.$"
-    regexp="y"
-    send_to="12"
-    sequence="100"
-  >
-  <send>mapper.auto_open()
-</send>
-  </trigger>
-
-  <trigger
-    enabled="y"
-    keep_evaluating="y"
-    match="^(.+)\: It\'s locked\.$"
-    regexp="y"
-    send_to="12"
-    sequence="100"
-  >
-  <send>mapper.stop_auto_open()
-</send>
   </trigger>
 
 
@@ -913,8 +853,8 @@ check_if_show_unmapped_exits()
     match="You are too exhausted. Better rest for a bit."
     keep_evaluating="y"
     regexp="y"
-    script="mapper.cancel_speedwalk"
     sequence="100"
+    script="mapper.cancel_speedwalk"
   >
   </trigger>
 
@@ -934,6 +874,9 @@ local show_other_areas = &show_other_areas;
 local show_up_down = &show_up_down;
 local show_area_exits = &show_area_exits;
 local speedwalk_prefix = "&speedwalk_prefix;"
+local use_nospeed_mode -- loaded via config2
+local use_grappling_mode -- loaded via config2
+local safewalk_mode -- loaded via config2
 local prefer_shown = true
 
 
@@ -999,6 +942,9 @@ function OnPluginInstall()
       show_other_areas = show_other_areas,  -- want to see areas other than the current one?
       show_up_down = show_up_down,          -- want to follow up/down exits?
       show_area_exits = show_area_exits,    -- want to see area exits?
+      use_nospeed_mode = use_nospeed,       -- use rooms/exits tagged as no-speed on speedwalks
+      use_grappling_mode = use_grappling,   -- use grappling
+      safewalk_mode = safewalk,             -- don't walk through PK, traps, etc.
       speedwalk_prefix = speedwalk_prefix,  -- how to speedwalk
     }
 
@@ -1148,17 +1094,22 @@ function help_maintenance()
 
 > tags:
 
+* mapper autotag signposts [on|off]  - automatically tags rooms with signposts (on by default)
+
+* mapper signpost [<room#>]  - tag room as signpost
 * mapper dt [<room#>]  - tag room as DT
 * mapper trap [<room#>]  - tag room as trap
 * mapper no-speed [<room#>]  - tag room as no-speed
 * mapper shop [<room#>]  - tag room as shop
 * mapper trainer [<room#>]  - tag room as trainer
 
+* mapper no-speed exit <dir> [f:<from_room#>]  - tag exit as no-speed
+
 > privacy:
 
 * mapper purge clanhalls  - purge clanhalls data from the database
 * mapper purge homes  - purge player homes data from the database
-* mapper purge bookmarks  - purge all non-vmap notes from the database
+* mapper purge bookmarks  - purge all non-vmap bookmarks from the database
 
 > rebuild data:
 
@@ -1224,6 +1175,9 @@ function reset_defaults()
     show_other_areas = show_other_areas,  -- want to see areas other than the current one?
     show_up_down = show_up_down,          -- want to follow up/down exits?
     show_area_exits = show_area_exits,    -- want to see area exits?
+    use_nospeed_mode = use_nospeed,       -- use rooms/exits tagged as no-speed on speedwalks
+    use_grappling_mode = use_grappling,   -- use grappling
+    safewalk_mode = safewalk,             -- don't walk through PK, traps, etc.
     speedwalk_prefix = speedwalk_prefix,  -- how to speedwalk
   }
 end
@@ -1360,12 +1314,12 @@ default_config = {
 
   FONT = {
     name = get_preferred_font {
-             "Dina",
-             "Lucida Console",
-             "Fixedsys",
-             "Courier",
-             "Sylfaen",
-           },
+      "Dina",
+      "Lucida Console",
+      "Fixedsys",
+      "Courier",
+      "Sylfaen",
+    },
     size = 8.
   },
 
@@ -1400,18 +1354,24 @@ default_config = {
 function load_config2()
   config2 = {
     visible = ((GetVariable("mapper_visible") or "true") == "true"),
-    auto_open = ((GetVariable("auto_open") or "true") == "true"),
+    use_nospeed = ((GetVariable("use_nospeed") or "false") == "true"),
+    use_grappling = ((GetVariable("use_grappling") or "false") == "true"),
     safewalk = ((GetVariable("safewalk") or "false") == "true"),
     color_terrain = ((GetVariable("color_terrain") or "false") == "true"),
     do_map_wilds = ((GetVariable("do_map_wilds") or "false") == "true"),
     show_database_mods = ((GetVariable("show_database_mods") or "true") == "true"),
     show_flags = ((GetVariable("show_flags") or "false") == "true"),
+    show_bookmarks = ((GetVariable("show_bookmarks") or "false") == "true"),
     show_numbers = ((GetVariable("show_numbers") or "false") == "true"),
     vis_road_exits = ((GetVariable("vis_road_exits") or "false") == "true"),
     vis_unmapped_exits = ((GetVariable("vis_unmapped_exits") or "false") == "true"),
+    autotag_signposts = ((GetVariable("autotag_signposts") or "true") == "true"),
     draw_other_floors = ((GetVariable("draw_other_floors") or "true") == "true"),
       -- this last variable overrides config.show_up_down
   }
+  mapper.set_use_nospeed_mode_to(config2.use_nospeed)
+  mapper.set_use_grappling_mode_to(config2.use_grappling)
+  mapper.set_safewalk_mode_to(config2.safewalk)
 
   if (not config2.visible) then
     mapper.hide()
@@ -1421,15 +1381,18 @@ end
 
 function save_config2()
   SetVariable("mapper_visible", tostring(config2.visible))
-  SetVariable("auto_open", tostring(config2.auto_open))
+  SetVariable("use_nospeed", tostring(config2.use_nospeed))
+  SetVariable("use_grappling", tostring(config2.use_grappling))
   SetVariable("safewalk", tostring(config2.safewalk))
   SetVariable("color_terrain", tostring(config2.color_terrain))
   SetVariable("do_map_wilds", tostring(config2.do_map_wilds))
   SetVariable("show_database_mods", tostring(config2.show_database_mods))
   SetVariable("show_flags", tostring(config2.show_flags))
+  SetVariable("show_bookmarks", tostring(config2.show_bookmarks))
   SetVariable("show_numbers", tostring(config2.show_numbers))
   SetVariable("vis_road_exits", tostring(config2.vis_road_exits))
   SetVariable("vis_unmapped_exits", tostring(config2.vis_unmapped_exits))
+  SetVariable("autotag_signposts", tostring(config2.autotag_signposts))
   SetVariable("draw_other_floors", tostring(config2.draw_other_floors))
 
   SaveState()
@@ -1490,7 +1453,11 @@ function get_room(uid)
 
   local texits = {}
   for dir in pairs(room.exits) do
-    table.insert(texits, dir)
+    local dir_info = dir
+    if (room.exits_tags and room.exits_tags[dir]) then
+      dir_info = dir_info .. " (" .. room.exits_tags[dir] .. ")"
+    end
+    table.insert(texits, dir_info)
   end -- for
   table.sort(texits)
 
@@ -1668,17 +1635,19 @@ function room_click(uid, flags)
   end -- if still not there
 
   local handlers = {
-      { name = "Edit bookmark", func = room_edit_bookmark} ,
-      { name = "-", } ,
-      { name = "Add Exit", func = room_add_exit} ,
-      { name = "Change Exit", func = room_change_exit} ,
-      { name = "Delete Exit", func = room_delete_exit} ,
-      { name = "-", } ,
-      { name = "Toggle DT", func = room_toggle_tag, tag = "dt" } ,
-      { name = "Toggle No-Speed", func = room_toggle_tag, tag = "no-speed" } ,
-      { name = "Toggle Shop", func = room_toggle_tag, tag = "shop" } ,
-      { name = "Toggle Trainer", func = room_toggle_tag, tag = "trainer" } ,
-      { name = "Toggle Trap", func = room_toggle_tag, tag = "trap" } ,
+    { name = "Edit Bookmark", func = gui_room_edit_bookmark} ,
+    { name = "-", } ,
+    { name = "Add Exit", func = gui_room_add_exit} ,
+    { name = "Change Exit", func = gui_room_change_exit} ,
+    { name = "Toggle No-Speed Exit", func = gui_room_toggle_exit_tag, tag = "no-speed" } ,
+    { name = "Delete Exit", func = gui_room_delete_exit} ,
+    { name = "-", } ,
+    { name = "Toggle Signpost", func = room_toggle_tag, tag = "signpost" } ,
+    { name = "Toggle DT", func = room_toggle_tag, tag = "dt" } ,
+    { name = "Toggle No-Speed", func = room_toggle_tag, tag = "no-speed" } ,
+    { name = "Toggle Shop", func = room_toggle_tag, tag = "shop" } ,
+    { name = "Toggle Trainer", func = room_toggle_tag, tag = "trainer" } ,
+    { name = "Toggle Trap", func = room_toggle_tag, tag = "trap" } ,
   } -- handlers
 
   local t, tf = {}, {}
@@ -1687,10 +1656,12 @@ function room_click(uid, flags)
     tf[v.name] = v
   end -- for
 
-  local choice = WindowMenu(mapper.win,
-                 WindowInfo(mapper.win, 14),
-                 WindowInfo(mapper.win, 15),
-                 table.concat(t, "|"))
+  local choice = WindowMenu(
+                  mapper.win,
+                  WindowInfo(mapper.win, 14),
+                  WindowInfo(mapper.win, 15),
+                  table.concat(t, "|")
+                )
 
   local f = tf[choice]
 
@@ -1731,123 +1702,86 @@ function mapper_hide(prefer)
 end
 
 
-function toggle_terrain_to(status)
-  config2.color_terrain = do_toggle(config2.color_terrain, status)
-
-  save_config2()
-
-  if (config2.color_terrain) then
-    Note("-- MM_GMCP_Mapper: showing terrain color only --")
-  else
-    Note("-- MM_GMCP_Mapper: PK/shop/trainer color supersedes terrain color --")
-  end
-
+function toggle_terrain_to(name, line, wildcards)
+  local status = wildcards.status
+  toggle_config2_option("color_terrain", "PK/shop/trainer color supersedes terrain", status)
   mapper.draw(current_room)
 end
 
 
-function toggle_vis_flags_to(status)
-  config2.show_flags = do_toggle(config2.show_flags, status)
-
-  save_config2()
-
-  if (config2.show_flags) then
-    Note("-- MM_GMCP_Mapper: showing room flags and terrain ON --")
-  else
-    Note("-- MM_GMCP_Mapper: showing room flags and terrain OFF --")
-  end
+function toggle_vis_flags_to(name, line, wildcards)
+  local status = wildcards.status
+  toggle_config2_option("show_flags", "showing room flags and terrain", status)
 end
 
 
-function toggle_vis_number_to(status)
-  config2.show_numbers = do_toggle(config2.show_numbers, status)
-
-  save_config2()
-
-  if (config2.show_numbers) then
-    Note("-- MM_GMCP_Mapper: showing and logging room numbers ON --")
-  else
-    Note("-- MM_GMCP_Mapper: showing and logging room numbers OFF --")
-  end
+function toggle_vis_bookmarks_to(name, line, wildcards)
+  local status = wildcards.status
+  toggle_config2_option("show_bookmarks", "showing room bookmarks", status)
 end
 
 
-function toggle_vis_road_exits_to(status)
-  config2.vis_road_exits = do_toggle(config2.vis_road_exits, status)
-
-  save_config2()
-
-  if (config2.vis_road_exits) then
-    Note("-- MM_GMCP_Mapper: showing road exits ON --")
-  else
-    Note("-- MM_GMCP_Mapper: showing road exits OFF --")
-  end
+function toggle_vis_number_to(name, line, wildcards)
+  local status = wildcards.status
+  toggle_config2_option("show_numbers", "showing and logging room numbers", status)
 end
 
 
-function toggle_vis_unmapped_to(status)
-  config2.vis_unmapped_exits = do_toggle(config2.vis_unmapped_exits, status)
-
-  save_config2()
-
-  if (config2.vis_unmapped_exits) then
-    Note("-- MM_GMCP_Mapper: showing unmapped exits ON --")
-  else
-    Note("-- MM_GMCP_Mapper: showing unmapped exits OFF --")
-  end
+function toggle_vis_road_exits_to(name, line, wildcards)
+  local status = wildcards.status
+  toggle_config2_option("vis_road_exits", "showing road exits", status)
 end
 
 
-function toggle_draw_other_floors_to(status)
-  config2.draw_other_floors = do_toggle(config2.draw_other_floors, status)
-
-  save_config2()
-
-  if (config2.draw_other_floors) then
-    mapper.toggle_show_up_down(true)
-    Note("-- MM_GMCP_Mapper: drawing other floors ON --")
-  else
-    mapper.toggle_show_up_down(false)
-    Note("-- MM_GMCP_Mapper: drawing other floors OFF --")
-  end
+function toggle_vis_unmapped_to(name, line, wildcards)
+  local status = wildcards.status
+  toggle_config2_option("vis_unmapped_exits", "showing unmapped exits", status)
 end
 
 
-function toggle_auto_open_to(status)
-  config2.auto_open = do_toggle(config2.auto_open, status)
-
-  save_config2()
-
-  if (config2.auto_open) then
-    Note("-- MM_GMCP_Mapper: auto-open doors ON --")
-  else
-    Note("-- MM_GMCP_Mapper: auto-open doors OFF --")
-  end
+function toggle_draw_other_floors_to(name, line, wildcards)
+  local status = wildcards.status
+  toggle_config2_option("draw_other_floors", "drawing other floors", status)
+  mapper.toggle_show_up_down(config2.draw_other_floors)
 end
 
 
-function toggle_safewalk_to(status)
-  config2.safewalk = do_toggle(config2.safewalk, status)
-
-  save_config2()
-
-  if (config2.safewalk) then
-    Note("-- MM_GMCP_Mapper: safewalk mode ON --")
-  else
-    Note("-- MM_GMCP_Mapper: safewalk mode OFF --")
-  end
+function toggle_use_nospeed_to(name, line, wildcards)
+  local status = wildcards.status
+  toggle_config2_option("use_nospeed", "use no-speed mode", status)
+  mapper.set_use_nospeed_mode_to(config2.use_nospeed)
 end
 
 
-function toggle_show_database_mods_to(status)
-  config2.show_database_mods = do_toggle(config2.show_database_mods, status)
+function toggle_use_grappling_to(name, line, wildcards)
+  local status = wildcards.status
+  toggle_config2_option("use_grappling", "use grappling mode", status)
+  mapper.set_use_grappling_mode_to(config2.use_grappling)
+end
+
+
+function toggle_safewalk_to(name, line, wildcards)
+  local status = wildcards.status
+  toggle_config2_option("safewalk", "safewalk mode", status)
+  mapper.set_safewalk_mode_to(config2.safewalk)
+end
+
+
+function toggle_show_database_mods_to(name, line, wildcards)
+  local status = wildcards.status
+  toggle_config2_option("show_database_mods", "showing database mods", status)
+end
+
+
+function toggle_config2_option(option, label, status)
+  config2[option] = do_toggle(config2[option], status)
 
   save_config2()
 
-  if (config2.show_database_mods) then
-    Note("-- MM_GMCP_Mapper: showing database mods ON --")
+  if (config2[option]) then
+    Note("-- MM_GMCP_Mapper: " .. label .. " ON --")
   else
-    Note("-- MM_GMCP_Mapper: showing database mods OFF --")
+    Note("-- MM_GMCP_Mapper: " .. label .. " OFF --")
   end
 end
 
@@ -1884,6 +1818,22 @@ function show_flags_and_terrain(flags, terrain)
   end
 
   Note("[gmcp: " .. show_flags .. " / " .. show_terrain .. "]")
+end
+
+
+function check_if_show_bookmarks(notes)
+  if (config2.show_bookmarks) then
+    show_bookmarks(notes)
+  end
+end
+
+
+function show_bookmarks(notes)
+  if (not notes) or (notes == "") then
+    return
+  end
+
+  Note("notes: " .. notes)
 end
 
 
@@ -1991,22 +1941,23 @@ function show_unmapped_exits()
 end
 
 
-function peek_room(id)
+function peek_room(name, line, wildcards)
+  local id = wildcards.id
+
   local room = load_room_from_database(id)
-
-  if (room) then -- room is in the map
-    peeking = true
-    peeking_from = id
-    Send("rest")
-    mapper.mapprint("Peeking room", id, "... Type 'look' to return to normal view.")
-    if (verbose_mode) then
-      Note("(making you rest so if you click on a room, you won't start a wrong speedwalk)")
-    end
-    mapper.draw(id)
-
-  else
+  if (not room) then
     mapper.mapprint("The room", id, "isn't in the map.")
+    return
   end
+
+  peeking = true
+  peeking_from = id
+  Send("rest")
+  mapper.mapprint("Peeking room", id, "... Type 'look' to return to normal view.")
+  if (verbose_mode) then
+    Note("(making you rest so if you click on a room, you won't start a wrong speedwalk)")
+  end
+  mapper.draw(id)
 end
 
 
@@ -2027,7 +1978,8 @@ end
 -- queries
 ------------
 
-function map_where(rname)
+function map_where(name, line, wildcards)
+  local rname = wildcards.rname
   local sname = fixsql("%" .. string.upper(rname) .. "%")
   local t = {}
 
@@ -2045,7 +1997,9 @@ function map_where(rname)
 end
 
 
-function map_wheree(rname, area)
+function map_wheree(name, line, wildcards)
+  local rname = wildcards.rname
+  local area = wildcards.area
   local sname = fixsql(string.upper(rname))
   local t = {}
 
@@ -2090,127 +2044,144 @@ function get_room_areas(rname)
 end
 
 
-function map_find(keywords)
-  if (not peeking) then
-    local rooms = {}
-    local count = 0
-    local snippets = {}
-    local reset = ANSI(0)
-    local bold = ANSI(1)
-    local unbold = ANSI(22)
-    local red = ANSI(31)
+function map_find(name, line, wildcards)
+  local keywords = wildcards.keywords
 
-    function show_snippet(uid)
+  -- it won't work when we are peeking another room
+  if (peeking) then
+    return
+  end
+
+  local rooms = {}
+  local count = 0
+  local snippets = {}
+  local reset = ANSI(0)
+  local bold = ANSI(1)
+  local unbold = ANSI(22)
+  local red = ANSI(31)
+
+  function show_snippet(uid)
+    local room = rooms[uid]
+    if (not room) then
+      room = load_room_from_database(uid)
+    end
+
+    local cpk = ""
+    if (has_flag(room.flags, "player-kill-chaotic")) then
+      cpk = red .. bold .. " [CPK]"
+    end
+
+    if (not reader_present) then
+      AnsiNote(reset .. snippets[uid], cpk, reset .. "  @  " .. room.area)
+    else
+      Note(StripANSI(snippets[uid] .. cpk .. "  @  " .. room.area))
+    end
+  end
+
+  -- find matching rooms using FTS3
+  for row in db:nrows(string.format(
+     [[
+      SELECT uid, name, snippet(rooms_lookup, '%s', '%s', ' ... ', -1, -10) AS snippet
+        FROM rooms_lookup
+        WHERE rooms_lookup MATCH %s]],
+      bold, unbold,
+      fixsql(keywords))) do
+     rooms[row.uid] = true
+     snippets[row.uid] = row.snippet
+     count = count + 1
+  end -- finding room
+
+--    for id, _ in pairs(rooms) do
+--      print(room)
+--    end
+
+  -- see if nearby
+
+  mapper.find(
+    function (uid)
       local room = rooms[uid]
-      if (not room) then
-        room = load_room_from_database(uid)
+      if room then
+        rooms[uid] = nil
       end
-
-      local cpk = ""
-      if (has_flag(room.flags, "player-kill-chaotic")) then
-        cpk = red .. bold .. " [CPK]"
-      end
-
-      if (not reader_present) then
-        AnsiNote(reset .. snippets[uid], cpk, reset .. "  @  " .. room.area)
-      else
-        Note(StripANSI(snippets[uid] .. cpk .. "  @  " .. room.area))
-      end
-    end
-
-    -- find matching rooms using FTS3
-    for row in db:nrows(string.format(
-       [[
-        SELECT uid, name, snippet(rooms_lookup, '%s', '%s', ' ... ', -1, -10) AS snippet
-          FROM rooms_lookup
-          WHERE rooms_lookup MATCH %s]],
-        bold, unbold,
-        fixsql(keywords))) do
-       rooms[row.uid] = true
-       snippets[row.uid] = row.snippet
-       count = count + 1
-    end -- finding room
-
-    -- see if nearby
-    mapper.find(
-      function (uid)
-        local room = rooms[uid]
-        if room then
-          rooms[uid] = nil
-        end
-        return room, next(rooms) == nil
-      end,  -- function
-      show_vnums,  -- show vnum?
-      count,       -- how many to expect
-      false,       -- don't auto-walk
-      config2.safewalk,
-      show_snippet -- show find snippet
-    )
-  end
+      return room, next(rooms) == nil
+    end,  -- function
+    show_vnums,  -- show vnum?
+    count,       -- how many to expect
+    false,       -- don't auto-walk
+    show_snippet -- show find snippet
+  )
 end
 
 
-function map_bookmarks(name, line, wildcards)
+function map_find_bookmarks(name, line, wildcards)
   if (compatibility) then
     ColourNote("tomato", "black", "GMCP Mapper: I can't find bookmarks in compatibility mode. Please upgrade your database.")
-
-  else
-    local rooms = {}
-    local count = 0
-
-    -- build table of special places (with info in them)
-    for row in db:nrows(string.format("SELECT uid FROM rooms WHERE area = %s", fixsql(zone))) do
-      local anote = load_notes_from_database(row.uid)
-      if (anote) and (anote ~= "") then
-        rooms[row.uid] = capitalize(anote)
-        count = count + 1
-      end
-    end   -- finding room
-
-    -- find such places
-    mapper.find(
-      function (uid)
-        local room = rooms[uid]
-        if room then
-          rooms[uid] = nil
-        end
-        return room, next(rooms) == nil  -- room will be type of info(eg. shop)
-      end,  -- function
-      show_vnums,  -- show vnum?
-      count,       -- how many to expect
-      false,       -- don't auto-walk
-      config2.safewalk
-    )
+    return
   end
+
+  local rooms = {}
+  local count = 0
+
+  -- build table of special places (with info in them)
+  for row in db:nrows(string.format("SELECT uid FROM rooms WHERE area = %s", fixsql(zone))) do
+    local anote = load_notes_from_database(row.uid)
+    if (anote) and (anote ~= "") then
+      rooms[row.uid] = capitalize(anote)
+      count = count + 1
+    end
+  end   -- finding room
+
+  -- find such places
+  mapper.find(
+    function (uid)
+      local room = rooms[uid]
+      if room then
+        rooms[uid] = nil
+      end
+      return room, next(rooms) == nil  -- room will be type of info(eg. shop)
+    end,  -- function
+    show_vnums,  -- show vnum?
+    count,       -- how many to expect
+    false,       -- don't auto-walk
+    config2.safewalk
+  )
 end
 
 
-function map_find_bookmark(book)
+function map_where_bookmark(name, line, wildcards)
+  local bm = wildcards.bm
+
   if (compatibility) then
     ColourNote("tomato", "black", "GMCP Mapper: I can't find bookmarks in compatibility mode. Please upgrade your database.")
+    return
+  end
 
-  else
-    local sbook = "%" .. string.upper(book) .. "%"
-    local t = {}
+  local sbook = "%" .. string.upper(bm) .. "%"
+  local t = {}
 
-    for row in db:nrows(string.format('SELECT * FROM bookmarks WHERE UPPER(notes) like "%s"', sbook)) do
-      local room = load_room_from_database(row.uid)
-      if (room.area == current_area) then
-        t[#t + 1] = row.uid
-      end
-    end -- finding rooms
-
-    ColourNote("lightgreen", "black", "Rooms bookmarked as: '" .. sbook .. "':")
-    show_hyperlinks(t)
-
-    if (verbose_mode) then
-      ColourNote("lightgreen", "black", "Click on a room's name or type 'mapper goto <id>' to speedwalk to the room, if possible.")
+  for row in db:nrows(string.format('SELECT * FROM bookmarks WHERE UPPER(notes) like "%s"', sbook)) do
+    local room = load_room_from_database(row.uid)
+    if (room.area == current_area) then
+      t[#t + 1] = row.uid
     end
+  end -- finding rooms
+
+  ColourNote("lightgreen", "black", "Rooms bookmarked as: '" .. sbook .. "':")
+  show_hyperlinks(t)
+
+  if (verbose_mode) then
+    ColourNote("lightgreen", "black", "Click on a room's name or type 'mapper goto <id>' to speedwalk to the room, if possible.")
   end
 end
 
 
-function map_list_by_flags(flags)
+function map_where_flags(name, line, wildcards)
+  local flags = wildcards.flags
+  map_where_by_flags(flags)
+end
+
+
+function map_where_by_flags(flags)
   local sflags = utils.split(flags, " ")
   local rarea = current_area
   local t = {}
@@ -2293,7 +2264,8 @@ function has_none(sflags, rflags)
 end
 
 
-function map_list_by_not_flags(flags)
+function map_where_by_not_flags(name, line, wildcards)
+  local flags = wildcards.flags
   local sflags = utils.split(flags, " ")
   local rarea = current_area
   local t = {}
@@ -2326,7 +2298,8 @@ function map_list_by_not_flags(flags)
 end
 
 
-function map_hyperlink(id)
+function map_hyperlink(name, line, wildcards)
+  local id = wildcards.id
   local t = {id}
   show_hyperlinks(t)
 end
@@ -2364,7 +2337,8 @@ function show_hyperlinks(t)
 end
 
 
-function map_show_adjacent_rooms(name)
+function map_show_adjacent_rooms(name, line, wildcards)
+  local name = wildcards.name
   local sname = fixsql(string.upper(Trim(name)))
 
   -- find matching rooms
@@ -2401,67 +2375,141 @@ function map_show_adjacent_rooms(name)
   end
 
   -- show results, if any
-  if (#tres > 0) then
-    table.sort(tres)
-
-    for i = 1, #tres do
-      ColourNote("silver", "black", tres[i])
-    end
-
-  else
+  if (#tres <= 0) then
     Note("No matches.")
+    return
   end
+
+  table.sort(tres)
+
+  for i = 1, #tres do
+    ColourNote("silver", "black", tres[i])
+  end
+end
+
+
+function map_signposts()
+  if (peeking) then
+    return
+  end
+
+  if (compatibility) then
+    ColourNote("tomato", "black", "GMCP Mapper: I can't search rooms with the Signpost tag in compatibility mode. Please upgrade your database.")
+    return
+  end
+
+  map_find_by_tags("signpost")
 end
 
 
 function map_safe()
-  if (not peeking) then
-    map_list_by_flags("safe")
+  if (peeking) then
+    return
   end
+
+  if (compatibility) then
+    ColourNote("tomato", "black", "GMCP Mapper: I can't search rooms with the Safe tag in compatibility mode. Please upgrade your database.")
+    return
+  end
+
+  map_where_by_flags("safe")
 end
 
 
 function map_cpk()
-  if (not peeking) then
-    map_list_by_flags("player-kill-chaotic")
+  if (peeking) then
+    return
   end
+
+  if (compatibility) then
+    ColourNote("tomato", "black", "GMCP Mapper: I can't search rooms with the CPK tag in compatibility mode. Please upgrade your database.")
+    return
+  end
+
+  map_where_by_flags("player-kill-chaotic")
 end
 
 
 function map_dts()
-  if (not peeking) then
-    if (not compatibility) then
-      map_list_by_tags("dt")
-    else
-      ColourNote("tomato", "black", "GMCP Mapper: I can't search rooms with the DT tag in compatibility mode. Please upgrade your database.")
-    end
+  if (peeking) then
+    return
   end
+
+  if (compatibility) then
+    ColourNote("tomato", "black", "GMCP Mapper: I can't search rooms with the DT tag in compatibility mode. Please upgrade your database.")
+    return
+  end
+
+  map_where_by_tags("dt")
 end
 
 
 function map_shops()
-  if (not peeking) then
-    if (not compatibility) then
-      map_list_by_tags("shop")
-    else
-      map_list_by_tags_compat("shop")
-    end
+  if (peeking) then
+    return
+  end
+
+  if (not compatibility) then
+    map_where_by_tags("shop")
+  else
+    map_where_by_tags_compat("shop")
   end
 end
 
 
 function map_trainers()
-  if (not peeking) then
-    if (not compatibility) then
-      map_list_by_tags("trainer")
-    else
-      map_list_by_tags_compat("train")
-    end
+  if (peeking) then
+    return
+  end
+
+  if (not compatibility) then
+    map_where_by_tags("trainer")
+  else
+    map_where_by_tags_compat("train")
   end
 end
 
 
-function map_list_by_tags(tags)
+function map_find_by_tags(tags)
+  local stags = utils.split(tags, " ")
+  local rooms = {}
+  local count = 0
+
+  -- build table of special places (with info in them)
+  for row in db:nrows(string.format("SELECT uid, tags FROM player_tags")) do
+    local rtags = row.tags
+    rtags = string.gsub(rtags or "", " ", "")
+    rtags = utils.split(rtags, ",")
+
+    if (has_all(stags, rtags)) then
+      rooms[row.uid] = true
+      count = count + 1
+    end
+  end   -- finding room
+
+  -- find such places
+  local old_depth = config.SCAN.depth
+  config.SCAN.depth = 250
+
+  mapper.find(
+    function (uid)
+      local room = rooms[uid]
+      if room then
+        rooms[uid] = nil
+      end
+      return room, next(rooms) == nil  -- room will be type of info(eg. shop)
+    end,  -- function
+    show_vnums,  -- show vnum?
+    count,       -- how many to expect
+    false,       -- don't auto-walk
+    config2.safewalk
+  )
+
+  config.SCAN.depth = old_depth
+end
+
+
+function map_where_by_tags(tags)
   local stags = utils.split(tags, " ")
   local rarea = current_area
   local t = {}
@@ -2490,7 +2538,7 @@ function map_list_by_tags(tags)
 end
 
 
-function map_list_by_tags_compat(which)
+function map_where_by_tags_compat(which)
   local rooms = {}
   local count = 0
 
@@ -2522,8 +2570,16 @@ end
 -- movement
 -------------
 
-function map_path(wanted)
-  return map_path2(current_room, wanted)
+function map_path(name, line, wildcards)
+  local id = wildcards.id
+  map_path2(current_room, id)
+end
+
+
+function map_path_from_to(name, line, wildcards)
+  local id1 = wildcards.id1
+  local id2 = wildcards.id2
+  map_path2(id1, id2)
 end
 
 
@@ -2566,6 +2622,12 @@ function map_path2(fromuid, touid)
   mapper.mapprint(string.format("Path from %s to %s is: %s", fromuid, touid, path))
 
   return path
+end
+
+
+function map_goto_room(name, line, wildcards)
+  local id = wildcards.id
+  map_goto(id)
 end
 
 
@@ -2678,10 +2740,7 @@ function process_room()
 
       current_room = uid
 
-      local room = rooms[current_room]
-      if (not room) then -- not cached
-        room = load_room_from_database(current_room) -- try to load room from db
-      end
+      local room = rooms[current_room] or load_room_from_database(current_room)
 
       if (not room) then -- room isn't mapped yet
         if (config2.do_map_wilds) -- we're mapping everything
@@ -2698,7 +2757,9 @@ function process_room()
           -- for fixes to outdated maps, run 'mapper update room'
         end
 
-      else -- room already mapped, update if needed
+      else -- room already mapped
+        check_if_show_bookmarks(room.notes)
+        -- update if needed
         update_room(uid)
       end
     end
@@ -2762,6 +2823,11 @@ function is_true(x)
 end
 
 
+function is_maze(uid)
+  return (uid == "-99")
+end
+
+
 function is_vmap(zone)
   local vmap_zones = {
     ["alyria"] = true,
@@ -2806,6 +2872,7 @@ function is_road(terrain)
     ["gravel road"] = true,
     ["mountain-road"] = true,
     ["paved road"] = true,
+    ["sailable-bridge"] = true,
     ["trail"] = true,
   }
 
@@ -2994,7 +3061,7 @@ function create_tables_new(use_db)
 
     CREATE TABLE IF NOT EXISTS player_tags(
       uid           TEXT NOT NULL,    -- room's vnum
-      tags          TEXT,             -- player tags (DT, no-speed, shop, trainer, trap)
+      tags          TEXT,             -- player tags (signpost, DT, no-speed, shop, trainer, trap)
       UNIQUE(uid),
       FOREIGN KEY(uid) REFERENCES rooms(uid)
     );
@@ -3006,6 +3073,14 @@ function create_tables_new(use_db)
       date_added    DATE,             -- date added to database
       FOREIGN KEY(fromuid) REFERENCES rooms(uid)
     );
+
+    CREATE TABLE IF NOT EXISTS exits_tags(
+      dir           TEXT NOT NULL,    -- direction, eg. "n", "s"
+      fromuid       TEXT NOT NULL,    -- exit from which room(in rooms table)
+      tags          TEXT,             -- player tags (no-speed, etc.)
+      FOREIGN KEY(fromuid) REFERENCES rooms(uid)
+    );
+
     CREATE INDEX IF NOT EXISTS fromuid_index ON exits(fromuid);
     CREATE INDEX IF NOT EXISTS touid_index   ON exits(touid);
   ]])
@@ -3119,7 +3194,6 @@ function do_load_room(uid)
       terrain = row.terrain,
       terraininfo = row.terraininfo,
       date_added = row.date_added,
-      exits = {}
     }
 
     if (not compatibility) then
@@ -3141,12 +3215,29 @@ function do_load_room(uid)
       room.tags = fix_tag(room.tags, row.train, "trainer")
     end
 
-    for exitrow in db:nrows(string.format("SELECT * FROM exits WHERE fromuid = %s", fixsql(uid))) do
-      room.exits[exitrow.dir] = tostring(exitrow.touid)
-    end -- for each exit
+    room.exits = load_exits_from_database(room, uid)
+    room.exits_tags = load_exits_tags_from_database(room, uid)
   end   -- finding room
 
   return room
+end
+
+
+function load_exits_from_database(room, uid)
+  local exits = {}
+  for exitrow in db:nrows(string.format("SELECT * FROM exits WHERE fromuid = %s", fixsql(uid))) do
+    exits[exitrow.dir] = tostring(exitrow.touid)
+  end -- for each exit
+  return exits
+end
+
+
+function load_exits_tags_from_database(room, uid)
+  local exits_tags = {}
+  for exitrow in db:nrows(string.format("SELECT * FROM exits_tags WHERE fromuid = %s", fixsql(uid))) do
+    exits_tags[exitrow.dir] = exitrow.tags
+  end -- for each exit
+  return exits_tags
 end
 
 
@@ -3221,29 +3312,38 @@ end
 -- add rooms
 --------------
 
-function map_add_room(id, name, zone, flags, terrain, terraininfo)
+function map_add_room(name, line, wildcards)
+  local id = wildcards.id
+  local name = wildcards.name
+  local zone = wildcards.area
+  local flags = wildcards.flags
+  local terrain = wildcards.terrain
+  local terraininfo = wildcards.terraininfo
+
   local room = load_room_from_database(id)
 
-  if (not room) then -- room isn't mapped yet
-    db:exec("BEGIN TRANSACTION;")
-
-    save_room_to_database(id, Trim(name), Trim(flags), Trim(zone), Trim(terrain), Trim(terraininfo))
-
-    db:exec("COMMIT;")
-
-    -- update in-memory table
-    load_room_from_database(id)
-
-    mapper.draw(current_room)
-
-  else
+  if (room) then
     mapper.mapprint("The room", id, "is already mapped.")
+    return
   end
+
+  -- room isn't mapped yet
+  db:exec("BEGIN TRANSACTION;")
+  save_room_to_database(id, Trim(name), Trim(flags), Trim(zone), Trim(terrain), Trim(terraininfo))
+  db:exec("COMMIT;")
+
+  -- update in-memory table
+  load_room_from_database(id)
+
+  mapper.draw(current_room)
 end
 
 
 function save_room_to_database(uid, title, flags, area, terrain, terraininfo)
   assert(uid, "No UID supplied to save_room_to_database")
+  if (is_maze(uid)) then
+    return
+  end
 
   local use_column = "flags"
   if (compatibility) then
@@ -3278,9 +3378,7 @@ function save_room_to_database(uid, title, flags, area, terrain, terraininfo)
 
   room_not_in_database[uid] = nil
 
-  if (config2.show_database_mods) then
-    mapper.mapprint("Added room", uid, "to database. Name:", title)
-  end
+  show_update(uid, "Added room " .. uid .. " to database. Name: " .. title)
 end
 
 
@@ -3289,93 +3387,103 @@ end
 -- add bookmarks
 ------------------
 
-function map_add_bookmark(id, new_note)
+function map_add_bookmark(name, line, wildcards)
+  local id = wildcards.id
+  local new_note = wildcards.bm
+
   if (compatibility) then
     ColourNote("tomato", "black", "GMCP Mapper: I can't edit bookmarks in compatibility mode. Please upgrade your database.")
+    return
+  end
 
+  if (id == "") then
+    id = uid -- current room is default
+  end
+  if (is_maze(id)) then
+    mapper.mapprint("Can't add bookmarks to maze rooms.")
+    return
+  end
+
+  if (new_note == "") then
+    new_note = "x"
+  end
+
+  local room = load_room_from_database(id)
+  if (not room) then
+    mapper.mapprint("The room", id, "isn't in the map.")
+    return
+  end
+
+  db:exec("BEGIN TRANSACTION;")
+
+  local notes = load_notes_from_database(id)
+
+  if (notes) then -- room already has a bookmark
+    update_bookmark(id, new_note)
+    mapper.mapprint("Bookmark for room", uid, "changed to:", new_note)
   else
-    if (id == "") then
-      id = uid -- current room is default
-    end
+    save_bookmark(id, new_note)
+    mapper.mapprint("Bookmark for room", id, "set to:", new_note)
+  end
 
-    if (new_note == "") then
-      new_note = "x"
-    end
+  db:exec("COMMIT;")
 
-    local room = load_room_from_database(id)
-
-    if (room) then -- room is in the map
-      db:exec("BEGIN TRANSACTION;")
-
-      local notes = load_notes_from_database(id)
-
-      if (notes) then -- room already has a bookmark
-        update_bookmark(id, new_note)
-        mapper.mapprint("Bookmark for room", uid, "changed to:", new_note)
-      else
-        save_bookmark(id, new_note)
-        mapper.mapprint("Bookmark for room", id, "set to:", new_note)
-      end
-
-      db:exec("COMMIT;")
-
-      -- update in-memory table
-      if (rooms[id]) then
-        rooms[id].notes = new_note
-      end
-
-    else
-      mapper.mapprint("The room", id, "isn't in the map.")
-    end
+  -- update in-memory table
+  if (rooms[id]) then
+    rooms[id].notes = new_note
   end
 end
 
 
-function room_edit_bookmark(room, uid)
--- gui function
+function gui_room_edit_bookmark(room, uid)
   if (compatibility) then
     ColourNote("tomato", "black", "GMCP Mapper: I can't edit bookmarks in compatibility mode. Please upgrade your database.")
+    return
+  end
 
+  if (is_maze(uid)) then
+    mapper.mapprint("Can't add bookmarks to maze rooms.")
+    return
+  end
+
+  local notes = room.notes or ""
+
+  if (notes ~= "") then
+    newnotes = utils.inputbox("Modify room comment (clear it to delete from database)", room.name, notes)
   else
-    local notes = room.notes or ""
+    newnotes = utils.inputbox("Enter room comment (creates a bookmark for this room)", room.name, notes)
+  end
 
-    if (notes ~= "") then
-      newnotes = utils.inputbox("Modify room comment (clear it to delete from database)", room.name, notes)
-    else
-      newnotes = utils.inputbox("Enter room comment (creates a bookmark for this room)", room.name, notes)
-    end
+  if (not newnotes) then
+    return
+  end -- if cancelled
 
-    if (not newnotes) then
-      return
-    end -- if cancelled
-
-    if (notes ~= newnotes) then
-      if (newnotes == "") then
-        if (notes == "") then
-          mapper.mapprint("No comment entered, bookmark not saved.")
-        else
-          del_bookmark_from_database(uid)
-          mapper.mapprint("Bookmark for room", uid, "deleted. Was previously:", notes)
-
-          -- update in-memory table
-          if (rooms[id]) then
-            rooms[id].notes = nil
-          end
-        end
-
-      else -- newnotes not empty
-        if (notes == "") then
-          save_bookmark(uid, newnotes)
-          mapper.mapprint("Bookmark added to room", uid, ":", newnotes)
-        else
-          update_bookmark(uid, newnotes)
-          mapper.mapprint("Bookmark for room", uid, "changed to:", newnotes)
-        end
+  if (notes ~= newnotes) then
+    if (newnotes == "") then
+      if (notes == "") then
+        mapper.mapprint("No comment entered, bookmark not saved.")
+      else
+        del_bookmark_from_database(uid)
+        mapper.mapprint("Bookmark for room", uid, "deleted. Was previously:", notes)
 
         -- update in-memory table
         if (rooms[id]) then
-          rooms[id].notes = newnotes
+          rooms[id].notes = nil
         end
+      end
+
+    else -- newnotes not empty
+      if (notes == "") then
+        save_bookmark(uid, newnotes)
+        mapper.mapprint("Bookmark added to room", uid, ":", newnotes)
+      else
+        update_bookmark(uid, newnotes)
+        mapper.mapprint("Bookmark for room", uid, "changed to:", newnotes)
+      end
+
+      -- update in-memory table
+      if (rooms[id]) then
+        rooms[id].notes = newnotes
       end
     end
   end
@@ -3405,49 +3513,65 @@ function save_tags_to_database(uid, tags)
 end
 
 
+function save_exit_tags_to_database(uid, dir, tags)
+  dbcheck(db:execute(string.format(
+    "INSERT INTO exits_tags(fromuid, dir, tags) VALUES(%s, %s, %s);",
+      fixsql(uid),
+      fixsql(dir),
+      fixsql(tags)
+  )))
+end
+
+
 
 --------------
 -- add exits
 --------------
 
-function map_add_exit(dir, fromid, toid)
+function map_add_exit(name, line, wildcards)
+  local dir = wildcards.dir
+  local fromid = wildcards.fromid
+  local toid = wildcards.toid
+
   if (fromid == "") then
     fromid = uid -- current room is default
   end
 
+  if (is_maze(fromid)) then
+    mapper.mapprint("Can't add exits to maze rooms.")
+    return
+  end
+
   local room = load_room_from_database(fromid)
+  if (not room) then
+    mapper.mapprint("The room", fromid, "isn't in the map.")
+    return
+  end
 
-  if (room) then -- room fromid is in the map
-    if (is_valid_direction(dir)) then
-      if (not is_volatile(toid)) then
-        db:exec("BEGIN TRANSACTION;")
+  if (not is_valid_direction(dir)) then
+    mapper.mapprint("You must provide a valid direction (n, ne, etc.)")
+    return
+  end
 
-        add_exit_to_database(dir, fromid, toid)
+  if (is_volatile(toid)) then
+    mapper.mapprint("The room", toid, "changes locations.")
+    return
+  end
 
-        db:exec("COMMIT;")
+  db:exec("BEGIN TRANSACTION;")
+  add_exit_to_database(dir, fromid, toid)
+  db:exec("COMMIT;")
 
-        -- update in-memory table
-        if (rooms[fromid]) then
-          if (not rooms[fromid].exits) then
-            rooms[fromid].exits = {}
-          end
-
-          rooms[fromid].exits[dir] = toid
-        end
-
-        mapper.draw(current_room)
-
-      else
-        mapper.mapprint("The room", toid, "changes locations.")
-      end
-
-    else
-      mapper.mapprint("You must provide a valid direction (n, ne, etc.)")
+  -- update in-memory table
+  if (rooms[fromid]) then
+    if (not rooms[fromid].exits) then
+      rooms[fromid].exits = {}
     end
 
-  else
-    mapper.mapprint("The room", fromid, "isn't in the map.")
+    rooms[fromid].exits[dir] = toid
   end
+
+  mapper.draw(current_room)
 end
 
 
@@ -3455,6 +3579,9 @@ function add_exit_to_database(dir, fromuid, touid)
   assert(dir, "No direction supplied to add_exit_to_database")
   assert(fromuid, "No fromUID supplied to add_exit_to_database")
   assert(touid, "No toUID supplied to add_exit_to_database")
+  if (is_maze(fromuid)) then
+    return
+  end
 
   dbcheck(db:execute(string.format(
     "INSERT INTO exits(dir, fromuid, touid, date_added) VALUES(%s, %s, %s, DATETIME('NOW'));",
@@ -3463,19 +3590,19 @@ function add_exit_to_database(dir, fromuid, touid)
       fixsql(touid)    -- destination room
   )))
 
-  if (config2.show_database_mods) then
-    mapper.mapprint("Added exit to database,", dir, "from", fromuid, "to", touid)
-  end
+  show_update(fromuid, "Added exit to database, " .. dir .. " from " .. fromuid .. " to " .. touid)
 end
 
 
 function save_exits_to_database(zone, uid, exits)
-  local dest
+  if (is_maze(uid)) then
+    return
+  end
 
   for dir in string.gmatch(exits, "%a+") do
-    dest = gmcpval("exits." .. dir)
+    local dest = gmcpval("exits." .. dir)
 
-    if (dest ~= "-99") then
+    if (not is_maze(dest)) then
       dbcheck(db:execute(string.format(
         "INSERT INTO exits(dir, fromuid, touid, date_added) VALUES(%s, %s, %s, DATETIME('NOW'));",
           fixsql(dir),  -- direction (eg. "n")
@@ -3487,27 +3614,13 @@ function save_exits_to_database(zone, uid, exits)
 end
 
 
-function room_add_exit(room, uid)
--- gui function
-  local available = {
-    n = "North",
-    s = "South",
-    e = "East",
-    w = "West",
-    u = "Up",
-    d = "Down",
-    ne = "Northeast",
-    sw = "Southwest",
-    nw = "Northwest",
-    se = "Southeast",
-    tprt = "Teleport",
-    prtl = "Portal",
-  }
-
-  -- remove existing exits
-  for k in pairs(room.exits) do
-    available[k] = nil
+function gui_room_add_exit(room, uid)
+  if (is_maze(uid)) then
+    mapper.mapprint("Can't add exits to maze rooms.")
+    return
   end
+
+  local available = get_non_existing_exits(room)
 
   if next(available) == nil then
     utils.msgbox("All exits already used.", "No free exits!", "ok", "!", 1)
@@ -3532,14 +3645,37 @@ function room_add_exit(room, uid)
       fixsql(exit_destination) -- destination room
   )))
 
-  if (config2.show_database_mods) then
-    mapper.mapprint("Added exit", available[chosen_exit], "from room", uid, "to room", exit_destination, "to database.")
-  end
+  show_update(uid, "Added exit " .. available[chosen_exit] .. " from room " .. uid .. " to room " .. exit_destination .. " to database.")
 
   -- update in-memory table
   rooms[uid].exits[chosen_exit] = exit_destination
 
   mapper.draw(current_room)
+end
+
+
+function get_non_existing_exits(room)
+  local available = {
+    n = "North",
+    s = "South",
+    e = "East",
+    w = "West",
+    u = "Up",
+    d = "Down",
+    ne = "Northeast",
+    sw = "Southwest",
+    nw = "Northwest",
+    se = "Southeast",
+    tprt = "Teleport",
+    prtl = "Portal",
+  }
+
+  -- remove existing exits
+  for k in pairs(room.exits) do
+    available[k] = nil
+  end
+
+  return available
 end
 
 
@@ -3552,42 +3688,47 @@ end
 -- delete rooms
 -----------------
 
-function map_del_room(id)
+function map_del_room(name, line, wildcards)
+  local id = wildcards.id
+
   local room = load_room_from_database(id)
-
-  if (room) then -- room is in the map
-
-    if (count_exits(room.exits) == 0) then -- the room has no "from" links
-      db:exec("BEGIN TRANSACTION;")
-
-      del_room_from_database(id)
-
-      local notes = load_notes_from_database(uid)
-      if (notes) then
-        del_bookmark_from_database(id)
-      end
-
-      local tags = load_tags_from_database(uid)
-      if (tags) then
-        del_tags_from_database(id)
-      end
-
-      db:exec("COMMIT;")
-
-      -- update in-memory table
-      if (rooms[id]) then
-        rooms[id] = nil
-      end
-
-      mapper.draw(current_room)
-
-    else
-      mapper.mapprint("Delete exits from room", id, "to other rooms first.")
-    end
-
-  else
+  if (not room) then
     mapper.mapprint("The room", id, "isn't in the map.")
+    return
   end
+
+  if (count_exits(room.exits) ~= 0) then
+    mapper.mapprint("Delete exits from room", id, "to other rooms first.")
+    return
+  end
+
+  if (room.notes) then
+    mapper.mapprint("Delete notes for room", id, "first.")
+    return
+  end
+
+  db:exec("BEGIN TRANSACTION;")
+
+  del_room_from_database(id)
+
+  local notes = load_notes_from_database(uid)
+  if (notes) then
+    del_bookmark_from_database(id)
+  end
+
+  local tags = load_tags_from_database(uid)
+  if (tags) then
+    del_tags_from_database(id)
+  end
+
+  db:exec("COMMIT;")
+
+  -- update in-memory table
+  if (rooms[id]) then
+    rooms[id] = nil
+  end
+
+  mapper.draw(current_room)
 end
 
 
@@ -3620,9 +3761,7 @@ function del_room_from_database(uid)
       fixsql(uid)
   )))
 
-  if (config2.show_database_mods) then
-    mapper.mapprint("Deleted room", uid, "from database")
-  end
+  show_update(uid, "Deleted room " .. uid .. " from database")
 end
 
 
@@ -3631,35 +3770,38 @@ end
 -- delete bookmarks
 ---------------------
 
+function map_del_bookmark_from(name, line, wildcards)
+  local id = wildcards.id
+  map_del_bookmark(id)
+end
+
+
 function map_del_bookmark(id)
   if (compatibility) then
     ColourNote("tomato", "black", "GMCP Mapper: I can't edit bookmarks in compatibility mode. Please upgrade your database.")
-
-  else
-    if (id == "") then
-      id = uid -- current room is default
-    end
-
-    local notes = load_notes_from_database(id)
-
-    if (notes) then -- room is in the map
-      db:exec("BEGIN TRANSACTION;")
-
-      del_bookmark_from_database(id)
-
-      db:exec("COMMIT;")
-
-      -- update in-memory table
-      if (rooms[id]) then
-        rooms[id].notes = ""
-      end
-
-      mapper.mapprint("Bookmark for room", id, "deleted.")
-
-    else
-      mapper.mapprint("The room", id, "doesn't have notes, or isn't mapped.")
-    end
+    return
   end
+
+  if (id == "") then
+    id = uid -- current room is default
+  end
+
+  local notes = load_notes_from_database(id)
+  if (not notes) then
+    mapper.mapprint("The room", id, "doesn't have notes, or isn't mapped.")
+    return
+  end
+
+  db:exec("BEGIN TRANSACTION;")
+  del_bookmark_from_database(id)
+  db:exec("COMMIT;")
+
+  -- update in-memory table
+  if (rooms[id]) then
+    rooms[id].notes = ""
+  end
+
+  mapper.mapprint("Bookmark for room", id, "deleted.")
 end
 
 
@@ -3684,65 +3826,73 @@ function del_tags_from_database(uid)
 end
 
 
+function del_exit_tags_from_database(uid, dir)
+  dbcheck(db:execute(string.format(
+    "DELETE FROM exits_tags WHERE fromuid = %s AND dir = %s;",
+      fixsql(uid),
+      fixsql(dir)
+  )))
+end
+
+
 
 -----------------
 -- delete exits
 -----------------
 
-function map_del_exits(fromid)
+function map_del_exits(name, line, wildcards)
+  local fromid = wildcards.fromid
+
   if (fromid == "") then
     fromid = uid -- current room is default
   end
 
   local room = load_room_from_database(fromid)
-
-  if (room) then -- room fromid is in the map
-    db:exec("BEGIN TRANSACTION;")
-
-    del_exits_from_database(fromid)
-
-    db:exec("COMMIT;")
-
-    -- update in-memory table
-    if (rooms[fromid]) then
-      rooms[fromid].exits = {}
-    end
-
-  else
+  if (not room) then
     mapper.mapprint("The room", fromid, "isn't in the map.")
+    return
+  end
+
+  db:exec("BEGIN TRANSACTION;")
+  del_exits_from_database(fromid)
+  db:exec("COMMIT;")
+
+  -- update in-memory table
+  if (rooms[fromid]) then
+    rooms[fromid].exits = {}
   end
 end
 
 
-function map_del_exit(dir, fromid)
+function map_del_exit(name, line, wildcards)
+  local dir = wildcards.dir
+  local fromid = wildcards.fromid
+
   if (fromid == "") then
     fromid = uid -- current room is default
   end
 
   local room = load_room_from_database(fromid)
-
-  if (room) then -- room fromid is in the map
-    if ((is_valid_direction(dir)) or (dir == "none")) then
-      db:exec("BEGIN TRANSACTION;")
-
-      del_exit_from_database(dir, fromid)
-
-      db:exec("COMMIT;")
-
-      -- update in-memory table
-      if (rooms[fromid]) then
-        rooms[fromid].exits[dir] = nil
-      end
-
-      mapper.draw(current_room)
-
-    else
-      mapper.mapprint("You must provide a valid direction (n, ne, etc.)")
-    end
-
-  else
+  if (not room) then
     mapper.mapprint("The room", fromid, "isn't in the map.")
+    return
   end
+
+  if ((dir ~= "none") and (not is_valid_direction(dir))) then
+    mapper.mapprint("You must provide a valid direction (n, ne, etc.)")
+    return
+  end
+
+  db:exec("BEGIN TRANSACTION;")
+  del_exit_from_database(dir, fromid)
+  db:exec("COMMIT;")
+
+  -- update in-memory table
+  if (rooms[fromid]) then
+    rooms[fromid].exits[dir] = nil
+  end
+
+  mapper.draw(current_room)
 end
 
 
@@ -3754,9 +3904,7 @@ function del_exits_from_database(uid)
       fixsql(uid)      -- fromuid
   )))
 
-  if (config2.show_database_mods) then
-    mapper.mapprint("Deleted all exits from room", uid, "from database")
-  end
+  show_update(uid, "Deleted all exits from room " .. uid .. " from database")
 end
 
 
@@ -3770,14 +3918,39 @@ function del_exit_from_database(dir, fromuid)
       fixsql(fromuid)   -- fromuid
   )))
 
-  if (config2.show_database_mods) then
-    mapper.mapprint("Deleted exit from database,", dir, "from", fromuid)
-  end
+  show_update(fromuid, "Deleted exit from database, " .. dir .. " from " .. fromuid)
 end
 
 
-function room_delete_exit(room, uid)
--- gui function
+function gui_room_delete_exit(room, uid)
+  local available = get_existing_exits(room)
+
+  if (next(available) == nil) then
+    utils.msgbox("There are no exits from this room.", "No exits!", "ok", "!", 1)
+    return
+  end -- not known
+
+  local chosen_exit = utils.listbox("Choose exit to delete", "Exits ...", available)
+  if (not chosen_exit) then
+    return
+  end
+
+  dbcheck(db:execute(string.format(
+    "DELETE FROM exits WHERE dir = %s AND fromuid = %s;",
+      fixsql(chosen_exit),  -- direction (eg. "n")
+      fixsql(uid)           -- from current room
+  )))
+
+  show_update(uid, "Deleted exit " .. available[chosen_exit] .. " from room " .. uid .. " from database.")
+
+  -- update in-memory table
+  rooms[uid].exits[chosen_exit] = nil
+
+  mapper.draw(current_room)
+end
+
+
+function get_existing_exits(room)
   local available = {
     n = "North",
     s = "South",
@@ -3799,33 +3972,10 @@ function room_delete_exit(room, uid)
       available[k] = available[k] .. " --> " .. room.exits[k]
     else
       available[k] = nil
-    end -- if not a room exit
+    end
   end
 
-  if (next(available) == nil) then
-    utils.msgbox("There are no exits from this room.", "No exits!", "ok", "!", 1)
-    return
-  end -- not known
-
-  local chosen_exit = utils.listbox("Choose exit to delete", "Exits ...", available)
-  if (not chosen_exit) then
-    return
-  end
-
-  dbcheck(db:execute(string.format(
-    "DELETE FROM exits WHERE dir = %s AND fromuid = %s;",
-      fixsql(chosen_exit),  -- direction (eg. "n")
-      fixsql(uid)           -- from current room
-  )))
-
-  if (config2.show_database_mods) then
-    mapper.mapprint("Deleted exit", available[chosen_exit], "from room", uid, "from database.")
-  end
-
-  -- update in-memory table
-  rooms[uid].exits[chosen_exit] = nil
-
-  mapper.draw(current_room)
+  return available
 end
 
 
@@ -3839,6 +3989,10 @@ end
 -----------------
 
 function update_room(uid)
+  if (is_maze(uid)) then
+    return
+  end
+
   db:exec("BEGIN TRANSACTION;")
 
   local oldarea, zone, oldname, name, oldterrain, terrain, oldterraininfo, terraininfo, oldflags, flags, cflags
@@ -3891,6 +4045,9 @@ function update_room(uid)
 
   db:exec("COMMIT;")
 
+  -- update rooms cache
+  rooms[uid] = load_room_from_database(uid)
+
   mapper.draw(current_room)
 end
 
@@ -3924,14 +4081,12 @@ function room_update_area(uid, zone)
     )))
   end
 
-  if (config2.show_database_mods) then
-    mapper.mapprint("Room", uid, "area updated")
-  end
+  show_update(uid, "Room " .. uid .. " area updated")
 
   if (rooms[id]) then
     rooms[uid].area = zone
   end
-end -- room_update_area
+end
 
 
 
@@ -3952,9 +4107,7 @@ function room_update_name(uid, name)
       fixsql(uid)
   )))
 
-  if (config2.show_database_mods) then
-    mapper.mapprint("Room", uid, "name updated")
-  end
+  show_update(uid, "Room " .. uid .. " name updated")
 
   if (rooms[id]) then
     rooms[uid].name = name
@@ -3974,9 +4127,7 @@ function room_update_terrain(uid, terrain)
       fixsql(uid)
   )))
 
-  if (config2.show_database_mods) then
-    mapper.mapprint("Room", uid, "terrain updated")
-  end
+  show_update(uid, "Room " .. uid .. " terrain updated")
 
   if (rooms[id]) then
     rooms[uid].terrain = terrain
@@ -3991,9 +4142,7 @@ function room_update_terraininfo(uid, terraininfo)
       fixsql(uid)
   )))
 
-  if (config2.show_database_mods) then
-    mapper.mapprint("Room", uid, "terraininfo updated")
-  end
+  show_update(uid, "Room " .. uid .. " terraininfo updated")
 
   if (rooms[id]) then
     rooms[uid].terraininfo = terraininfo
@@ -4027,9 +4176,7 @@ function room_update_flags(uid, flags)
     )))
   end
 
-  if (config2.show_database_mods) then
-    mapper.mapprint("Room", uid, "flags updated")
-  end
+  show_update(uid, "Room " .. uid .. " flags updated")
 
   if (rooms[uid]) then
     rooms[uid].flags = flags
@@ -4056,72 +4203,106 @@ end
 -- modify tags
 ----------------
 
+function map_toggle_signpost(name, line, wildcards)
+  local id = wildcards.id
+  map_toggle_tag(id, "signpost")
+end
+
+
+function map_toggle_dt(name, line, wildcards)
+  local id = wildcards.id
+  map_toggle_tag(id, "dt")
+end
+
+
+function map_toggle_trap(name, line, wildcards)
+  local id = wildcards.id
+  map_toggle_tag(id, "trap")
+end
+
+
+function map_toggle_nospeed(name, line, wildcards)
+  local id = wildcards.id
+  map_toggle_tag(id, "no-speed")
+end
+
+
+function map_toggle_shop(name, line, wildcards)
+  local id = wildcards.id
+  map_toggle_tag(id, "shop")
+end
+
+
+function map_toggle_trainer(name, line, wildcards)
+  local id = wildcards.id
+  map_toggle_tag(id, "trainer")
+end
+
+
 function map_toggle_tag(id, tag)
   if (compatibility) then
     ColourNote("tomato", "black", "GMCP Mapper: I can't tag rooms in compatibility mode. Please upgrade your database.")
-
-  else
-    if (id == "") then
-      id = uid -- current room is default
-    end
-
-    local room = rooms[id]
-
-    if (not room) then
-      room = load_room_from_database(uid)
-    end
-
-    if (not room) then
-      mapper.mapprint("The room", id, "isn't in the map.")
-
-    else
-      room_toggle_tag(room, id, tag)
-    end
+    return
   end
+
+  if (id == "") then
+    id = uid -- current room is default
+  end
+
+  local room = rooms[id] or load_room_from_database(id)
+  if (not room) then
+    mapper.mapprint("The room", id, "isn't in the map.")
+    return
+  end
+
+  room_toggle_tag(room, id, tag)
 end
 
 
 function room_toggle_tag(room, uid, tag)
   if (compatibility) then
     ColourNote("tomato", "black", "GMCP Mapper: I can't tag rooms in compatibility mode. Please upgrade your database.")
+    return
+  end
+
+  local old_tags = room.tags
+
+  local tags
+  if (has_tag(old_tags, tag)) then
+    tags = del_a_tag(old_tags, tag)
+  else
+    tags = add_a_tag(old_tags, tag)
+  end
+  if (Trim(tags or "") == "") then
+    tags = nil
+  end
+
+  db:exec("BEGIN TRANSACTION;")
+
+  if (old_tags) then
+    if (tags) then
+      update_tags(uid, tags)
+    else
+      del_tags_from_database(uid)
+    end
 
   else
-    if (has_tag(rooms[uid].tags, tag)) then
-      rooms[uid].tags = del_a_tag(rooms[uid].tags, tag)
-    else
-      rooms[uid].tags = add_a_tag(rooms[uid].tags, tag)
-    end
-
-    db:exec("BEGIN TRANSACTION;")
-
-    local tags = room.tags or ""
-    if (Trim(tags) == "") then
-      tags = nil
-    end
-
     if (tags) then
-      if (rooms[uid].tags) then
-        save_tags_to_database(uid, rooms[uid].tags)
-      end
-
-    else
-      if (rooms[uid].tags) then
-        update_tags(uid, rooms[uid].tags)
-      else
-        del_tags_from_database(uid)
-      end
+      save_tags_to_database(uid, tags)
     end
-
-    db:exec("COMMIT;")
-
-    if (has_flag(rooms[uid].tags, tag)) then
-      mapper.mapprint("Room", uid, "tagged as", tag)
-    else
-      mapper.mapprint("Room", uid, "no longer tagged as", tag)
-    end
-
-    mapper.draw(current_room)
   end
+
+  db:exec("COMMIT;")
+
+  if (not has_flag(old_tags, tag)) then
+    mapper.mapprint("Room", uid, "tagged as", tag)
+  else
+    mapper.mapprint("Room", uid, "no longer tagged as", tag)
+  end
+
+  -- update in-memory table & redraw
+  rooms[uid].tags = tags
+  mapper.draw(current_room)
 end
 
 
@@ -4153,10 +4334,25 @@ function del_a_tag(tags, tag)
 end
 
 
+
+----------------
+-- update tags
+----------------
+
 function update_tags(uid, tags)
   dbcheck(db:execute(string.format(
     "UPDATE player_tags SET tags = %s WHERE uid = %s;",
       fixsql(tags),
+      fixsql(uid)
+  )))
+end
+
+
+function update_exit_tags(uid, dir, tags)
+  dbcheck(db:execute(string.format(
+    "UPDATE exits_tags SET tags = %s WHERE dir = %s AND fromuid = %s;",
+      fixsql(tags),
+      fixsql(dir),
       fixsql(uid)
   )))
 end
@@ -4173,7 +4369,7 @@ function fix_exits(zone, uid, exits)
   for dir in string.gmatch(exits, "%a+") do
     dest = gmcpval("exits." .. dir)
 
-    if (dest) and (dest ~= "none") and (dest ~= "-99")
+    if (dest) and (dest ~= "none") and (not is_maze(dest))
     and (not is_volatile(uid)) and (not is_volatile(dest)) then
 
       if (dest ~= rooms[uid].exits[dir]) then -- exit changed, update it
@@ -4188,9 +4384,7 @@ function fix_exits(zone, uid, exits)
         -- update in-memory table
         rooms[uid].exits[dir] = dest
 
-        if (config2.show_database_mods) then
-          mapper.mapprint("Room", uid, "-", dir, "exit updated")
-        end
+        show_update(uid, "Room " .. uid .. " - " .. dir .. " exit updated")
       end
     end
 
@@ -4198,31 +4392,8 @@ function fix_exits(zone, uid, exits)
 end
 
 
-function room_change_exit(room, uid)
--- gui function
-  local available = {
-    n = "North",
-    s = "South",
-    e = "East",
-    w = "West",
-    u = "Up",
-    d = "Down",
-    ne = "Northeast",
-    sw = "Southwest",
-    nw = "Northwest",
-    se = "Southeast",
-    tprt = "Teleport",
-    prtl = "Portal",
-  }  -- end of available
-
-  -- remove non-existent exits
-  for k in pairs(available) do
-    if room.exits[k] then
-      available[k] = available[k] .. " --> " .. room.exits[k]
-    else
-      available[k] = nil
-    end -- if not a room exit
-  end
+function gui_room_change_exit(room, uid)
+  local available = get_existing_exits(room)
 
   if (next(available) == nil) then
     utils.msgbox("There are no exits from this room.", "No exits!", "ok", "!", 1)
@@ -4247,13 +4418,108 @@ function room_change_exit(room, uid)
       fixsql(uid)               -- from current room
   )))
 
-  if (config2.show_database_mods) then
-    mapper.mapprint("Modified exit", available[chosen_exit], "from room", uid, "to be to room", exit_destination, "in database.")
-  end
+  show_update(uid, "Modified exit " .. available[chosen_exit] .. " from room " .. uid .. " to be to room " .. exit_destination .. " in database.")
 
   -- update in-memory table
   rooms[uid].exits[chosen_exit] = exit_destination
   mapper.draw(current_room)
+end
+
+
+function map_toggle_nospeed_exit(name, line, wildcards)
+  local fromid = wildcards.fromid
+  local dir = wildcards.dir
+  map_toggle_exit_tag(fromid, dir, "no-speed")
+end
+
+
+function map_toggle_exit_tag(id, dir, tag)
+  if (compatibility) then
+    ColourNote("tomato", "black", "GMCP Mapper: I can't tag exits in compatibility mode. Please upgrade your database.")
+    return
+  end
+
+  if (id == "") then
+    id = uid -- current room is default
+  end
+
+  local room = rooms[id] or load_room_from_database(id)
+  if (not room) then
+    mapper.mapprint("The room", id, "isn't in the map.")
+    return
+  end
+
+  room_toggle_exit_tag(room, id, dir, tag)
+end
+
+
+function gui_room_toggle_exit_tag(room, uid, tag)
+  if (compatibility) then
+    ColourNote("tomato", "black", "GMCP Mapper: I can't tag exits in compatibility mode. Please upgrade your database.")
+    return
+  end
+
+  local available = get_existing_exits(room)
+
+  if (next(available) == nil) then
+    utils.msgbox("There are no exits from this room.", "No exits!", "ok", "!", 1)
+    return
+  end -- not known
+
+  local chosen_exit = utils.listbox("Choose exit to tag as " .. tag .. ":", "Exits ...", available)
+  if not chosen_exit then
+    return
+  end
+
+  room_toggle_exit_tag(room, uid, chosen_exit, tag)
+end
+
+
+function room_toggle_exit_tag(room, uid, dir, tag)
+  if (is_maze(uid)) then
+    mapper.mapprint("Can't tag exits from maze rooms.")
+    return
+  end
+
+  local old_tags = room.exits_tags[dir]
+
+  local tags
+  if (has_tag(old_tags, tag)) then
+    tags = del_a_tag(old_tags, tag)
+  else
+    tags = add_a_tag(old_tags, tag)
+  end
+  if (Trim(tags or "") == "") then
+    tags = nil
+  end
+
+  db:exec("BEGIN TRANSACTION;")
+
+  if (old_tags) then
+    -- there are previous exit tags
+    if (tags) then
+      update_exit_tags(uid, dir, tags)
+    else
+      del_exit_tags_from_database(uid, dir)
+    end
+
+  else
+    -- no previous exit tags
+    if (tags) then
+      save_exit_tags_to_database(uid, dir, tags)
+    end
+  end
+
+  db:exec("COMMIT;")
+
+  if (not has_flag(old_tags, tag)) then
+    show_update(uid, "Room " .. uid .. " tagged as " .. tag)
+  else
+    show_update(uid, "Room " .. uid .. " no longer tagged as " .. tag)
+  end
+
+  -- update in-memory table
+  room.exits_tags[dir] = tags
 end
 
 
@@ -4262,18 +4528,9 @@ end
 -- special areas
 -- ---------------
 
-function toggle_wilds_mapping(status)
-  config2.do_map_wilds = do_toggle(config2.do_map_wilds, status)
-
-  save_config2()
-
-  if (config2.do_map_wilds) then
-    Note("-- MM_GMCP_Mapper: wilds mapping ON --")
-
-  else
-    Note("-- MM_GMCP_Mapper: wilds mapping OFF --")
-  end
-
+function toggle_wilds_mapping(name, line, wildcards)
+  local status = wildcards.status
+  toggle_config2_option(do_map_wilds, "wilds mapping", status)
 --  mapper.draw(current_room)
 end
 
@@ -4287,57 +4544,76 @@ end
 -- room info
 --------------
 
-function show_room_info(id)
+function show_room_info(name, line, wildcards)
+  local id = wildcards.id
   if (id == "") then
     id = uid -- current room is default
   end
 
   local room = load_room_from_database(id)
-
-  if (room) then -- room is in the map
-    Tell("id: ")
-    ColourNote(fontcol, bgcol, id)
-    Tell("name: ")
-    ColourNote(fontcol, bgcol, room.name)
-    Tell("zone: ")
-    ColourNote(fontcol, bgcol, room.area)
-
-    if (room.terrain) then
-      Tell("terrain: ")
-      ColourNote(fontcol, bgcol, room.terrain)
-    end
-
-    if (room.terraininfo) then
-      Tell("terraininfo: ")
-      ColourNote(fontcol, bgcol, room.terraininfo)
-    end
-
-    Tell("flags: ")
-    ColourNote(fontcol, bgcol, room.flags or "-")
-
-    room.tags = load_tags_from_database(id)
-    Tell("tags: ")
-    ColourNote(fontcol, bgcol, room.tags or "-")
-
-    room.notes = load_notes_from_database(id)
-    if (room.notes) then
-      Tell("bookmarks: ")
-      ColourNote(fontcol, bgcol, room.notes)
-    end
-
-    if (room.exits) then
-      Tell("exits: ")
-      ColourNote(fontcol, bgcol, serialize.save_simple(room.exits))
-    end
-
-  else
+  if (not room) then
     mapper.mapprint("The room", id, "isn't in the map.")
+    return
+  end
+
+  Tell("id: ")
+  ColourNote(fontcol, bgcol, id)
+  Tell("name: ")
+  ColourNote(fontcol, bgcol, room.name)
+  Tell("zone: ")
+  ColourNote(fontcol, bgcol, room.area)
+
+  if (room.terrain) then
+    Tell("terrain: ")
+    ColourNote(fontcol, bgcol, room.terrain)
+  end
+
+  if (room.terraininfo) then
+    Tell("terraininfo: ")
+    ColourNote(fontcol, bgcol, room.terraininfo)
+  end
+
+  Tell("flags: ")
+  ColourNote(fontcol, bgcol, room.flags or "-")
+
+  room.tags = load_tags_from_database(id)
+  Tell("tags: ")
+  ColourNote(fontcol, bgcol, room.tags or "-")
+
+  room.notes = load_notes_from_database(id)
+  if (room.notes) then
+    Tell("bookmarks: ")
+    ColourNote(fontcol, bgcol, room.notes)
+  end
+
+  if (room.exits) then
+    Tell("exits: ")
+    ColourNote(fontcol, bgcol, mk_exits_info(room.exits, room.exits_tags))
   end
 end
 
 
-function export_rooms(name)
--- name must be an exact room match
+function mk_exits_info(exits, exits_tags)
+  local exits_info = {}
+  for dir, touid in pairs(exits) do
+    exits_info[dir] = mk_exit_info(touid, dir, exits_tags)
+  end
+  return serialize.save_simple(exits_info)
+end
+
+
+function mk_exit_info(touid, dir, exits_tags)
+  local exit_info = touid
+  if (exits_tags) and (exits_tags[dir]) then
+    exit_info = exit_info .. ' (' .. exits_tags[dir] .. ')'
+  end
+  return exit_info
+end
+
+
+function export_rooms(name, line, wildcards)
+  local name = wildcards.name
+  -- name must be an exact room match
 
   local sname = string.upper(name)
   local t = {}
@@ -4352,7 +4628,8 @@ function export_rooms(name)
 end
 
 
-function export_area(name)
+function export_area(name, line, wildcards)
+  local name = wildcards.name
   local sname = string.upper(name)
   local t = {}
 
@@ -4404,7 +4681,8 @@ end
 -- purge stuff
 ----------------
 
-function purge_entire_area(name)
+function purge_entire_area(name, line, wildcards)
+  local name = wildcards.name
   local arooms = {}
   local aname = fixsql(string.upper(name))
 
@@ -4417,23 +4695,24 @@ function purge_entire_area(name)
 end
 
 
-function purge_wilds(name)
+function purge_wilds(name, line, wildcards)
+  local plane = wildcards.plane
   local prooms = {}
-  local pname = fixsql(string.upper(name))
+  local pname = fixsql(string.upper(plane))
 
-  if (is_vmap(name)) then
-    -- make list of stuff to delete
-    for row in db:nrows(string.format("SELECT uid, name, terrain FROM rooms WHERE UPPER(area) = %s", pname)) do
-      if (not is_road(row.terrain)) or (is_cave(row.name)) then
-        prooms[#prooms + 1] = row.uid
-      end
-    end -- finding rooms
-
-    purge_stuff(prooms, name, false)
-
-  else
-    mapper.mapprint("'" .. name .. "' is not a valid plane name.")
+  if (not is_vmap(plane)) then
+    mapper.mapprint("'" .. plane .. "' is not a valid plane name.")
+    return
   end
+
+  -- make list of stuff to delete
+  for row in db:nrows(string.format("SELECT uid, name, terrain FROM rooms WHERE UPPER(area) = %s", pname)) do
+    if (not is_road(row.terrain)) or (is_cave(row.name)) then
+      prooms[#prooms + 1] = row.uid
+    end
+  end -- finding rooms
+
+  purge_stuff(prooms, plane, false)
 end
 
 
@@ -4484,28 +4763,28 @@ end
 
 
 function purge_bookmarks(t, name)
-  if (#t > 0) then
-    db:exec("BEGIN TRANSACTION;")
-
-    mapper.mapprint("Deleting " .. name .. " bookmarks...")
-    for i = 1, #t do
-      SetStatus("Erasing bookmark for room " .. t[i] .. "...")
-      map_del_bookmark(t[i])
-
-      -- update in-memory table
-      if (rooms[t[i]]) then
-        rooms[t[i]].notes = nil
-      end
-    end
-
-    db:exec("COMMIT;")
-
-    mapper.mapprint("Done.")
-    SetStatus("Ready")
-
-  else
+  if (#t <= 0) then
     mapper.mapprint("No bookmarks found for '" .. name .. "'")
+    return
   end
+
+  db:exec("BEGIN TRANSACTION;")
+
+  mapper.mapprint("Deleting " .. name .. " bookmarks...")
+  for i = 1, #t do
+    SetStatus("Erasing bookmark for room " .. t[i] .. "...")
+    map_del_bookmark(t[i])
+
+    -- update in-memory table
+    if (rooms[t[i]]) then
+      rooms[t[i]].notes = nil
+    end
+  end
+
+  db:exec("COMMIT;")
+
+  mapper.mapprint("Done.")
+  SetStatus("Ready")
 end
 
 
@@ -4517,33 +4796,33 @@ end
 
 
 function purge_stuff(t, name, unlink)
-  if (#t > 0) then
-    db:exec("BEGIN TRANSACTION;")
-
-    if (unlink) then
-      mapper.mapprint("Unlinking " .. name .. "...")
-    else
-      mapper.mapprint("Purging " .. name .. "...")
-    end
-
-    for i = 1, #t do
-      if (unlink) then
-        unlink_room(t[i])
-      else
-        nuke_room(t[i])
-      end
-    end
-
-    db:exec("COMMIT;")
-
-    mapper.mapprint("Done.")
-    SetStatus("Ready")
-
-    mapper.draw(current_room)
-
-  else
+  if (#t <= 0) then
     mapper.mapprint("No rooms found for '" .. name .. "'")
+    return
   end
+
+  db:exec("BEGIN TRANSACTION;")
+
+  if (unlink) then
+    mapper.mapprint("Unlinking " .. name .. "...")
+  else
+    mapper.mapprint("Purging " .. name .. "...")
+  end
+
+  for i = 1, #t do
+    if (unlink) then
+      unlink_room(t[i])
+    else
+      nuke_room(t[i])
+    end
+  end
+
+  db:exec("COMMIT;")
+
+  mapper.mapprint("Done.")
+  SetStatus("Ready")
+
+  mapper.draw(current_room)
 end
 
 
@@ -4661,9 +4940,10 @@ function purge_notes()
   db:exec("BEGIN TRANSACTION;")
 
   -- make lists of stuff to delete
-  for row in db:nrows(string.format("SELECT uid, notes, area FROM rooms")) do
-    if (not is_vmap())
-    and (row.notes) then
+  for row in db:nrows(string.format("SELECT uid, area FROM rooms")) do
+    local anote = load_notes_from_database(row.uid)
+    if (not is_vmap(row.area))
+    and ((anote) and (anote ~= "")) then
       brooms[#brooms + 1] = row.uid
     end
   end -- finding rooms
@@ -4728,7 +5008,9 @@ function rebuild_lookup()
 end
 
 
-function recreate_database(cmd)
+function recreate_database(name, line, wildcards)
+  local cmd = wildcards.cmd
+
   -- open databases on disk
   if (cmd == "upgrade") and (compatibility) then
     dbnew = assert(sqlite3.open(GetInfo(66) .. "mm_mapper.db"))
@@ -4819,9 +5101,77 @@ end
 
 
 
+-- ---------------------------
+-- mxp / signposts detection
+-- ---------------------------
+
+function OnPluginMXPcloseTag(name, text)
+  if (not config2.autotag_signposts) then
+    return
+  end
+
+  if (string.find(name, "get") == 1) then -- item on the ground
+    local long_desc = string.match(name, "get,(.+)")
+--    print(long_desc)
+    autotag_signposts(long_desc)
+  end
+end
+
+
+function toggle_autotag_signposts_to(name, line, wildcards)
+  local status = wildcards.status
+  toggle_config2_option(autotag_signposts, "autotag signposts", status)
+end
+
+
+function autotag_signposts(name)
+  if (not is_road_signpost(name)) then
+    return
+  end
+
+  local room = rooms[current_room]
+  if (not has_tag(room.tags, "signpost")) then
+    Execute('mapper signpost')
+  end
+end
+
+
+function is_road_signpost(name)
+  return (name == "A weatherbeaten signpost is firmly planted here.")
+    or (string.match(name, "A signpost indicating that everything to the .+ is CPK is here."))
+end
+
+
+--[[
+* crossroads: short: a weatherbeaten signpost at <X> and <Y> / long: A weatherbeaten signpost is firmly planted here.
+* near area: short: a weatherbeaten signpost near <X> / long: A weatherbeaten signpost is firmly planted here.
+* area entrance: short: a weatherbeaten signpost outside <X>'s <Y> gate / long: A weatherbeaten signpost is firmly planted here.
+* entrance to CPK area: short: a weatherbeaten signpost outside New Kolvir / long: A signpost indicating that everything to the X is CPK is here.
+* pier: short: a weatherbeaten signpost / long: A weatherbeaten signpost is nailed to the pier here.
+--]]
+
+
+
 -- ------
 -- misc
 -- ------
+
+function on_visible_exits(name, line, wildcards)
+  local exits = wildcards.exits
+  visible_exits = exits
+  check_if_show_room_number(exits)
+  check_if_show_road_exits()
+  check_if_show_unmapped_exits()
+end
+
+
+function show_update(uid, msg)
+  if (config2.show_database_mods) and (not is_maze(uid)) then
+    mapper.mapprint(msg)
+  end
+end
+
+
 
 ------------------------
 -- scripting functions
@@ -4829,11 +5179,6 @@ end
 
 function speeding()
   return (not mapper.check_we_can_find())
-end
-
-
-function handled_door()
-  return (config2.auto_open)
 end
 
 
