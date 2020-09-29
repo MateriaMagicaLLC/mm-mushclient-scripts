@@ -20,7 +20,7 @@
   purpose="GMCP Mapper for Materia Magica"
   save_state="y"
   date_written="2012-02-03 20:26:09"
-  date_modified="2020-09-27 10:32:46"
+  date_modified="2020-09-29 07:25:36"
   requires="4.71"
   version="1.0"
 >
@@ -3420,7 +3420,7 @@ function map_add_bookmark(name, line, wildcards)
 
   if (notes) then -- room already has a bookmark
     update_bookmark(id, new_note)
-    mapper.mapprint("Bookmark for room", uid, "changed to:", new_note)
+    mapper.mapprint("Bookmark for room", id, "changed to:", new_note)
   else
     save_bookmark(id, new_note)
     mapper.mapprint("Bookmark for room", id, "set to:", new_note)
