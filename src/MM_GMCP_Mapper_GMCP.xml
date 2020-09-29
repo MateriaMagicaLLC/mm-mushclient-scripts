@@ -758,7 +758,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
     match="^mapper[ ]+purge[ ]+bookmarks$"
     regexp="y"
     sequence="100"
-    script="purge_bookmarks"
+    script="purge_all_bookmarks"
   >
   </alias>
 
@@ -4759,6 +4759,17 @@ function purge_molehill()
 
   purge_bookmarks(mnotes, marea)
   purge_stuff(mrooms, marea, true)
+end
+
+
+function purge_all_bookmarks()
+  local tnotes = {}
+  
+  for row in db:nrows(string.format("SELECT uid FROM bookmarks")) do
+    tnotes[#tnotes + 1] = row.uid
+  end
+  
+  purge_bookmarks(tnotes, "ALL")
 end
 
 
