@@ -3909,8 +3909,8 @@ end
 
 
 function del_exit_from_database(dir, fromuid)
-  assert(dir, "No direction supplied to add_exit_to_database")
-  assert(fromuid, "No fromUID supplied to add_exit_to_database")
+  assert(dir, "No direction supplied to del_exit_from_database")
+  assert(fromuid, "No fromUID supplied to del_exit_from_database")
 
   dbcheck(db:execute(string.format(
     "DELETE FROM exits WHERE dir = %s AND fromuid = %s;",
