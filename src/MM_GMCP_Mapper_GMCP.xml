@@ -3534,7 +3534,7 @@ function map_add_exit(name, line, wildcards)
   local toid = wildcards.toid
 
   if (fromid == "") then
-    fromid = uid -- current room is default
+    fromid = current_room -- current room is default
   end
 
   if (is_maze(fromid)) then
