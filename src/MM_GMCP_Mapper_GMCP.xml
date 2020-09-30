@@ -20,7 +20,7 @@
   purpose="GMCP Mapper for Materia Magica"
   save_state="y"
   date_written="2012-02-03 20:26:09"
-  date_modified="2020-09-29 07:25:36"
+  date_modified="2020-09-30 11:37:07"
   requires="4.71"
   version="1.0"
 >
@@ -3189,6 +3189,7 @@ function do_load_room(uid)
 
   for row in db:nrows(string.format("SELECT * FROM rooms WHERE uid = %s", fixsql(uid))) do
     room = {
+      uid = row.uid,
       name = row.name,
       area = row.area,
       terrain = row.terrain,
@@ -3528,6 +3529,17 @@ end
 -- add exits
 --------------
 
+function save_exits_to_database(uid, exits)
+  room = load_room_from_database(uid)
+  db:exec("BEGIN TRANSACTION;")
+  for dir in string.gmatch(exits, "%a+") do
+    local dest = gmcpval("exits." .. dir)
+    add_or_update_exit(room, dir, dest)
+  end -- for each exit
+  db:exec("COMMIT;")
+end
+
+
 function map_add_exit(name, line, wildcards)
   local dir = wildcards.dir
   local fromid = wildcards.fromid
@@ -3559,7 +3571,7 @@ function map_add_exit(name, line, wildcards)
   end
 
   db:exec("BEGIN TRANSACTION;")
-  add_exit_to_database(dir, fromid, toid)
+  add_or_update_exit(room, dir, toid, true)
   db:exec("COMMIT;")
 
   -- update in-memory table
@@ -3575,7 +3587,20 @@ function map_add_exit(name, line, wildcards)
 end
 
 
-function add_exit_to_database(dir, fromuid, touid)
+function add_or_update_exit(room, dir, touid, show_not_changed)
+  if (not room.exits[dir]) then
+    -- no exits, adding
+    add_exit_to_database(dir, room.uid, touid)
+  elseif (room.exits[dir] ~= touid) then
+    -- exit changed, updating
+    update_database_exit(dir, room.uid, touid)
+  elseif (show_not_changed) then
+    show_update(room.uid, "Exit not updated (the destination room didn't change).")
+  end
+end
+
+
+function add_exit_to_database(dir, fromuid, touid, dont_show)
   assert(dir, "No direction supplied to add_exit_to_database")
   assert(fromuid, "No fromUID supplied to add_exit_to_database")
   assert(touid, "No toUID supplied to add_exit_to_database")
@@ -3590,27 +3615,9 @@ function add_exit_to_database(dir, fromuid, touid)
       fixsql(touid)    -- destination room
   )))
 
-  show_update(fromuid, "Added exit to database, " .. dir .. " from " .. fromuid .. " to " .. touid)
-end
-
-
-function save_exits_to_database(uid, exits)
-  if (is_maze(uid)) then
-    return
+  if (not dont_show) then
+    show_update(fromuid, "Added exit to database, " .. dir .. " from " .. fromuid .. " to " .. touid)
   end
-
-  for dir in string.gmatch(exits, "%a+") do
-    local dest = gmcpval("exits." .. dir)
-
-    if (not is_maze(dest)) then
-      dbcheck(db:execute(string.format(
-        "INSERT INTO exits(dir, fromuid, touid, date_added) VALUES(%s, %s, %s, DATETIME('NOW'));",
-          fixsql(dir),  -- direction (eg. "n")
-          fixsql(uid),  -- from current room
-          fixsql(dest)  -- destination room
-      )))
-    end
-  end -- for each exit
 end
 
 
@@ -3638,14 +3645,9 @@ function gui_room_add_exit(room, uid)
     return
   end -- cancelled
 
-  dbcheck(db:execute(string.format(
-    "INSERT INTO exits(dir, fromuid, touid, date_added) VALUES(%s, %s, %s, DATETIME('NOW'));",
-      fixsql(chosen_exit),  -- direction (eg. "n")
-      fixsql(uid),  -- from current room
-      fixsql(exit_destination) -- destination room
-  )))
-
-  show_update(uid, "Added exit " .. available[chosen_exit] .. " from room " .. uid .. " to room " .. exit_destination .. " to database.")
+  db:exec("BEGIN TRANSACTION;")
+  add_exit_to_database(chosen_exit, uid, exit_destination)
+  db:exec("COMMIT;")
 
   -- update in-memory table
   rooms[uid].exits[chosen_exit] = exit_destination
@@ -4381,18 +4383,10 @@ function fix_exits(uid, exits)
     and (not is_volatile(uid)) and (not is_volatile(dest)) then
 
       if (dest ~= rooms[uid].exits[dir]) then -- exit changed, update it
-
-        dbcheck(db:execute(string.format(
-          "INSERT INTO exits(dir, fromuid, touid, date_added) VALUES(%s, %s, %s, DATETIME('NOW'));",
-            fixsql(dir),  -- direction (eg. "n")
-            fixsql(uid),  -- from current room
-            fixsql(dest)  -- destination room
-        )))
+        update_database_exit(dir, uid, dest)
 
         -- update in-memory table
         rooms[uid].exits[dir] = dest
-
-        show_update(uid, "Room " .. uid .. " - " .. dir .. " exit updated")
       end
     end
 
@@ -4419,18 +4413,34 @@ function gui_room_change_exit(room, uid)
     return
   end -- cancelled
 
-  dbcheck(db:execute(string.format(
-    "UPDATE exits SET touid = %s WHERE dir = %s AND fromuid = %s;",
-      fixsql(exit_destination),
-      fixsql(chosen_exit),      -- direction (eg. "n")
-      fixsql(uid)               -- from current room
-  )))
-
-  show_update(uid, "Modified exit " .. available[chosen_exit] .. " from room " .. uid .. " to be to room " .. exit_destination .. " in database.")
+  db:exec("BEGIN TRANSACTION;")
+  update_database_exit(chosen_exit, uid, exit_destination)
+  db:exec("COMMIT;")
 
   -- update in-memory table
   rooms[uid].exits[chosen_exit] = exit_destination
   mapper_redraw()
+end
+
+
+function update_database_exit(dir, fromuid, touid, dont_show)
+  assert(dir, "No direction supplied to update_database_exit")
+  assert(fromuid, "No fromUID supplied to update_database_exit")
+  assert(touid, "No toUID supplied to update_database_exit")
+  if (is_maze(fromuid)) then
+    return
+  end
+
+  dbcheck(db:execute(string.format(
+    "UPDATE exits SET touid = %s WHERE dir = %s AND fromuid = %s;",
+      fixsql(touid),
+      fixsql(dir),     -- direction (eg. "n")
+      fixsql(fromuid)  -- from current room
+  )))
+
+  if (not dont_show) then
+    show_update(fromuid, "Updated exit " .. dir .. " from room " .. fromuid .. " to be to room " .. touid .. " in database.")
+  end
 end
 
 
