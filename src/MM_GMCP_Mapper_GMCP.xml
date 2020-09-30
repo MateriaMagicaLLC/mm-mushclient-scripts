@@ -2748,7 +2748,7 @@ function process_room()
           db:exec("BEGIN TRANSACTION;")
 
           save_room_to_database(current_room, roomname, roomflags, zone, terrain, terraininfo)
-          save_exits_to_database(zone, current_room, exits_str)
+          save_exits_to_database(current_room, exits_str)
 
           db:exec("COMMIT;")
 
@@ -3594,7 +3594,7 @@ function add_exit_to_database(dir, fromuid, touid)
 end
 
 
-function save_exits_to_database(zone, uid, exits)
+function save_exits_to_database(uid, exits)
   if (is_maze(uid)) then
     return
   end
@@ -4023,7 +4023,7 @@ function update_room(uid)
   end
 
   -- fix exits, in case some of them are missing
-  fix_exits(zone, uid, exits_str)
+  fix_exits(uid, exits_str)
 
   terrain = gmcpval("terrain")
   oldterrain = rooms[uid].terrain -- if terrain has changed, then update/add it
@@ -4371,7 +4371,7 @@ end
 -- modify exits
 -----------------
 
-function fix_exits(zone, uid, exits)
+function fix_exits(uid, exits)
   local dest, aux
 
   for dir in string.gmatch(exits, "%a+") do
