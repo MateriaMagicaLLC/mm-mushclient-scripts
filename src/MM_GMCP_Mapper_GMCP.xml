@@ -592,7 +592,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 <!-- maintenance - additions -->
 
   <alias
-    match="^mapper[ ]+addroom[ ]+(?<id>[0-9A-F]+)[ ]+n\:(?<name>.+)[ ]+a\:(?<area>.+)[ ]+f\:(?<flags>.+)[ ]+t\:(?<terrain>.+)[ ]+ti\:(?<terraininfo>.+)$"
+    match="^mapper[ ]+addroom[ ]+(?<id>[0-9A-F]+)[ ]+n\:(?<name>.+)[ ]+a\:(?<area>.+)[ ]+f\:(?<flags>|.+)[ ]+t\:(?<terrain>.+)[ ]+ti\:(?<terraininfo>.+)$"
     enabled="y"
     regexp="y"
     sequence="100"
