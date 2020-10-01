@@ -20,7 +20,7 @@
   purpose="GMCP Mapper for Materia Magica"
   save_state="y"
   date_written="2012-02-03 20:26:09"
-  date_modified="2020-09-30 11:37:07"
+  date_modified="2020-10-01 05:26:55"
   requires="4.71"
   version="1.0"
 >
@@ -45,6 +45,7 @@ Modified to work with GMCP by Ruthgul. (Please report bugs to Ruthgul.)
 - MM_GMCP_Handler (plugin id="f67c4339ed0591a5b010d05b") must be installed and enabled.
 - Client setting: Game, Configure, Output > [x] Convert IAC EOR/GA to new line (must be checked).
 - Game settings: SHOW-EXITS must be ON (to show room numbers, road exits and unmapped exits).
+- Game settings: MXP must be ON, to auto-detect signposts [ Client setting: Game, Configure, MXP / Pueblo... > Use MXP / Pueblo: On command (or Yes - always). ]
 
 
 Notes:
