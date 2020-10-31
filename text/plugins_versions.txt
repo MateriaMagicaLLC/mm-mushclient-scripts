@@ -68,7 +68,7 @@ id = 98e6a55b66fa94328c5dc168  hash = 3EB5CCEE313C521E0AE33D9DF561E3B9
 id = ad02c292bb640b7aee9e4df0  hash = 320AED42A4E31EE4309E460160FF14B4
 id = 60a4b5df5d7507d9ec3d2d7a  hash = 58DE15E4A70B987A8C2C5E18CC643133
 id = adc3a873d4e47348da7cb426  hash = D4639AD634A8C0013DA12D226DC98E7D  aux_files = {   [1] = {     name = "arrow.png",     },   [2] = {     name = "circ.png",     },   [3] = {     name = "cross.png",     },   [4] = {     name = "custom.png",     },   [5] = {     name = "dest.png",     },   [6] = {     name = "horse.png",     },   [7] = {     name = "ship.png",     },   [8] = {     name = "alyria.png",     },   [9] = {     name = "alyria_spk_purple.png",     },   [10] = {     name = "alyria_spk_red.png",     },   [11] = {     name = "fp.png",     },   [12] = {     name = "lasler.png",     },   [13] = {     name = "social.png",     },   [14] = {     name = "sugx.png",     },   [15] = {     name = "ug.png",     },   [16] = {     name = "verity.png",     },   }
-id = cb6469228f9f7e26129c1ebc  hash = 660D535E3FD38C244612DB6B7DAB9D9D  aux_files = {   [1] = {     name = "world_miniwindow.lua",     dest = "MUSH/lua",     },   }
+id = cb6469228f9f7e26129c1ebc  hash = A4F1F8215F5AA3F7CFBF293CB016831E  aux_files = {   [1] = {     name = "world_miniwindow.lua",     dest = "MUSH/lua",     },   }
 id = 616b8084d0f246d12d54588b  hash = D72ED2293551ABAB728E51CEB7E03F2E  aux_files = {   [1] = {     name = "generic_miniwindow.lua",     dest = "MUSH/lua",     },   }
 id = 66f8ef96f2166bb586529087  hash = EBDA2240869865A4D3919428330F6FF8
 id = ed9db27b1b50b46624e21eb4  hash = 9DF0B37D036D9CEC000E235C7A8E9B6E
