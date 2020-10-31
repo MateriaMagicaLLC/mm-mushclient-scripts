@@ -15,7 +15,7 @@
    purpose="countdown to next tick"
    save_state="y"
    date_written="2011-12-01 11:51:38"
-   date_modified="2014-01-03 22:13:19"
+   date_modified="2020-09-28 10:45:54"
    requires="4.71"
    version="1.0"
    >
@@ -160,7 +160,7 @@ end
    name="sync"
    keep_evaluating="y"
    expand_variables="y"
-   match="^(A sudden\, strong gust of wind knocks you to the ground\!|The current pulls you along to the (.+)\.\.\.|A sudden torrent of lava sweeps you the (.+)\.|Your stomach rumbles\.|Your throat feels parched\.|(You are|(@!char_name) is) buffeted to the (.+) by crosswinds\!|You shiver and suffer from the poison burning within\.|(@!char_name) shivers and suffers\.|(You struggle|(@!char_name) struggles) (.*?)against the webs which hold (.+) in place\.|You turn pale(| and shudder) as dark magic burns away some of your life force\.|(@!char_name) turns pale and shudders\.|Electrical energy pulses(| and arcs) through(|out) (your|(.+)\'s) body\!)$"
+   match="^(A sudden\, strong gust of wind knocks you to the ground\!|The current pulls you along to the (.+)\.\.\.|A sudden torrent of lava sweeps you the (.+)\.|(You are|(@!char_name) is) buffeted to the (.+) by crosswinds\!|You shiver and suffer from the poison burning within\.|(@!char_name) shivers and suffers\.)$"
    regexp="y"
    send_to="12"
    sequence="100"
@@ -349,7 +349,7 @@ function resync_tick(syncat)
       show_tick(-1)
     end
 
-    Note("-- tick: waiting for some of the next things to happen, to synchronize: thirst, hunger, poison / extinction / energy orb tick, web struggle, wind, crosswinds, current --")
+    Note("-- tick: waiting for some of the next things to happen, to synchronize: poison, wind, crosswinds, current --")
 
   else
     syncat = tonumber(syncat)
