@@ -2,7 +2,16 @@
 
 --[[
 
-Mods: Ruthgul, for Materia Magica (changes marked as '-- mod')
+Mods: Ruthgul, for Materia Magica
+
+2020-09-26
+* Added support for grapple-required rooms (to be excluded by the pathfinder if grappling mode is off)
+* Added grappling mode (use / avoid grapple-required rooms)
+* Added support for no-speed rooms and exits (to be excluded by the path finder)
+* Removed auto-open doors (it's now handled by the game)
+
+2020-07-29
+* Updated to Gammon's mapper.lua v2.6
 
 2014-11-21
 * Added toggle_show_up_down() to let the user toggle the drawing of up/down exits via an alias
@@ -18,10 +27,10 @@ Mods: Ruthgul, for Materia Magica (changes marked as '-- mod')
 
 2014-04-05
 * Added death-trap detection to safewalk mode
-* Added no-speed detection for rooms (won't be speedwalkable, regardless of safewalk)
+* Added no-speed detection for rooms (the pathfinder will exclude them, regardless of safewalk)
 
 2014-01-12
-* Added support for safewalk mode (avoid PK rooms)
+* Added support for safewalk mode (avoid / don't avoid PK rooms)
 
 2013-12-14
 * Added support for auto-open doors
@@ -38,6 +47,7 @@ Amended: 16th November 2010 to add symbolic constants (miniwin.xxxx)
 Amended: 18th November 2010 to add more timing and count of times called
          Also added zooming with the mouse wheel.
 Amended: 26th November 2010 to check timers are enabled when speedwalking.
+Amended: 11th November 2014 to allow for detecting mouse-overs of rooms
 
 Generic MUD mapper.
 
@@ -48,6 +58,8 @@ init (t)            -- call once, supply:
                           t.get_room    -- info about room (uid)
                           t.show_help   -- function that displays some help
                           t.room_click  -- function that handles RH click on room (uid, flags)
+                          t.room_mouseover -- function that handles mouse-over a room (uid, flags)
+                          t.room_cancelmouseover -- function that handles cancelled mouse-over of a room (uid, flags)
                           t.timing      -- true to show timing
                           t.show_completed  -- true to show "Speedwalk completed."
                           t.show_other_areas -- true to show non-current areas
@@ -82,6 +94,7 @@ Room info should include:
 
   name          (what to show as room name)
   exits         (table keyed by direction, value is exit uid)
+  exits_tags    (table keyed by direction, value is exit uid)
   area          (area name)
   hovermessage  (what to show when you mouse-over the room)
   bordercolour  (colour of room border)     - RGB colour
@@ -94,7 +107,7 @@ Room info should include:
 
 module (..., package.seeall)
 
-VERSION = 2.5   -- for querying by plugins
+VERSION = 2.6   -- for querying by plugins
 
 require "movewindow"
 require "copytable"
@@ -115,18 +128,22 @@ local DISTANCE_TO_NEXT_ROOM = 15
 local config  -- configuration table
 local supplied_get_room
 local room_click
-local timing            -- true to show timing and other info
-local show_completed    -- true to show "Speedwalk completed."
-local show_other_areas  -- true to draw other areas
-local show_area_exits   -- true to show area exits
-local show_up_down      -- true to show up/down exits
-
+local room_mouseover
+local room_cancelmouseover
+local timing              -- true to show timing and other info
+local show_completed      -- true to show "Speedwalk completed."
+local show_other_areas    -- true to draw other areas
+local show_area_exits     -- true to show area exits
+local show_up_down        -- true to show up/down exits
+local use_nospeed_mode    -- true to use rooms and exits tagged as no-speed on speedwalks
+local use_grappling_mode  -- true to use grappling
+local safewalk_mode       -- true to avoid PK rooms, traps, etc. on speedwalks
 
 -- current room number
 local current_room
 
 -- next direction in a speedwalk
-local next_dir -- mod
+local next_dir
 
 -- locked door detected during a speedwalk
 local locked
@@ -199,7 +216,7 @@ local default_config = {
   ROOM_COLOUR             = { name = "Room",              colour =  ColourNameToRGB "cyan", },
   EXIT_COLOUR             = { name = "Exit",              colour =  ColourNameToRGB "darkgreen", },
   EXIT_COLOUR_UP_DOWN     = { name = "Exit up/down",      colour =  ColourNameToRGB "darkmagenta", },
-  EXIT_COLOUR_PRT         = { name = "Teleport/portal",   colour =  ColourNameToRGB "#3775E8", }, -- mod
+  EXIT_COLOUR_PRT         = { name = "Teleport/portal",   colour =  ColourNameToRGB "#3775E8", },
   UNKNOWN_ROOM_COLOUR     = { name = "Unknown room",      colour =  ColourNameToRGB "#00CACA", },
   MAPPER_NOTE_COLOUR      = { name = "Messages",          colour =  ColourNameToRGB "lightgreen" },
 
@@ -240,18 +257,34 @@ local expand_direction = {
   sw = "southwest",
   nw = "northwest",
   se = "southeast",
-  tprt = "teleport", -- mod
-  prtl = "portal", -- mod
-  }  -- end of expand_direction
+  tprt = "teleport",
+  prtl = "portal",
+}  -- end of expand_direction
+
+local shorten_direction = {
+  north = "n",
+  south = "s",
+  east = "e",
+  west = "w",
+  up = "u",
+  down = "d",
+  northeast = "ne",
+  southwest = "sw",
+  northwest = "nw",
+  southeast = "se",
+  teleport = "tprt",
+  portal = "prtl",
+}
 
 local function get_room (uid)
   local room = supplied_get_room (uid)
   room = room or { unknown = true }
 
   -- defaults in case they didn't supply them ...
-  room.name = room.name or string.format ("Room %s", uid)
+  room.name = room.name or string.format ("Room %s", uid or "<none>")
   room.name = mw.strip_colours (room.name)  -- no colour codes for now
   room.exits = room.exits or {}
+  room.exits_tags = room.exits_tags or {}
   room.area = room.area or "<No area>"
   room.hovermessage = room.hovermessage or "<Unexplored room>"
   room.bordercolour = room.bordercolour or config.ROOM_COLOUR.colour
@@ -527,8 +560,8 @@ local inverse_direction = {
   sw = "ne",
   nw = "se",
   se = "nw",
-  tprt = "teleport", -- mod
-  prtl = "portal", -- mod
+  tprt = "teleport",
+  prtl = "portal",
   }  -- end of inverse_direction
 
 local function add_another_room (uid, path, x, y)
@@ -588,12 +621,12 @@ local function draw_room (uid, path, x, y)
         arrow = arrows.nw
         exit_line_colour = config.EXIT_COLOUR_UP_DOWN.colour
       end -- if available
-    elseif dir == "tprt" then -- mod
+    elseif dir == "tprt" then
       if not room.exits.ne then
         exit_info = connectors.ne
         stub_exit_info = half_connectors.ne
         arrow = arrows.ne
-        exit_line_colour = config.EXIT_COLOUR_PRT.colour -- mod
+        exit_line_colour = config.EXIT_COLOUR_PRT.colour
       end -- if
     elseif dir == "d" then
       if not room.exits.se then
@@ -602,12 +635,12 @@ local function draw_room (uid, path, x, y)
         arrow = arrows.se
         exit_line_colour = config.EXIT_COLOUR_UP_DOWN.colour
       end -- if available
-    elseif dir == "prtl" then -- mod
+    elseif dir == "prtl" then
       if not room.exits.sw then
         exit_info = connectors.sw
         stub_exit_info = half_connectors.sw
         arrow = arrows.sw
-        exit_line_colour = config.EXIT_COLOUR_PRT.colour -- mod
+        exit_line_colour = config.EXIT_COLOUR_PRT.colour
       end -- if
     end -- if down
 
@@ -730,19 +763,19 @@ local function draw_room (uid, path, x, y)
   if room.exits.d then  -- line at bottom
     WindowLine (win, left, bottom, left + ROOM_SIZE, bottom, config.EXIT_COLOUR_UP_DOWN.colour, miniwin.pen_solid, 1)
   end -- if
-  if room.exits.tprt then  -- line at right -- mod
-    WindowLine (win, left + ROOM_SIZE, top, left + ROOM_SIZE, bottom, config.EXIT_COLOUR_PRT.colour, miniwin.pen_solid, 1) -- mod
+  if room.exits.tprt then  -- line at right
+    WindowLine (win, left + ROOM_SIZE, top, left + ROOM_SIZE, bottom, config.EXIT_COLOUR_PRT.colour, miniwin.pen_solid, 1)
   end -- if
-  if room.exits.prtl then  -- line at left -- mod
-    WindowLine (win, left, top, left, bottom, config.EXIT_COLOUR_PRT.colour, miniwin.pen_solid , 1) -- mod
+  if room.exits.prtl then  -- line at left
+    WindowLine (win, left, top, left, bottom, config.EXIT_COLOUR_PRT.colour, miniwin.pen_solid , 1)
   end -- if
 
   speedwalks [uid] = path  -- so we know how to get here
 
   WindowAddHotspot(win, uid,
-                 left, top, right, bottom,   -- rectangle
-                 "",  -- mouseover
-                 "",  -- cancelmouseover
+                 left, top, right, bottom,       -- rectangle
+                 "mapper.mouseover_room",        -- mouseover
+                 "mapper.cancelmouseover_room",  -- cancelmouseover
                  "",  -- mousedown
                  "",  -- cancelmousedown
                  "mapper.mouseup_room",  -- mouseup
@@ -753,14 +786,82 @@ local function draw_room (uid, path, x, y)
 
 end -- draw_room
 
+
+local function is_exit_tagged_as(uid, dir, tag)
+  local room = get_room(uid)
+  local dir = shorten_direction[dir]
+  local exits_tags = room.exits_tags or {}
+  return string.find(exits_tags[dir] or "", tag) or false
+end
+
+
+local function can_exit_be_used_on_speedwalks(uid, dir)
+  return (use_nospeed_mode)
+    or not is_exit_tagged_as(uid, dir, "no%-speed")
+end
+
+
+local function is_safewalk_check_ok(uid)
+  return (not safewalk_mode)
+    or (
+      (not is_room_flagged_as(uid, "player%-kill%-"))
+      and (not is_room_tagged_as(uid, "dt"))
+    )
+end
+
+
+local function is_room_tagged_as(uid, tag)
+  local tags = rooms[uid].tags or ""
+  return string.find(tags or "", tag)
+end
+
+
+local function is_room_flagged_as(uid, flag)
+  local flags = rooms[uid].flags or ""
+  return string.find(flags or "", flag)
+end
+
+
+local function can_be_used_on_speedwalks(uid)
+  return (
+      (use_nospeed_mode)
+      or (not is_room_tagged_as(uid, "no%-speed"))
+    )
+    and (
+      (use_grappling_mode)
+      or (not is_room_flagged_as(uid, "grapple%-required"))
+    )
+end
+
+
+local function check_if_should_walk(next_dir, next_uid)
+  if (not can_exit_be_used_on_speedwalks(current_room, next_dir)) then
+    cancel_speedwalk ("exit " .. next_dir .. " can't be used on speedwalks")
+    return false
+  end
+
+  if (not is_safewalk_check_ok(next_uid)) then
+    cancel_speedwalk ("safewalk check failed for room " .. next_uid)
+    return false
+  end
+
+  if (not can_be_used_on_speedwalks(next_uid)) then
+    cancel_speedwalk ("room " .. next_uid .. " can't be used on speedwalks")
+    return false
+  end
+
+  return true
+end
+
+
 --local function changed_room (uid)
-local function changed_room (uid) -- mod
+local function changed_room (uid)
   hyperlink_paths = nil  -- those hyperlinks are meaningless now
   speedwalks = {}  -- old speedwalks are irrelevant
 
   if current_speedwalk then
 
-    if (uid ~= expected_room) then -- mod
+    if (uid ~= expected_room) then
       local exp = rooms [expected_room]
       if not exp then
         exp = get_room (expected_room) or { name = expected_room }
@@ -771,13 +872,19 @@ local function changed_room (uid) -- mod
       end -- if
       exp = expected_room
       here = uid
-      maperror (string.format ("Speedwalk failed! Expected to be in '%s' but ended up in '%s'.", exp, here))
+      maperror (string.format ("Speedwalk failed! Expected to be in '%s' but ended up in '%s'.", exp or "<none>", here))
       cancel_speedwalk ()
+
     else
       if #current_speedwalk > 0 then
         local dir = table.remove (current_speedwalk, 1)
-        next_dir = (expand_direction[dir.dir] or dir.dir) -- mod
-        if (dir) then -- mod
+        next_dir = (expand_direction[dir.dir] or dir.dir)
+
+        if (not check_if_should_walk(next_dir, dir.uid)) then
+          return
+        end
+
+        if (dir) then
           SetStatus ("Walking " .. (expand_direction[dir.dir] or dir.dir) ..
                      " to " .. walk_to_room_name ..
                      ". Speedwalks to go: " .. #current_speedwalk + 1)
@@ -788,10 +895,10 @@ local function changed_room (uid) -- mod
             end -- if timers disabled
             DoAfter (config.DELAY.time, dir.dir)
           else
-            Execute (dir.dir) -- mod
+            Execute (dir.dir)
           end -- if
---          old_dir = dir -- mod
-        end -- mod
+        end
+
       else
         last_hyperlink_uid = nil
         last_speedwalk_uid = nil
@@ -804,6 +911,7 @@ local function changed_room (uid) -- mod
   end -- if have a current speedwalk
 
 end -- changed_room
+
 
 local function draw_zone_exit (exit)
 
@@ -832,13 +940,14 @@ local function draw_zone_exit (exit)
 end --  draw_zone_exit
 
 
+
 ----------------------------------------------------------------------------------
 --  EXPOSED FUNCTIONS
 ----------------------------------------------------------------------------------
 
--- next direction we're supposed to go -- mod
+-- next direction we're supposed to go
 
-function get_next_dir() -- mod
+function get_next_dir()
   return next_dir
 end -- get_next_dir
 
@@ -915,16 +1024,14 @@ function find_paths (uid, f)
 
         -- create one new particle for each exit
         for dir, dest in pairs(exits) do
-
           -- if we've been in this room before, drop it
-          if not explored_rooms[dest] then
+          if not explored_rooms[dest]
+          and can_exit_be_used_on_speedwalks(part.current_room, dir) then
             explored_rooms[dest] = true
             rooms [dest] = supplied_get_room (dest) -- make sure this room in table
-            if rooms [dest] -- mod
-            and ((not safewalk_mode) -- mod, is it ok to walk the room?
-              or ((not string.find(rooms [dest].flags or "", "player%-kill%-")) -- mod
-                and (not string.find(rooms [dest].tags or "", "dt")))) -- mod
-            and (not string.find(rooms [dest].tags or "", "no%-speed")) then -- mod
+            if rooms [dest]
+            and (is_safewalk_check_ok(dest))
+            and (can_be_used_on_speedwalks(dest)) then
               new_path = copytable.deep (part.path)
               table.insert(new_path, { dir = dir, uid = dest } )
 
@@ -936,13 +1043,13 @@ function find_paths (uid, f)
 
               -- make a new particle in the new room
               table.insert(new_generation, make_particle(dest, new_path))
-            end -- if room exists and it's ok to walk it -- mod
+            end -- if room exists and it's ok to walk it
           end -- not explored this room
           if done then
             break
           end
 
-        end  -- for each exit
+        end -- for each exit
 
       end -- if room exists
 
@@ -957,6 +1064,7 @@ function find_paths (uid, f)
   SetStatus "Ready"
   return paths, count, depth
 end -- function find_paths
+
 
 -- draw our map starting at room: uid
 
@@ -987,6 +1095,15 @@ function draw (uid)
 
   current_area = room.area
 
+  -- we are recreating the window so any mouse-over is not valid any more
+  if WindowInfo (win, 19) and WindowInfo (win, 19) ~= "" then
+    if type (room_cancelmouseover) == "function" then
+      room_cancelmouseover (WindowInfo (win, 19), 0)  -- cancelled mouse over
+    end -- if
+  end -- have a hotspot
+
+  WindowDeleteAllHotspots (win)
+
   WindowCreate (win,
                  windowinfo.window_left,
                  windowinfo.window_top,
@@ -996,7 +1113,7 @@ function draw (uid)
                  windowinfo.window_flags,
                  config.BACKGROUND_COLOUR.colour)
 
-  -- background texture -- mod
+  -- background texture
   local dir = GetInfo(66)
   local imgpath = dir .. "worlds\\mm_mapper_bg.png"
   local res = WindowLoadImage(win, "bg", imgpath)
@@ -1018,6 +1135,7 @@ function draw (uid)
   end
 
   -- let them move it around
+--  movewindow.add_drag_handler (win, 0, 0, 0, font_height + 4)
   movewindow.add_drag_handler (win, 0, 0, 0, font_height, miniwin.cursor_both_arrow)
 
   -- for zooming
@@ -1085,6 +1203,7 @@ function draw (uid)
   if areaname then
     draw_text_box (win, FONT_ID,
                    (config.WINDOW.width - WindowTextWidth (win, FONT_ID, areaname, true)) / 2,   -- left
+--                   config.WINDOW.height - 6 - font_height,    -- top
                    config.WINDOW.height - 3 - font_height,    -- top
                    areaname, true,              -- what to draw, utf8
                    config.AREA_NAME_TEXT.colour,   -- text colour
@@ -1098,9 +1217,11 @@ function draw (uid)
     draw_configuration ()
   else
     local x = 5
+--    local y = config.WINDOW.height - 6 - font_height
     local y = config.WINDOW.height - 2 - font_height
     local width = draw_text_box (win, FONT_ID,
                    x,   -- left
+--                   y,   -- top (ie. at bottom)
                    config.WINDOW.height - 2 - font_height,    -- top (ie. at bottom)
                    "*", true,                   -- what to draw, utf8
                    config.AREA_NAME_TEXT.colour,   -- text colour
@@ -1122,7 +1243,7 @@ function draw (uid)
     -- mod: moved the "?" icon to the upper right corner of the miniwindow
     local x = config.WINDOW.width - WindowTextWidth (win, FONT_ID, "?", true) - 5
     local y = 2
-    local width = draw_text_box (win, FONT_ID, 
+    local width = draw_text_box (win, FONT_ID,
                    x,   -- left
                    y,   -- top
                    "?", true,              -- what to draw, utf8
@@ -1130,7 +1251,8 @@ function draw (uid)
                    config.AREA_NAME_FILL.colour,   -- fill colour
                    config.AREA_NAME_BORDER.colour)     -- border colour
 
-    WindowAddHotspot(win, "<help>",  
+    WindowAddHotspot(win, "<help>",
+--                   x, y, x + width, y + font_height,   -- rectangle
                    x, y, x + width + 6, y + font_height,   -- rectangle
                    "",  -- mouseover
                    "",  -- cancelmouseover
@@ -1145,8 +1267,8 @@ function draw (uid)
 
   draw_3d_box (win, 0, 0, config.WINDOW.width, config.WINDOW.height)
 
-  add_resizer() -- mod
-  
+  add_resizer()
+
   -- make sure window visible
   WindowShow (win, not hidden)
 
@@ -1192,12 +1314,17 @@ function init (t)
 
   show_help = t.show_help     -- "help" function
   room_click = t.room_click   -- RH mouse-click function
+  room_mouseover = t.room_mouseover -- mouse-over function
+  room_cancelmouseover = t.room_cancelmouseover -- cancel mouse-over function
   timing = t.timing           -- true for timing info
   show_completed = t.show_completed  -- true to show "Speedwalk completed." message
   show_other_areas = t.show_other_areas  -- true to show other areas
   show_up_down = t.show_up_down        -- true to show up or down
   show_area_exits = t.show_area_exits  -- true to show area exits
   speedwalk_prefix = t.speedwalk_prefix  -- how to speedwalk (prefix)
+  use_nospeed_mode = t.use_nospeed_mode  -- true to use rooms and exits tagged as no-speed on speedwalks
+  use_grappling_mode = t.use_grappling_mode  -- true to use grappling exits
+  safewalk_mode = t.safewalk_mode  -- true to avoid PK rooms, traps, etc. on speedwalks
 
   -- force some config defaults if not supplied
   for k, v in pairs (default_config) do
@@ -1205,7 +1332,7 @@ function init (t)
   end -- for
 
   win = GetPluginID () .. "_mapper"
-  
+
   WindowCreate (win, 0, 0, 0, 0, 0, 0, 0)
 
   -- add the fonts
@@ -1231,6 +1358,7 @@ function init (t)
                  config.BACKGROUND_COLOUR.colour)
 
   -- let them move it around
+--  movewindow.add_drag_handler (win, 0, 0, 0, font_height + 4)
   movewindow.add_drag_handler (win, 0, 0, 0, font_height, miniwin.cursor_both_arrow)
 
   local top = (config.WINDOW.height - #credits * font_height) /2
@@ -1243,12 +1371,28 @@ function init (t)
   end -- for
 
   draw_3d_box (win, 0, 0, config.WINDOW.width, config.WINDOW.height)
-  
-  add_resizer() -- mod
+
+  add_resizer()
 
   WindowShow (win, true)
 
 end -- init
+
+
+function set_use_nospeed_mode_to(tf)
+  use_nospeed_mode = tf
+end
+
+
+function set_use_grappling_mode_to(tf)
+  use_grappling_mode = tf
+end
+
+
+function set_safewalk_mode_to(tf)
+  safewalk_mode = tf
+end
+
 
 function zoom_in ()
   if last_drawn and ROOM_SIZE < 40 then
@@ -1312,21 +1456,20 @@ end -- save_state
 
 -- if fcb is a function, it is called back after displaying each line
 
-function find (f, show_uid, expected_count, walk, safewalk, fcb) -- mod
+function find (f, show_uid, expected_count, walk, fcb)
 
   if not check_we_can_find () then
     return
   end -- if
 
   if fcb then
-    assert (type (fcb) == "function")
+    print (type (fcb) ~= "function")
+    --assert (type (fcb) == "function")
   end -- if
 
-  safewalk_mode = safewalk -- mod
   local start_time = utils.timer ()
   local paths, count, depth = find_paths (current_room, f)
   local end_time = utils.timer ()
-  safewalk_mode = nil -- mod
 
   local t = {}
   local found_count = 0
@@ -1343,9 +1486,13 @@ function find (f, show_uid, expected_count, walk, safewalk, fcb) -- mod
 
   if found_count == 0 then
     mapprint ("No matches.")
-    if safewalk then -- mod
-      mapprint ("(Try again with safewalk off.)") -- mod
-    end -- mod
+    if (safewalk_mode) then
+      mapprint ("(Try again with 'mapper safewalk off'.)")
+    elseif (not use_nospeed_mode) then
+      mapprint ("(Try again with 'mapper use no-speed on'.)")
+    elseif (not use_grappling_mode) then
+      mapprint ("(Try again with 'mapper use grappling on'.)")
+    end
     return
   end -- if
 
@@ -1475,6 +1622,7 @@ function build_speedwalk (path)
 
 end -- build_speedwalk
 
+
 -- start a speedwalk to a path
 
 function start_speedwalk (path)
@@ -1502,17 +1650,24 @@ function start_speedwalk (path)
         return
       end -- if
 
-      BroadcastPlugin(1, "speedwalking") -- mod
+      BroadcastPlugin(1, "speedwalking")
 
       local dir = table.remove (current_speedwalk, 1)
+
       next_dir = (expand_direction [dir.dir] or dir.dir)
+
+      if (not check_if_should_walk(next_dir, dir.uid)) then
+        return
+      end
+
       locked = false
       local room = get_room (dir.uid)
+
       walk_to_room_name = room.name
       SetStatus ("Walking " .. (expand_direction [dir.dir] or dir.dir) ..
                  " to " .. walk_to_room_name ..
                  ". Speedwalks to go: " .. #current_speedwalk + 1)
-      Execute (dir.dir) -- mod
+      Execute (dir.dir)
       expected_room = dir.uid
     else
       cancel_speedwalk ()
@@ -1521,34 +1676,25 @@ function start_speedwalk (path)
 
 end -- start_speedwalk
 
+
 -- cancel the current speedwalk
 
-function cancel_speedwalk ()
+function cancel_speedwalk (reason)
+  local msg = "Speedwalk cancelled."
+  if (reason) then
+    msg = msg .. " - reason: " .. reason
+  end
   if current_speedwalk and #current_speedwalk > 0 then
-    mapprint "Speedwalk cancelled."
+    mapprint (msg)
   end -- if
   current_speedwalk = nil
   expected_room = nil
   hyperlink_paths = nil
---  old_dir = nil -- mod
-  next_dir = nil -- mod
+  next_dir = nil
   SetStatus ("Ready")
-  BroadcastPlugin(1, "done") -- mod
+  BroadcastPlugin(1, "done")
 end -- cancel_speedwalk
 
-
--- auto-open a door
-
-function auto_open () -- mod
-  if (config2.auto_open) and (next_dir) and (not locked) then
-    Execute("open " .. next_dir .. " door")
-    Execute(next_dir)
-  end
-end
-
-function stop_auto_open () -- mod
-  locked = true
-end
 
 
 -- ------------------------------------------------------------------
@@ -1581,6 +1727,23 @@ function mouseup_room (flags, hotspot_id)
   start_speedwalk (speedwalks [uid])
 
 end -- mouseup_room
+
+-- ------------------------------------------------------------------
+-- mouse-over handlers (need to be exposed)
+-- these are for mousing over a room
+-- ------------------------------------------------------------------
+
+function mouseover_room (flags, hotspot_id)
+  if type (room_mouseover) == "function" then
+    room_mouseover (hotspot_id, flags)  -- moused over
+  end -- if
+end -- mouseover_room
+
+function cancelmouseover_room (flags, hotspot_id)
+  if type (room_cancelmouseover) == "function" then
+    room_cancelmouseover (hotspot_id, flags)  -- cancled mouse over
+  end -- if
+end -- cancelmouseover_room
 
 function mouseup_configure (flags, hotspot_id)
   draw_configure_box = true
@@ -1665,7 +1828,7 @@ end -- mouseup_change_height
 
 function mouseup_change_depth (flags, hotspot_id)
 
-  local depth = get_number_from_user ("Choose scan depth (3 to 500 rooms)", "Depth", config.SCAN.depth, 3, 500) -- mod
+  local depth = get_number_from_user ("Choose scan depth (3 to 2500 rooms)", "Depth", config.SCAN.depth, 3, 2500)
 
   if not depth then
     return
@@ -1697,9 +1860,9 @@ function zoom_map (flags, hotspot_id)
 end -- zoom_map
 
 
--- ----------------
--- resizer -- mod
--- ----------------
+-- ---------
+-- resizer
+-- ---------
 
 function add_resizer()
   local size = 15
@@ -1710,7 +1873,7 @@ function add_resizer()
   -- draw the resize widget bottom right corner.
   local HIGHLIGHT = 0x000000
   local SHADOW = 0x505050
-                   
+
   local x1 = width - size -- + 7
   local y1 = height - size -- + 7
   local x2 = x1 + size
@@ -1761,18 +1924,18 @@ function resizer_callback()
 
   local width = WindowInfo(win, 3) + posx - startx
   startx = posx
-  
+
   if (50 > width) then
     width = 50
     startx = windowinfo.window_left + width
   elseif (windowinfo.window_left + width > GetInfo(281)) then
     width = GetInfo(281) - windowinfo.window_left
     startx = GetInfo(281)
-  end 
+  end
 
   local height = WindowInfo(win, 4) + posy - starty
   starty = posy
-  
+
   if (50 > height) then
     height = 50
     starty = windowinfo.window_top + height
@@ -1782,7 +1945,7 @@ function resizer_callback()
   end
 
   WindowResize(win, width, height, config.BACKGROUND_COLOUR.colour)
-  
+
   WindowShow(win,true)
 end
 
@@ -1802,7 +1965,7 @@ function toggle_show_up_down(status)
   if (status == false) then
     old_show_up_down = show_up_down
     show_up_down = false
-  
+
   else
     show_up_down = old_show_up_down
   end
