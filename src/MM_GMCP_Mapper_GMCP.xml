@@ -20,7 +20,7 @@
   purpose="GMCP Mapper for Materia Magica"
   save_state="y"
   date_written="2012-02-03 20:26:09"
-  date_modified="2020-10-04 12:42:25"
+  date_modified="2020-10-31 18:57:51"
   requires="4.71"
   version="1.0"
 >
@@ -2168,7 +2168,7 @@ function map_where_bookmark(name, line, wildcards)
 
   for row in db:nrows(string.format('SELECT * FROM bookmarks WHERE UPPER(notes) like "%s"', sbook)) do
     local room = load_room_from_database(row.uid)
-    if (room.area == current_area) then
+    if (room and room.area == current_area) then
       t[#t + 1] = row.uid
     end
   end -- finding rooms
