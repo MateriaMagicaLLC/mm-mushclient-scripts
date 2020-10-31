@@ -14,7 +14,7 @@
    language="Lua"
    purpose="loads default contents for speewdalk_manager_p2's database"
    date_written="2013-12-31 03:55:46"
-   date_modified="2013-12-30 04:30:59"
+   date_modified="2020-09-29 06:24:14"
    requires="4.71"
    version="1.0"
    >
@@ -189,6 +189,7 @@ locations = {
       ["3729129"] = "Mount Vesuvius;Ves",
       ["3765964"] = "Vospire, east;VosE",
       ["3768246"] = "Vospire, west;VosW",
+      ["3710799"] = "Tabert's Inn;Tab",
     -- on pseudo-roads
       ["4341111"] = "A Dwarven Passage Between Sigil and the Underside;DwP",
       ["3954770"] = "A Labyrinthine Molehill;LMol",
@@ -224,8 +225,9 @@ locations = {
       ["3288425"] = "Pirate's Cove, north;PCN",
       ["3304508"] = "Pirate's Cove, west;PCW",
       ["200834"] = "Pirate's Cove Realty;PCR",
-  --    ["3923433"] = "Vandemaar's Keep;VK",
       ["3831487"] = "Xalt, Unseelie Outpost;Xal",
+      ["3447442"] = "The Desert Oasis;DO",
+      ["3925733"] = "Vandemaar's Keep;VK",
     -- on pseudo-roads
       ["3573430"] = "Chanctonbury Woods;Cha",
       ["3426608"] = "The Village of Colyon, north;ColN",
@@ -245,8 +247,7 @@ locations = {
       ["1547405"] = "Tower of Art;ToA",
       ["22899"] = "Tower of Art, to Grimbold's Annex;Gri",
       ["2377105"] = "Dungeon Avarice;Ava",
-      ["1921850"] = "Bazaar, north;BazN",
-      ["1949452"] = "Bazaar, west;BazW",
+      ["1949452"] = "Old Bazaar;OBaz",
       ["2085131"] = "Tavern Of The Boars;ToB",
       ["10495"] = "Focault's Residence;Foc",
       ["1880584"] = "Gilvery;Gil",
@@ -274,8 +275,8 @@ locations = {
       ["10259"] = "Shadow Castle;SC",
       ["10627"] = "Temple of Sumter;Sum",
       ["10584"] = "Temple Crypt;TCr",
-      ["1807082"] = "Desert Of Thorn, east;ThoE",
-      ["1788665"] = "Desert Of Thorn, west;ThoW",
+      ["1807082"] = "Desert Thorn, east;ThoE",
+      ["1788665"] = "Desert Thorn, west;ThoW",
       ["2558910"] = "Traveler's Retreat;TR",
       ["1765641"] = "Inn of the Twin Moons;TMI",
       ["2804903"] = "Van Pelt's Emporium;VP",
@@ -286,6 +287,8 @@ locations = {
       ["2105636"] = "The Towne of Xaventry, south;XavS",
       ["2087227"] = "The Towne of Xaventry, west;XavW",
       ["74834"] = "Xaventry Realty;XavR",
+      ["1422610"] = "Via Civmar;Civ",
+      ["1586161"] = "The Joint Magical Consortium;JMC",
     -- on pseudo-roads
       ["3011951"] = "An Abandoned Lighthouse;ALH",
       ["1666479"] = "A Disturbed Pyramid;Pyr",
