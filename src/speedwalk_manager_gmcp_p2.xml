@@ -8,16 +8,16 @@
 <muclient>
 
 <plugin
-   name="speedwalk_manager_p2"
-   author="Ruthgul"
-   id="71b23c59cf79acc8521fc4a9"
-   language="Lua"
-   purpose="speedwalk manager part 2, handles command line speedwalks"
-   date_written="2011-12-31 19:59:35"
-   date_modified="2014-11-06 10:24:08"
-   requires="4.71"
-   version="1.0"
-   >
+  name="speedwalk_manager_p2"
+  author="Ruthgul"
+  id="71b23c59cf79acc8521fc4a9"
+  language="Lua"
+  purpose="speedwalk manager part 2, handles command line speedwalks"
+  date_written="2011-12-31 19:59:35"
+  date_modified="2020-09-27 11:00:50"
+  requires="4.71"
+  version="1.0"
+>
 
 <description trim="y">
 
@@ -51,7 +51,7 @@ Syntax:
 
 * spdn all - lists all of the available paths and their abbreviations
 
-* add abbreviation <name> <room id> <description>  - adds a new abbreviation to the database, where <name> cannot contain spaces, and <num> must be a valid GMCP room number (eg, add abbreviation TemTS 46670 Templeton Town Square)
+* add abbreviation <name> <room_id> <description>  - adds a new abbreviation to the database, where <name> cannot contain spaces, and <room_id> must be a valid GMCP room id (eg, add abbreviation TemTS 46670 Templeton Town Square)
 
 * del abbreviation <name>  - removes an abbreviation from the database (eg, del abbreviation TemTS); where <name> is case sensitive
 
@@ -72,64 +72,54 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
 <aliases>
 
-<alias
-  enabled="y"
-  match="^spdn$"
-  regexp="y"
-  send_to="12"
-  sequence="100"
+  <alias
+   enabled="y"
+   match="^spdn$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
   >
   <send>Note("Type 'spdn all' to see a list of all available paths, or 'spdn help' for help.")
- </send>
- </alias>
+</send>
+  </alias>
 
- <alias
-  enabled="y"
-  match="^spdn all$"
-  regexp="y"
-  send_to="12"
-  sequence="100"
+  <alias
+   enabled="y"
+   match="^spdn all$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
   >
   <send>walk_or_find("%")
- </send>
-</alias>
-
-  <alias
-   enabled="y"
-   match="^spd2[ ]+(?P&lt;command&gt;(abort|(.+)))$"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>if ("%&lt;command&gt;" == "abort") then
-  speedwalk_abort()
-else
-  speedwalk("%1")
-end
 </send>
   </alias>
 
   <alias
    enabled="y"
-   match="^gate(|s)[ ]+(?P&lt;place&gt;.+)$"
+   match="^spd2[ ]+(?<command>abort|.+)$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="speedwalk_c"
   >
-  <send>show_roomids("%&lt;place&gt;", "areas")
-</send>
   </alias>
 
   <alias
    enabled="y"
-   match="^dock(|s)[ ]+(?P&lt;place&gt;.+)$"
+   match="^gate(|s)[ ]+(?<place>.+)$"
+   regexp="y"
+   sequence="100"
+   script="show_roomids_areas"
+  >
+  </alias>
+
+  <alias
+   enabled="y"
+   match="^dock(|s)[ ]+(?<place>.+)$"
    ignore_case="y"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="show_roomids_docks"
   >
-  <send>show_roomids("%&lt;place&gt;", "docks")
-</send>
   </alias>
 
 
@@ -137,35 +127,29 @@ end
 
   <alias
    enabled="y"
-   match="^spdn[ ]+(?P&lt;place&gt;.+)|^spdn$"
+   match="^spdn[ ]+(?<place>.+)$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="walk_or_find_c"
   >
-  <send>walk_or_find("%&lt;place&gt;")
-</send>
   </alias>
 
   <alias
    enabled="y"
-   match="^add[ ]+abbreviation[ ]+(?P&lt;name&gt;[^ ]+)[ ]+(?P&lt;num&gt;[0-9A-F]+)[ ]+(?P&lt;desc&gt;.+)$"
+   match="^add[ ]+abbreviation[ ]+(?<name>[^ ]+)[ ]+(?<id>[0-9A-F]+)[ ]+(?<desc>.+)$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="add_abbreviation"
   >
-  <send>add_abbreviation("%&lt;name&gt;", "%&lt;num&gt;", "%&lt;desc&gt;")
-</send>
   </alias>
 
   <alias
    enabled="y"
-   match="^del[ ]+abbreviation[ ]+(?P&lt;name&gt;[^ ]+)$"
+   match="^del[ ]+abbreviation[ ]+(?<name>[^ ]+)$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="del_abbreviation"
   >
-  <send>del_abbreviation("%&lt;name&gt;")
-</send>
   </alias>
 
 
@@ -198,15 +182,11 @@ end
   <trigger
    enabled="y"
    keep_evaluating="y"
-   match="^You turn white with fear at the sight of (.+?)\!$"
+   match="^You turn white with fear at the sight of (.*)\!$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="on_fear"
   >
-  <send>if (speeding) then
-  ignore_next_room = ignore_next_room + 1
-end
-</send>
   </trigger>
 
   <trigger
@@ -236,11 +216,9 @@ end
    keep_evaluating="y"
    match="^Not while you are in combat\.$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="on_combat"
   >
-  <send>combat = true
-</send>
   </trigger>
 
 </triggers>
@@ -472,6 +450,13 @@ function wipe_vars()
 end
 
 
+function on_fear()
+  if (speeding) then
+    ignore_next_room = ignore_next_room + 1
+  end
+end
+
+
 function obstacle_found()
   if (speeding) then
     Note("-- speedwalk_manager_p2: error - found an obstacle in the speedwalk --")
@@ -490,6 +475,16 @@ function speedwalk_start(spdeval)
   current_step = 1
   EnableTimer("spd_step_check", true)
   speed_step() -- start moving
+end
+
+
+function speedwalk_c(name, line, wildcards)
+  local cmd = wildcards.command
+  if (cmd == "abort") then
+    speedwalk_abort()
+  else
+    speedwalk(cmd)
+  end
 end
 
 
@@ -513,6 +508,11 @@ function speedwalk_abort()
     Note("-- speedwalk_manager_p2: speedwalk aborted - elapsed time " .. os.time() - starttime .. "s --")
     wipe_vars()
   end
+end
+
+
+function on_combat()
+  combat = true
 end
 
 
@@ -579,6 +579,18 @@ end
 ----------------
 -- gates stuff
 ----------------
+
+function show_roomids_areas(name, line, wildcards)
+  local place = wildcards.place
+  show_roomids(place, "areas")
+end
+
+
+function show_roomids_docks(name, line, wildcards)
+  local place = wildcards.place
+  show_roomids(place, "docks")
+end
+
 
 function show_roomids(place, what)
   if (db) then
@@ -663,6 +675,13 @@ end
 -- spdn
 ---------
 
+function walk_or_find_c(name, line, wildcards)
+  local place = wildcards.place
+  
+  walk_or_find(place)
+end
+
+
 function walk_or_find(place)
   if (db) then
     local tuids = find_exact_match(place)
@@ -737,7 +756,11 @@ end
 -- adding / removing abbreviations
 ------------------------------------
 
-function add_abbreviation(name, num, desc)
+function add_abbreviation(name, line, wildcards)
+  local name = wildcards.name
+  local num = wildcards.id
+  local desc = wildcards.desc
+
   if (db) then
     db_save_location("other", "?", num, desc, name)
   else
@@ -746,7 +769,9 @@ function add_abbreviation(name, num, desc)
 end
 
 
-function del_abbreviation(name)
+function del_abbreviation(name, line, wildcards)
+  local name = wildcards.name
+
   if (db) then
     db_delete_location(name)
   else
