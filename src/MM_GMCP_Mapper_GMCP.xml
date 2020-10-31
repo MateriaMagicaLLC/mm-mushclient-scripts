@@ -13,14 +13,14 @@
 <muclient>
 
 <plugin
-  name="MM_GMCP_Mapper"
+  name="MM_GMCP_Mapper_GMCP"
   author="Nick Gammon, Ruthgul"
   id="f973af093e715dece34dc25f"
   language="Lua"
   purpose="GMCP Mapper for Materia Magica"
   save_state="y"
   date_written="2012-02-03 20:26:09"
-  date_modified="2020-09-27 10:32:46"
+  date_modified="2020-10-01 05:26:55"
   requires="4.71"
   version="1.0"
 >
@@ -45,6 +45,7 @@ Modified to work with GMCP by Ruthgul. (Please report bugs to Ruthgul.)
 - MM_GMCP_Handler (plugin id="f67c4339ed0591a5b010d05b") must be installed and enabled.
 - Client setting: Game, Configure, Output > [x] Convert IAC EOR/GA to new line (must be checked).
 - Game settings: SHOW-EXITS must be ON (to show room numbers, road exits and unmapped exits).
+- Game settings: MXP must be ON, to auto-detect signposts [ Client setting: Game, Configure, MXP / Pueblo... > Use MXP / Pueblo: On command (or Yes - always). ]
 
 
 Notes:
@@ -592,7 +593,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 <!-- maintenance - additions -->
 
   <alias
-    match="^mapper[ ]+addroom[ ]+(?<id>[0-9A-F]+)[ ]+n\:(?<name>.+)[ ]+a\:(?<area>.+)[ ]+f\:(?<flags>.+)[ ]+t\:(?<terrain>.+)[ ]+ti\:(?<terraininfo>.+)$"
+    match="^mapper[ ]+addroom[ ]+(?<id>[0-9A-F]+)[ ]+n\:(?<name>.+)[ ]+a\:(?<area>.+)[ ]+f\:(?<flags>|.+)[ ]+t\:(?<terrain>.+)[ ]+ti\:(?<terraininfo>.+)$"
     enabled="y"
     regexp="y"
     sequence="100"
@@ -758,7 +759,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
     match="^mapper[ ]+purge[ ]+bookmarks$"
     regexp="y"
     sequence="100"
-    script="purge_bookmarks"
+    script="purge_all_bookmarks"
   >
   </alias>
 
@@ -1705,7 +1706,7 @@ end
 function toggle_terrain_to(name, line, wildcards)
   local status = wildcards.status
   toggle_config2_option("color_terrain", "PK/shop/trainer color supersedes terrain", status)
-  mapper.draw(current_room)
+  mapper_redraw()
 end
 
 
@@ -2748,7 +2749,7 @@ function process_room()
           db:exec("BEGIN TRANSACTION;")
 
           save_room_to_database(current_room, roomname, roomflags, zone, terrain, terraininfo)
-          save_exits_to_database(zone, current_room, exits_str)
+          save_exits_to_database(current_room, exits_str)
 
           db:exec("COMMIT;")
 
@@ -2771,7 +2772,7 @@ function process_room()
   and ((config2.do_map_wilds) -- we're mapping the wilds
     or ((not is_vmap(zone) or (is_road(terrain) and not is_cave(roomname))))) then
   -- or we're in a part of the wilds that we always wanna map
-    mapper.draw(current_room) -- call mapper to draw this rom
+    mapper_redraw() -- call mapper to draw this rom
   end
 end
 
@@ -2920,7 +2921,7 @@ function is_volatile(uid)
   local x = volatile[tostring(uid)]
 
   if (x) then
-    add_to_events_mini("room #" .. current_room .. ": " .. x)
+    add_to_events_mini("room #" .. uid .. ": " .. x)
   end
 
   return (x ~= nil)
@@ -3189,6 +3190,7 @@ function do_load_room(uid)
 
   for row in db:nrows(string.format("SELECT * FROM rooms WHERE uid = %s", fixsql(uid))) do
     room = {
+      uid = row.uid,
       name = row.name,
       area = row.area,
       terrain = row.terrain,
@@ -3335,7 +3337,7 @@ function map_add_room(name, line, wildcards)
   -- update in-memory table
   load_room_from_database(id)
 
-  mapper.draw(current_room)
+  mapper_redraw()
 end
 
 
@@ -3420,7 +3422,7 @@ function map_add_bookmark(name, line, wildcards)
 
   if (notes) then -- room already has a bookmark
     update_bookmark(id, new_note)
-    mapper.mapprint("Bookmark for room", uid, "changed to:", new_note)
+    mapper.mapprint("Bookmark for room", id, "changed to:", new_note)
   else
     save_bookmark(id, new_note)
     mapper.mapprint("Bookmark for room", id, "set to:", new_note)
@@ -3528,13 +3530,24 @@ end
 -- add exits
 --------------
 
+function save_exits_to_database(uid, exits)
+  room = load_room_from_database(uid)
+  db:exec("BEGIN TRANSACTION;")
+  for dir in string.gmatch(exits, "%a+") do
+    local dest = gmcpval("exits." .. dir)
+    add_or_update_exit(room, dir, dest)
+  end -- for each exit
+  db:exec("COMMIT;")
+end
+
+
 function map_add_exit(name, line, wildcards)
   local dir = wildcards.dir
   local fromid = wildcards.fromid
   local toid = wildcards.toid
 
   if (fromid == "") then
-    fromid = uid -- current room is default
+    fromid = current_room -- current room is default
   end
 
   if (is_maze(fromid)) then
@@ -3559,7 +3572,7 @@ function map_add_exit(name, line, wildcards)
   end
 
   db:exec("BEGIN TRANSACTION;")
-  add_exit_to_database(dir, fromid, toid)
+  add_or_update_exit(room, dir, toid, true)
   db:exec("COMMIT;")
 
   -- update in-memory table
@@ -3571,11 +3584,24 @@ function map_add_exit(name, line, wildcards)
     rooms[fromid].exits[dir] = toid
   end
 
-  mapper.draw(current_room)
+  mapper_redraw()
 end
 
 
-function add_exit_to_database(dir, fromuid, touid)
+function add_or_update_exit(room, dir, touid, show_not_changed)
+  if (not room.exits[dir]) then
+    -- no exits, adding
+    add_exit_to_database(dir, room.uid, touid)
+  elseif (room.exits[dir] ~= touid) then
+    -- exit changed, updating
+    update_database_exit(dir, room.uid, touid)
+  elseif (show_not_changed) then
+    show_update(room.uid, "Exit not updated (the destination room didn't change).")
+  end
+end
+
+
+function add_exit_to_database(dir, fromuid, touid, dont_show)
   assert(dir, "No direction supplied to add_exit_to_database")
   assert(fromuid, "No fromUID supplied to add_exit_to_database")
   assert(touid, "No toUID supplied to add_exit_to_database")
@@ -3590,27 +3616,9 @@ function add_exit_to_database(dir, fromuid, touid)
       fixsql(touid)    -- destination room
   )))
 
-  show_update(fromuid, "Added exit to database, " .. dir .. " from " .. fromuid .. " to " .. touid)
-end
-
-
-function save_exits_to_database(zone, uid, exits)
-  if (is_maze(uid)) then
-    return
+  if (not dont_show) then
+    show_update(fromuid, "Added exit to database, " .. dir .. " from " .. fromuid .. " to " .. touid)
   end
-
-  for dir in string.gmatch(exits, "%a+") do
-    local dest = gmcpval("exits." .. dir)
-
-    if (not is_maze(dest)) then
-      dbcheck(db:execute(string.format(
-        "INSERT INTO exits(dir, fromuid, touid, date_added) VALUES(%s, %s, %s, DATETIME('NOW'));",
-          fixsql(dir),  -- direction (eg. "n")
-          fixsql(uid),  -- from current room
-          fixsql(dest)  -- destination room
-      )))
-    end
-  end -- for each exit
 end
 
 
@@ -3638,19 +3646,14 @@ function gui_room_add_exit(room, uid)
     return
   end -- cancelled
 
-  dbcheck(db:execute(string.format(
-    "INSERT INTO exits(dir, fromuid, touid, date_added) VALUES(%s, %s, %s, DATETIME('NOW'));",
-      fixsql(chosen_exit),  -- direction (eg. "n")
-      fixsql(uid),  -- from current room
-      fixsql(exit_destination) -- destination room
-  )))
-
-  show_update(uid, "Added exit " .. available[chosen_exit] .. " from room " .. uid .. " to room " .. exit_destination .. " to database.")
+  db:exec("BEGIN TRANSACTION;")
+  add_exit_to_database(chosen_exit, uid, exit_destination)
+  db:exec("COMMIT;")
 
   -- update in-memory table
   rooms[uid].exits[chosen_exit] = exit_destination
 
-  mapper.draw(current_room)
+  mapper_redraw()
 end
 
 
@@ -3728,7 +3731,7 @@ function map_del_room(name, line, wildcards)
     rooms[id] = nil
   end
 
-  mapper.draw(current_room)
+  mapper_redraw()
 end
 
 
@@ -3892,7 +3895,7 @@ function map_del_exit(name, line, wildcards)
     rooms[fromid].exits[dir] = nil
   end
 
-  mapper.draw(current_room)
+  mapper_redraw()
 end
 
 
@@ -3909,8 +3912,8 @@ end
 
 
 function del_exit_from_database(dir, fromuid)
-  assert(dir, "No direction supplied to add_exit_to_database")
-  assert(fromuid, "No fromUID supplied to add_exit_to_database")
+  assert(dir, "No direction supplied to del_exit_from_database")
+  assert(fromuid, "No fromUID supplied to del_exit_from_database")
 
   dbcheck(db:execute(string.format(
     "DELETE FROM exits WHERE dir = %s AND fromuid = %s;",
@@ -3946,7 +3949,7 @@ function gui_room_delete_exit(room, uid)
   -- update in-memory table
   rooms[uid].exits[chosen_exit] = nil
 
-  mapper.draw(current_room)
+  mapper_redraw()
 end
 
 
@@ -3984,6 +3987,14 @@ end
 -- modifications
 -- ---------------
 
+-- redraw only if connected
+function mapper_redraw()
+  if (IsConnected()) then
+    mapper.draw(current_room)
+  end
+end
+
+
 -----------------
 -- modify rooms
 -----------------
@@ -4015,7 +4026,7 @@ function update_room(uid)
   end
 
   -- fix exits, in case some of them are missing
-  fix_exits(zone, uid, exits_str)
+  fix_exits(uid, exits_str)
 
   terrain = gmcpval("terrain")
   oldterrain = rooms[uid].terrain -- if terrain has changed, then update/add it
@@ -4048,7 +4059,7 @@ function update_room(uid)
   -- update rooms cache
   rooms[uid] = load_room_from_database(uid)
 
-  mapper.draw(current_room)
+  mapper_redraw()
 end
 
 
@@ -4302,7 +4313,7 @@ function room_toggle_tag(room, uid, tag)
 
   -- update in-memory table & redraw
   rooms[uid].tags = tags
-  mapper.draw(current_room)
+  mapper_redraw()
 end
 
 
@@ -4363,7 +4374,7 @@ end
 -- modify exits
 -----------------
 
-function fix_exits(zone, uid, exits)
+function fix_exits(uid, exits)
   local dest, aux
 
   for dir in string.gmatch(exits, "%a+") do
@@ -4373,18 +4384,10 @@ function fix_exits(zone, uid, exits)
     and (not is_volatile(uid)) and (not is_volatile(dest)) then
 
       if (dest ~= rooms[uid].exits[dir]) then -- exit changed, update it
-
-        dbcheck(db:execute(string.format(
-          "INSERT INTO exits(dir, fromuid, touid, date_added) VALUES(%s, %s, %s, DATETIME('NOW'));",
-            fixsql(dir),  -- direction (eg. "n")
-            fixsql(uid),  -- from current room
-            fixsql(dest)  -- destination room
-        )))
+        update_database_exit(dir, uid, dest)
 
         -- update in-memory table
         rooms[uid].exits[dir] = dest
-
-        show_update(uid, "Room " .. uid .. " - " .. dir .. " exit updated")
       end
     end
 
@@ -4411,18 +4414,34 @@ function gui_room_change_exit(room, uid)
     return
   end -- cancelled
 
-  dbcheck(db:execute(string.format(
-    "UPDATE exits SET touid = %s WHERE dir = %s AND fromuid = %s;",
-      fixsql(exit_destination),
-      fixsql(chosen_exit),      -- direction (eg. "n")
-      fixsql(uid)               -- from current room
-  )))
-
-  show_update(uid, "Modified exit " .. available[chosen_exit] .. " from room " .. uid .. " to be to room " .. exit_destination .. " in database.")
+  db:exec("BEGIN TRANSACTION;")
+  update_database_exit(chosen_exit, uid, exit_destination)
+  db:exec("COMMIT;")
 
   -- update in-memory table
   rooms[uid].exits[chosen_exit] = exit_destination
-  mapper.draw(current_room)
+  mapper_redraw()
+end
+
+
+function update_database_exit(dir, fromuid, touid, dont_show)
+  assert(dir, "No direction supplied to update_database_exit")
+  assert(fromuid, "No fromUID supplied to update_database_exit")
+  assert(touid, "No toUID supplied to update_database_exit")
+  if (is_maze(fromuid)) then
+    return
+  end
+
+  dbcheck(db:execute(string.format(
+    "UPDATE exits SET touid = %s WHERE dir = %s AND fromuid = %s;",
+      fixsql(touid),
+      fixsql(dir),     -- direction (eg. "n")
+      fixsql(fromuid)  -- from current room
+  )))
+
+  if (not dont_show) then
+    show_update(fromuid, "Updated exit " .. dir .. " from room " .. fromuid .. " to be to room " .. touid .. " in database.")
+  end
 end
 
 
@@ -4531,7 +4550,7 @@ end
 function toggle_wilds_mapping(name, line, wildcards)
   local status = wildcards.status
   toggle_config2_option(do_map_wilds, "wilds mapping", status)
---  mapper.draw(current_room)
+--  mapper_redraw()
 end
 
 
@@ -4762,6 +4781,17 @@ function purge_molehill()
 end
 
 
+function purge_all_bookmarks()
+  local tnotes = {}
+  
+  for row in db:nrows(string.format("SELECT uid FROM bookmarks")) do
+    tnotes[#tnotes + 1] = row.uid
+  end
+  
+  purge_bookmarks(tnotes, "ALL")
+end
+
+
 function purge_bookmarks(t, name)
   if (#t <= 0) then
     mapper.mapprint("No bookmarks found for '" .. name .. "'")
@@ -4822,7 +4852,7 @@ function purge_stuff(t, name, unlink)
   mapper.mapprint("Done.")
   SetStatus("Ready")
 
-  mapper.draw(current_room)
+  mapper_redraw()
 end
 
 
@@ -4894,7 +4924,7 @@ function purge_clanhalls()
   mapper.mapprint("Done.")
   SetStatus("Ready")
 
-  mapper.draw(current_room)
+  mapper_redraw()
 end
 
 
@@ -4929,7 +4959,7 @@ function purge_player_homes()
   mapper.mapprint("Done.")
   SetStatus("Ready")
 
-  mapper.draw(current_room)
+  mapper_redraw()
 end
 
 
@@ -4960,7 +4990,7 @@ function purge_notes()
   mapper.mapprint("Done.")
   SetStatus("Ready")
 
-  mapper.draw(current_room)
+  mapper_redraw()
 end
 
 

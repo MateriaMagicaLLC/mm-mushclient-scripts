@@ -1463,8 +1463,7 @@ function find (f, show_uid, expected_count, walk, fcb)
   end -- if
 
   if fcb then
-    print (type (fcb) ~= "function")
-    --assert (type (fcb) == "function")
+    assert (type (fcb) == "function")
   end -- if
 
   local start_time = utils.timer ()
