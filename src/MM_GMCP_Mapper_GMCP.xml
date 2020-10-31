@@ -20,7 +20,7 @@
   purpose="GMCP Mapper for Materia Magica"
   save_state="y"
   date_written="2012-02-03 20:26:09"
-  date_modified="2020-10-01 05:26:55"
+  date_modified="2020-10-04 12:42:25"
   requires="4.71"
   version="1.0"
 >
@@ -2098,6 +2098,10 @@ function map_find(name, line, wildcards)
 
   -- see if nearby
 
+  -- find such places
+  local old_depth = config.SCAN.depth
+  config.SCAN.depth = 250
+
   mapper.find(
     function (uid)
       local room = rooms[uid]
@@ -2111,6 +2115,8 @@ function map_find(name, line, wildcards)
     false,       -- don't auto-walk
     show_snippet -- show find snippet
   )
+
+  config.SCAN.depth = old_depth
 end
 
 
@@ -3530,10 +3536,10 @@ end
 -- add exits
 --------------
 
-function save_exits_to_database(uid, exits)
+function save_exits_to_database(uid, exits_str)
   room = load_room_from_database(uid)
   db:exec("BEGIN TRANSACTION;")
-  for dir in string.gmatch(exits, "%a+") do
+  for dir in string.gmatch(exits_str, "%a+") do
     local dest = gmcpval("exits." .. dir)
     add_or_update_exit(room, dir, dest)
   end -- for each exit
@@ -3592,9 +3598,11 @@ function add_or_update_exit(room, dir, touid, show_not_changed)
   if (not room.exits[dir]) then
     -- no exits, adding
     add_exit_to_database(dir, room.uid, touid)
+    room.exits[dir] = touid
   elseif (room.exits[dir] ~= touid) then
     -- exit changed, updating
     update_database_exit(dir, room.uid, touid)
+    room.exits[dir] = touid
   elseif (show_not_changed) then
     show_update(room.uid, "Exit not updated (the destination room didn't change).")
   end
@@ -3605,7 +3613,8 @@ function add_exit_to_database(dir, fromuid, touid, dont_show)
   assert(dir, "No direction supplied to add_exit_to_database")
   assert(fromuid, "No fromUID supplied to add_exit_to_database")
   assert(touid, "No toUID supplied to add_exit_to_database")
-  if (is_maze(fromuid)) then
+  if (is_maze(fromuid)) or (is_maze(touid))
+  or (is_volatile(fromuid)) or (is_volatile(touid)) then
     return
   end
 
@@ -3623,8 +3632,8 @@ end
 
 
 function gui_room_add_exit(room, uid)
-  if (is_maze(uid)) then
-    mapper.mapprint("Can't add exits to maze rooms.")
+  if (is_maze(uid)) or (is_maze(touid)) then
+    mapper.mapprint("Can't add exits to or from maze rooms.")
     return
   end
 
@@ -4026,7 +4035,7 @@ function update_room(uid)
   end
 
   -- fix exits, in case some of them are missing
-  fix_exits(uid, exits_str)
+  save_exits_to_database(uid, exits_str)
 
   terrain = gmcpval("terrain")
   oldterrain = rooms[uid].terrain -- if terrain has changed, then update/add it
@@ -4374,27 +4383,6 @@ end
 -- modify exits
 -----------------
 
-function fix_exits(uid, exits)
-  local dest, aux
-
-  for dir in string.gmatch(exits, "%a+") do
-    dest = gmcpval("exits." .. dir)
-
-    if (dest) and (dest ~= "none") and (not is_maze(dest))
-    and (not is_volatile(uid)) and (not is_volatile(dest)) then
-
-      if (dest ~= rooms[uid].exits[dir]) then -- exit changed, update it
-        update_database_exit(dir, uid, dest)
-
-        -- update in-memory table
-        rooms[uid].exits[dir] = dest
-      end
-    end
-
-  end -- for each exit
-end
-
-
 function gui_room_change_exit(room, uid)
   local available = get_existing_exits(room)
 
@@ -4428,7 +4416,8 @@ function update_database_exit(dir, fromuid, touid, dont_show)
   assert(dir, "No direction supplied to update_database_exit")
   assert(fromuid, "No fromUID supplied to update_database_exit")
   assert(touid, "No toUID supplied to update_database_exit")
-  if (is_maze(fromuid)) then
+  if (is_maze(fromuid)) or (is_maze(touid))
+  or (is_volatile(fromuid)) or (is_volatile(touid)) then
     return
   end
 
@@ -4783,11 +4772,11 @@ end
 
 function purge_all_bookmarks()
   local tnotes = {}
-  
+
   for row in db:nrows(string.format("SELECT uid FROM bookmarks")) do
     tnotes[#tnotes + 1] = row.uid
   end
-  
+
   purge_bookmarks(tnotes, "ALL")
 end
 
