@@ -91,7 +91,7 @@ name = tick.mp3  hash = 7BF41ECDB1AA5273CBE81981219E6D9D
 name = custom.png  hash = 37A97CF8063D2B980B1567D00ADD3122
 name = arrow.png  hash = 0F7BCC9C7B4CAFABE452F0E479FC02BD
 name = spdman2_locations.db  hash = 176CAE855F0408D396B74DFC3433450A
-name = world_miniwindow.lua  hash = 1D46EF3A73B88BEE540D280A06016D9C
+name = world_miniwindow.lua  hash = 08868EA01E48C08BD4AA27962F655461
 name = alyria_spk_red.png  hash = 5E8C1597EDA4D371152CAE90BA4B7247
 name = sandbox.dune.net.MCL  hash = 6ACCC5E536B37BCC677FE6B3436C5764
 name = circ.png  hash = 6702936EB3DB83A69CBA4733DCC699A2
