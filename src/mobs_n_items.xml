@@ -8,17 +8,17 @@
 <muclient>
 
 <plugin
-   name="mobs_n_items"
-   author="Ruthgul"
-   id="8755063a5cf00f3312b113e6"
-   language="Lua"
-   purpose="NPCs and items database"
-   save_state="y"
-   date_written="2012-09-26 10:15:07"
-   date_modified="2014-11-06 09:52:06"
-   requires="4.71"
-   version="1.0"
-   >
+  name="mobs_n_items"
+  author="Ruthgul"
+  id="8755063a5cf00f3312b113e6"
+  language="Lua"
+  purpose="NPCs and items database"
+  save_state="y"
+  date_written="2012-09-26 10:15:07"
+  date_modified="2020-10-01 05:26:36"
+  requires="4.71"
+  version="1.0"
+>
 
 <description trim="y">
 
@@ -33,7 +33,7 @@ Implements a database for NPCs and items.
 
 ** REQUIRES **
 
-- MXP must be ON, to auto-detect NPCs & items [ Client setting: Game, Configure, MXP / Pueblo... > Use MXP / Pueblo: On command (or Yes - always). ]
+- Game settings: MXP must be ON, to auto-detect NPCs & items [ Client setting: Game, Configure, MXP / Pueblo... > Use MXP / Pueblo: On command (or Yes - always). ]
 - MM GMCP Handler, to auto-detect room & area for items
 - MM_GMCP_Mapper, to search for and speedwalk to rooms
 - Speedwalk_Manager_GMCP_P2, to search for and speedwalk to areas
@@ -97,35 +97,29 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
     enabled="y"
-    match="^add[ ]+mxp(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    match="^add[ ]+mxp(|[ ]+(?<status>on|off))$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="toggle_add_mxp"
   >
-  <send>toggle_add_mxp("%&lt;status&gt;")
-</send>
   </alias>
 
   <alias
     enabled="y"
-    match="^add[ ]+mxp[ ]+1stock(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    match="^add[ ]+mxp[ ]+1stock(|[ ]+(?<status>on|off))$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="toggle_add_mxp_1stock"
   >
-  <send>toggle_add_mxp_1stock("%&lt;status&gt;")
-</send>
   </alias>
 
   <alias
     enabled="y"
-    match="^add[ ]+mxp[ ]+ground(|[ ]+(?P&lt;status&gt;(on|off)))$"
+    match="^add[ ]+mxp[ ]+ground(|[ ]+(?<status>on|off))$"
     regexp="y"
-    send_to="12"
     sequence="100"
+    script="toggle_add_mxp_ground"
   >
-  <send>toggle_add_mxp_ground("%&lt;status&gt;")
-</send>
   </alias>
 
 
@@ -133,35 +127,29 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
    enabled="y"
-   match="^add mob (?P&lt;id&gt;[^\:]+) n\:(?P&lt;name&gt;[^\:]+)(| l\:(?P&lt;long&gt;[^\:]+))$"
+   match="^add mob (?<id>[^\:]+) n\:(?<name>[^\:]+)(| l\:(?<long>[^\:]+))$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="add_mob_c"
   >
-  <send>add_mob("%&lt;id&gt;", "%&lt;name&gt;", "%&lt;long&gt;", false)
-</send>
   </alias>
 
   <alias
    enabled="y"
-   match="^add item (?P&lt;id&gt;[^\:]+) n\:(?P&lt;name&gt;[^\:]+)(| l\:(?P&lt;long&gt;[^\:]+))$"
+   match="^add item (?<id>[^\:]+) n\:(?<name>[^\:]+)(| l\:(?<long>[^\:]+))$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="add_item_c"
   >
-  <send>add_item("%&lt;id&gt;", "%&lt;name&gt;", "%&lt;long&gt;", false)
-</send>
   </alias>
 
   <alias
    enabled="y"
-   match="^add skill (?P&lt;id&gt;[^\:]+) n\:(?P&lt;name&gt;[^\:]+)$"
+   match="^add skill (?<id>[^\:]+) n\:(?<name>[^\:]+)$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="add_skill"
   >
-  <send>add_skill("%&lt;name&gt;", "%&lt;id&gt;")
-</send>
   </alias>
 
 
@@ -169,35 +157,29 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
    enabled="y"
-   match="^add mob loc(|ation) (?P&lt;mobid&gt;[^\:]+)(| a\:(?P&lt;area&gt;[^\:]+))(| r\:(?P&lt;room&gt;[^\:]+))$"
+   match="^add mob loc(|ation) (?<mobid>[^\:]+)(| a\:(?<area>[^\:]+))(| r\:(?<room>[^\:]+))$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="add_mob_location_c"
   >
-  <send>add_mob_location("%&lt;mobid&gt;", "%&lt;area&gt;", "%&lt;room&gt;", false)
-</send>
   </alias>
 
   <alias
    enabled="y"
-   match="^add item loc(|ation) (?P&lt;itemid&gt;[^\:]+)(| a\:(?P&lt;area&gt;[^\:]+))(| m\:(?P&lt;mobid&gt;[^\:]+))(| r\:(?P&lt;room&gt;[^\:]+))$"
+   match="^add item loc(|ation) (?<itemid>[^\:]+)(| a\:(?<area>[^\:]+))(| m\:(?<mobid>[^\:]+))(| r\:(?<room>[^\:]+))$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="add_item_location_c"
   >
-  <send>add_item_location("%&lt;itemid&gt;", "%&lt;area&gt;", "%&lt;mobid&gt;", "%&lt;room&gt;", false)
-</send>
   </alias>
 
   <alias
    enabled="y"
-   match="^add trainer (?P&lt;skillid&gt;[^\:]+) (?P&lt;mobid&gt;[^\:]+)$"
+   match="^add trainer (?<skillid>[^\:]+) (?<mobid>[^\:]+)$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="add_skill_trainer"
   >
-  <send>add_skill_trainer("%&lt;skillid&gt;", "%&lt;mobid&gt;")
-</send>
   </alias>
 
 
@@ -205,35 +187,29 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
    enabled="y"
-   match="^del(|ete) mob (?P&lt;id&gt;[^\:]+)$"
+   match="^del(|ete) mob (?<id>[^\:]+)$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="del_mob"
   >
-  <send>del_mob("%&lt;id&gt;")
-</send>
   </alias>
 
   <alias
    enabled="y"
-   match="^del(|ete) item (?P&lt;id&gt;[^\:]+)$"
+   match="^del(|ete) item (?<id>[^\:]+)$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="del_item"
   >
-  <send>del_item("%&lt;id&gt;")
-</send>
   </alias>
 
   <alias
    enabled="y"
-   match="^del(|ete) skill (?P&lt;id&gt;[^\:]+)$"
+   match="^del(|ete) skill (?<id>[^\:]+)$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="del_skill"
   >
-  <send>del_skill("%&lt;id&gt;")
-</send>
   </alias>
 
 
@@ -241,35 +217,29 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
    enabled="y"
-   match="^del(|ete) mob loc(|ation) (?P&lt;mobid&gt;[^\:]+)(| a\:(?P&lt;area&gt;[^\:]+))(| r\:(?P&lt;room&gt;[^\:]+))$"
+   match="^del(|ete) mob loc(|ation) (?<mobid>[^\:]+)(| a\:(?<area>[^\:]+))(| r\:(?<room>[^\:]+))$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="del_mob_location"
   >
-  <send>del_mob_location("%&lt;mobid&gt;", "%&lt;area&gt;", "%&lt;room&gt;")
-</send>
   </alias>
 
   <alias
    enabled="y"
-   match="^del(|ete) item loc(|ation) (?P&lt;itemid&gt;[^\:]+)(| a\:(?P&lt;area&gt;[^\:]+))(| m\:(?P&lt;mobid&gt;[^\:]+))(| r\:(?P&lt;room&gt;[^\:]+))$"
+   match="^del(|ete) item loc(|ation) (?<itemid>[^\:]+)(| a\:(?<area>[^\:]+))(| m\:(?<mobid>[^\:]+))(| r\:(?<room>[^\:]+))$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="del_item_location"
   >
-  <send>del_item_location("%&lt;itemid&gt;", "%&lt;area&gt;", "%&lt;mobid&gt;", "%&lt;room&gt;")
-</send>
   </alias>
 
   <alias
    enabled="y"
-   match="^del(|ete) trainer (?P&lt;skillid&gt;[^\:]+) (?P&lt;mobid&gt;[^\:]+)$"
+   match="^del(|ete) trainer (?<skillid>[^\:]+) (?<mobid>[^\:]+)$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="del_skill_trainer"
   >
-  <send>del_skill_trainer("%&lt;skillid&gt;", "%&lt;mobid&gt;")
-</send>
   </alias>
 
 
@@ -277,68 +247,56 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
    enabled="y"
-   match="^mob wheree (?P&lt;name&gt;[^\:]+)(| a\:(?P&lt;area&gt;[^\:]+))$"
+   match="^mob wheree (?<name>[^\:]+)(| a\:(?<area>[^\:]+))$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="find_npc_strict"
   >
-  <send>find_npc("%&lt;name&gt;", "%&lt;area&gt;", false)
-</send>
   </alias>
 
   <alias
    enabled="y"
-   match="^mob where (?P&lt;name&gt;[^\:]+)(| a\:(?P&lt;area&gt;[^\:]+))$"
+   match="^mob where (?<name>[^\:]+)(| a\:(?<area>[^\:]+))$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="find_npc_fuzzy"
   >
-  <send>find_npc("%&lt;name&gt;", "%&lt;area&gt;", true)
-</send>
   </alias>
 
   <alias
    enabled="y"
-   match="^item wheree (?P&lt;name&gt;[^\:]+)(| a\:(?P&lt;area&gt;[^\:]+))$"
+   match="^item wheree (?<name>[^\:]+)(| a\:(?<area>[^\:]+))$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="find_item_strict"
   >
-  <send>find_item("%&lt;name&gt;", "%&lt;area&gt;", false)
-</send>
   </alias>
 
   <alias
    enabled="y"
-   match="^item where (?P&lt;name&gt;[^\:]+)(| a\:(?P&lt;area&gt;[^\:]+))$"
+   match="^item where (?<name>[^\:]+)(| a\:(?<area>[^\:]+))$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="find_item_fuzzy"
   >
-  <send>find_item("%&lt;name&gt;", "%&lt;area&gt;", true)
-</send>
   </alias>
 
   <alias
    enabled="y"
-   match="^skill wheree (?P&lt;name&gt;[^\:]+)(| a\:(?P&lt;area&gt;[^\:]+))$"
+   match="^skill wheree (?<name>[^\:]+)(| a\:(?<area>[^\:]+))$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="find_skill_strict"
   >
-  <send>find_skill("%&lt;name&gt;", "%&lt;area&gt;", false)
-</send>
   </alias>
 
   <alias
    enabled="y"
-   match="^skill where (?P&lt;name&gt;[^\:]+)(| a\:(?P&lt;area&gt;[^\:]+))$"
+   match="^skill where (?<name>[^\:]+)(| a\:(?<area>[^\:]+))$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="find_skill_fuzzy"
   >
-  <send>find_skill("%&lt;name&gt;", "%&lt;area&gt;", true)
-</send>
   </alias>
 
 
@@ -363,13 +321,11 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
   <trigger
    enabled="y"
    keep_evaluating="y"
-   match="^[ ]*[0-9]+\) (.+) [0-9]+ [ ]* (?P&lt;amount&gt;(No limit|[0-9\,]+)) [ ]+\[[ ]*[0-9\,]+ (|gp)\]$"
+   match="^[ ]*[0-9]+\) (.+) [0-9]+ [ ]* (?<amount>No limit|[0-9\,]+) [ ]+\[[ ]*[0-9\,]+ (|gp|gold)\]$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="add_item_if_stock_c"
   >
-  <send>add_item_if_stock("%&lt;amount&gt;")
-</send>
   </trigger>
 
 </triggers>
@@ -406,6 +362,7 @@ end
 
 function OnPluginDisconnect()
   update_hits()
+--  db:close()
 end
 
 
@@ -448,7 +405,9 @@ function load_config()
 end
 
 
-function toggle_add_mxp(status)
+function toggle_add_mxp(name, line, wildcards)
+  local status = wildcards.status
+
   config.addMXP = do_toggle(config.addMXP, status)
   save_config()
 
@@ -465,7 +424,9 @@ function toggle_add_mxp(status)
 end
 
 
-function toggle_add_mxp_1stock(status)
+function toggle_add_mxp_1stock(name, line, wildcards)
+  local status = wildcards.status
+
   config.addMXP1stock = do_toggle(config.addMXP1stock, status)
   save_config()
 
@@ -478,7 +439,9 @@ function toggle_add_mxp_1stock(status)
 end
 
 
-function toggle_add_mxp_ground(status)
+function toggle_add_mxp_ground(name, line, wildcards)
+  local status = wildcards.status
+
   config.addMXPground = do_toggle(config.addMXPground, status)
   save_config()
 
@@ -694,6 +657,7 @@ end
 --------
 
 function OnPluginMXPopenTag(name, args, mylist)
+--  print(name)
   if (config.addMXP) then
     if (not entity) then
       entity = {}
@@ -794,10 +758,16 @@ function add_npc_if_new()
 end
 
 
+function add_item_if_stock_c(name, line, wildcards)
+  local amount = wildcards.amount
+  add_item_if_stock(amount)
+end
+
+
 function add_item_if_stock(amount)
 -- shop items are checked vs stock, to avoid ading items sold by players
   if (config.addMXP) then
---    Note(amount)
+--    print(amount)
 
     local num = string.gsub(amount, ",", "")
     num = tonumber(num)
@@ -805,7 +775,7 @@ function add_item_if_stock(amount)
     if (amount == "No limit")
     or (config.addMXP1stock)
     or ((num) and (num > 1)) then
---      Note("add_item_if_stock()")
+--      print("add_item_if_stock()")
       add_item_if_new()
 
     elseif (num == 1) then
@@ -1085,6 +1055,14 @@ end
 -- add NPCs / items / skills
 ------------------------------
 
+function add_mob_c(name, line, wildcards)
+  local id = wildcards.id
+  local name = wildcards.name
+  local long = wildcards.long
+  add_mob(id, name, long, false)
+end
+
+
 function add_mob(mobid, name, long_desc, auto)
   local mob = load_mob_from_database(mobid)
 
@@ -1105,6 +1083,14 @@ function add_mob(mobid, name, long_desc, auto)
   end
 
   return mobid
+end
+
+
+function add_item_c(name, line, wildcards)
+  local id = wildcards.id
+  local name = wildcards.name
+  local long = wildcards.long
+  add_item(id, name, long, false)
 end
 
 
@@ -1131,7 +1117,10 @@ function add_item(itemid, name, long_desc, auto)
 end
 
 
-function add_skill(name, skillid)
+function add_skill(name, line, wildcards)
+  local skillid = wildcards.id
+  local name = wildcards.name
+
   local skill = load_skill_from_database(skillid)
 
   if (skill) then
@@ -1255,7 +1244,9 @@ end
 -- delete NPCs / items / skills
 ---------------------------------
 
-function del_mob(mobid)
+function del_mob(name, line, wildcards)
+  local mobid = wildcards.id
+
   local mob = load_mob_from_database(mobid)
 
   if (mob) then
@@ -1267,7 +1258,9 @@ function del_mob(mobid)
 end
 
 
-function del_item(itemid)
+function del_item(name, line, wildcards)
+  local itemid = wildcards.id
+
   local item = load_item_from_database(itemid)
 
   if (item) then
@@ -1279,7 +1272,9 @@ function del_item(itemid)
 end
 
 
-function del_skill(skillid)
+function del_skill(name, line, wildcards)
+  local skillid = wildcards.id
+
   local skill = load_skill_from_database(skillid)
 
   if (skill) then
@@ -1359,6 +1354,14 @@ end
 -- add locations
 ------------------
 
+function add_mob_location_c(name, line, wildcards)
+  local mobid = wildcards.mobid
+  local area = wildcards.area
+  local room = wildcards.room
+  add_mob_location(mobid, area, room, false)
+end
+
+
 function add_mob_location(mobid, area, room, auto)
   local res = {}
 
@@ -1382,6 +1385,15 @@ function add_mob_location(mobid, area, room, auto)
   else
     ColourNote("red", "black", "-- mobs_n_items: please provide either a room #, or [an] area [+ room] name[s] --")
   end
+end
+
+
+function add_item_location_c(name, line, wildcards)
+  local itemid = wildcards.itemid
+  local area = wildcards.area
+  local mobid = wildcards.mobid
+  local room = wildcards.room
+  add_item_location(itemid, area, mobid, room, false)
 end
 
 
@@ -1412,7 +1424,10 @@ function add_item_location(itemid, area, mobid, room, auto)
 end
 
 
-function add_skill_trainer(skillid, mobid)
+function add_skill_trainer(name, line, wildcards)
+  local skillid = wildcards.skillid
+  local mobid = wildcards.mobid
+
   local res = {}
 
   if (tonumber(skillid)) then -- sanity check, is it a # or a name?
@@ -1504,7 +1519,7 @@ end
 
 
 function update_mobs_hits()
-  --Note(serialize.save_simple(mobs_locations_cache))
+  --print(serialize.save_simple(mobs_locations_cache))
 
   local t
 
@@ -1531,7 +1546,7 @@ end
 
 
 function update_items_hits()
-  --Note(serialize.save_simple(items_locations_cache))
+  --print(serialize.save_simple(items_locations_cache))
 
   local t
 
@@ -1584,7 +1599,11 @@ end
 -- delete locations
 ---------------------
 
-function del_mob_location(mobid, area, room)
+function del_mob_location(name, line, wildcards)
+  local mobid = wildcards.mobid
+  local area = wildcards.area
+  local room = wildcards.room
+
   local res = {}
 
   for row in db:nrows(string.format("SELECT * FROM mobsloc WHERE mobid = %s", fixsql(mobid))) do
@@ -1603,7 +1622,12 @@ function del_mob_location(mobid, area, room)
 end
 
 
-function del_item_location(itemid, area, mobid, room)
+function del_item_location(name, line, wildcards)
+  local itemid = wildcards.itemid
+  local area = wildcards.area
+  local mobid = wildcards.mobid
+  local room = wildcards.room
+
   local res = {}
 
   for row in db:nrows(string.format("SELECT * FROM itemsloc WHERE itemid = %s", fixsql(itemid))) do
@@ -1623,7 +1647,10 @@ function del_item_location(itemid, area, mobid, room)
 end
 
 
-function del_skill_trainer(skillid, mobid)
+function del_skill_trainer(name, line, wildcards)
+  local skillid = wildcards.skillid
+  local mobid = wildcards.mobid
+
   local res = {}
 
   for row in db:nrows(string.format("SELECT * FROM skillstrain WHERE skillid = %s", fixsql(skillid))) do
@@ -1701,6 +1728,20 @@ local namecol = "palevioletred" -- springgreen
 local mobcol = fontcol
 
 
+function find_npc_strict(name, line, wildcards)
+  local name = wildcards.name
+  local area = wildcards.area
+  find_npc(name, area, false)
+end
+
+
+function find_npc_fuzzy(name, line, wildcards)
+  local name = wildcards.name
+  local area = wildcards.area
+  find_npc(name, area, true)
+end
+
+
 function find_npc(name, area, fuzzy)
   local results = {}
 
@@ -1735,6 +1776,20 @@ function find_npc(name, area, fuzzy)
 end
 
 
+function find_item_strict(name, line, wildcards)
+  local name = wildcards.name
+  local area = wildcards.area
+  find_item(name, area, false)
+end
+
+
+function find_item_fuzzy(name, line, wildcards)
+  local name = wildcards.name
+  local area = wildcards.area
+  find_item(name, area, true)
+end
+
+
 function find_item(name, area, fuzzy)
   local results = {}
 
@@ -1766,6 +1821,20 @@ function find_item(name, area, fuzzy)
     Hyperlink("item wheree " .. name, "[here]", "", "lightgreen", "black", false)
     ColourNote("lightgreen", "black", " or type 'item wheree " .. name .. "' to repeat the search without area restrictions.")
   end
+end
+
+
+function find_skill_strict(name, line, wildcards)
+  local name = wildcards.name
+  local area = wildcards.area
+  find_skill(name, area, false)
+end
+
+
+function find_skill_fuzzy(name, line, wildcards)
+  local name = wildcards.name
+  local area = wildcards.area
+  find_skill(name, area, true)
 end
 
 
@@ -1989,13 +2058,13 @@ function show_skill_info(id, area)
 
     local trainer
 
---    Note(serialize.save_simple(skill))
+--    print(serialize.save_simple(skill))
 
     if (area ~= "") then
       for i = #skill.trainers, 1, -1 do
         trainer = load_mob_from_database(skill.trainers[i])
 
---        Note(serialize.save_simple(trainer))
+--        print(serialize.save_simple(trainer))
 
         if (#trainer.locations > 0) then
           if (string.lower(area) ~= string.lower(trainer.locations[1].area)) then -- trainer isn't in the chosen area
@@ -2015,7 +2084,7 @@ function show_skill_info(id, area)
     for i = 1, #skill.trainers do
       trainer = load_mob_from_database(skill.trainers[i])
 
---      Note(serialize.save_simple(trainer))
+--      print(serialize.save_simple(trainer))
 
       if (i == 1) then
         Tell(" ")
@@ -2042,13 +2111,13 @@ function get_npc_areas(mob_name)
   local sname = fixsql(string.upper(mob_name))
   local mob_ids = {}
 
---  Note(sname)
+--  print(sname)
 
   for row in db:nrows(string.format("SELECT mobid FROM mobs WHERE UPPER(name) = %s", sname)) do
     mob_ids[#mob_ids + 1] = row.mobid
   end -- finding rooms
 
---  Note(serialize.save_simple(mob_ids))
+--  print(serialize.save_simple(mob_ids))
 
   local t = {}
 
@@ -2058,7 +2127,7 @@ function get_npc_areas(mob_name)
     end
   end
 
---  Note(serialize.save_simple(t))
+--  print(serialize.save_simple(t))
 
   return table.concat(t, ";")
 end
@@ -2066,7 +2135,7 @@ end
 
 function get_item_areas(item_name)
   local sname = fixsql(string.upper(item_name))
---  Note(sname)
+--  print(sname)
 
   local item_ids = {}
 
@@ -2074,7 +2143,7 @@ function get_item_areas(item_name)
     item_ids[#item_ids + 1] = row.itemid
   end -- finding rooms
 
---  Note(serialize.save_simple(item_ids))
+--  print(serialize.save_simple(item_ids))
 
   local t = {}
 
@@ -2084,7 +2153,7 @@ function get_item_areas(item_name)
     end
   end
 
---  Note(serialize.save_simple(t))
+--  print(serialize.save_simple(t))
 
   return table.concat(t, ";")
 end

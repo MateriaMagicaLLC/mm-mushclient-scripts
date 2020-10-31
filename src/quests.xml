@@ -15,7 +15,7 @@
    purpose="Scripts related to Orc Pursuer or Crystal quests"
    save_state="y"
    date_written="2012-04-11 18:38:09"
-   date_modified="2014-04-11 02:18:12"
+   date_modified="2020-09-28 09:11:07"
    requires="4.71"
    version="1.0"
    >
@@ -374,7 +374,6 @@ next_quest_in(min * 60)
 <!-- personal logs -->
 
   <trigger
-   enabled="y"
    group="script-log"
    keep_evaluating="y"
    match="^Key\: Killed \| Available$"
@@ -638,6 +637,9 @@ end
 -- crystal quests
 -------------------
 
+-- 2 minutes
+local crystal_cooldown = 2 * 60 * 60
+
 function crystal_started()
 --  fetching_crystal = true
   got_crystal = nil
@@ -662,11 +664,11 @@ function crystal_done()
   got_crystal = nil
 
   if (meh_timers_present) then
-    set_unique_countdown(0, 0, 3600, "crystal quest available", "quests plugin")
+    set_unique_countdown(0, 0, crystal_cooldown, "crystal quest available", "quests plugin")
     nagged = false
 
   else
-    next_crystal = 3600
+    next_crystal = crystal_cooldown
 
     EnableTrigger("countdown", true)
 
@@ -712,6 +714,10 @@ end
 -- pursuer quests
 -------------------
 
+-- 15 minutes
+local pursuer_cooldown = 15 * 60 * 60
+
+
 function pursuer_started(what, where)
   SetVariable("pursuer_when", os.date())
   SetVariable("pursuer_what", what)
@@ -721,11 +727,11 @@ function pursuer_started(what, where)
   pursuer_done = false
 
   if (meh_timers_present) then
-    set_unique_countdown(0, 0, 3600, "pursuer quest available", "quests plugin")
+    set_unique_countdown(0, 0, pursuer_cooldown, "pursuer quest available", "quests plugin")
     nagged = false
 
   else
-    next_pursuer = 3600
+    next_pursuer = pursuer_cooldown
 
     EnableTrigger("countdown", true)
 
@@ -739,11 +745,11 @@ function pursuer_completed()
     pursuer_done = true
 
     if (meh_timers_present) then
-      set_unique_countdown(0, 0, 3600, "pursuer quest available", "quests plugin")
+      set_unique_countdown(0, 0, pursuer_cooldown, "pursuer quest available", "quests plugin")
       nagged = false
 
     else
-      next_pursuer = 3600
+      next_pursuer = pursuer_cooldown
 
       EnableTrigger("countdown", true)
 

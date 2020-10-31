@@ -75,11 +75,12 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 <triggers>
   <trigger
    enabled="y"
+   keep_evaluating="y"
+   regexp="y"
    match="^(.*)(?<url>(ftp|mailto|https?)\:(|\/\/)([^ ^\,\;])+)(.*)$"
    omit_from_output="y"
-   regexp="y"
-   script="on_hyperlink"
    sequence="100"
+   script="on_hyperlink"
   >
   </trigger>
 </triggers>

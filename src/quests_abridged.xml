@@ -15,7 +15,7 @@
    purpose="Implements abridged q s #, q c # - for multi-questing"
    save_state="y"
    date_written="2012-06-19 22:44:42"
-   date_modified="2013-10-22 13:27:10"
+   date_modified="2020-10-04 03:46:32"
    requires="4.71"
    version="1.0"
    >
@@ -72,47 +72,39 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
    match="^q[ ]+s[ ]+all$"
    enabled="y"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="build_table_start"
   >
-  <send>build_table_start()
-</send>
   </alias>
 
   <alias
-   match="^q[ ]+s(|[ ]+(?P&lt;num&gt;[0-9]+))$"
+   match="^q[ ]+s(|[ ]+(?<num>[0-9]+))$"
    enabled="y"
    group="quests_abridged"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="quest_status"
   >
-  <send>quest_status("%&lt;num&gt;")
-</send>
   </alias>
 
   <alias
-   match="^q[ ]+c[ ]+(?P&lt;num&gt;[0-9]+)$"
+   match="^q[ ]+c[ ]+(?<num>[0-9]+)$"
    enabled="y"
    group="quests_abridged"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="quest_complete"
   >
-  <send>quest_complete("%&lt;num&gt;")
-</send>
   </alias>
 
   <alias
-   match="^q[ ]+Q[ ]+(?P&lt;num&gt;[0-9]+)$"
+   match="^q[ ]+Q[ ]+(?<num>[0-9]+)$"
    enabled="y"
    group="quests_abridged"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="quest_cancel"
   >
-  <send>quest_cancel("%&lt;num&gt;")
-</send>
   </alias>
 
   <alias
@@ -150,26 +142,20 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
    keep_evaluating="y"
    match="^(You ask (.+) for a quest\.|You inform (.+) you have completed your quest \'(.+)\'\.|You have run out of time for your quest\, \'(.+)\'\.|You are no longer on the quest\, \'(.+)\'\.)$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="build_table_start"
   >
-  <send>build_table_start()
-</send>
   </trigger>
 
   <trigger
    group="quests_abridged"
    keep_evaluating="y"
-   match="^Quest \#(?P&lt;num&gt;[0-9]+)\: (?P&lt;name&gt;.+) \((?P&lt;cgoals&gt;[0-9]+)\/(?P&lt;tgoals&gt;[0-9]+) goal(|s) complete\)\.$"
+   match="^Quest \#(?<num>[0-9]+)\: (?<name>.+) \((?<cgoals>[0-9]+)\/(?<tgoals>[0-9]+) goal(|s) complete\)\.$"
    omit_from_output="y"
    regexp="y"
-   send_to="14"
    sequence="100"
+   script="on_quest_line"
   >
-  <send>trigger_style_runs = TriggerStyleRuns
-show_line()
-build_table("%&lt;num&gt;")
-</send>
   </trigger>
 
   <trigger
@@ -177,11 +163,9 @@ build_table("%&lt;num&gt;")
    keep_evaluating="y"
    match="^Type QUEST STATUS \<\#\> for complete information on that quest\.$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="build_table_end"
   >
-  <send>build_table_end()
-</send>
   </trigger>
 
 
@@ -190,13 +174,11 @@ build_table("%&lt;num&gt;")
   <trigger
    enabled="y"
    keep_evaluating="y"
-   match="^This quest \[(?P&lt;num&gt;.+)\] is called \'(.+)\'\,$"
+   match="^This quest \[(?<num>.+)\] is called \'(.+)\'\,$"
    regexp="y"
-   send_to="12"
    sequence="100"
+   script="set_current_quest_num"
   >
-  <send>set_current_quest_num("%&lt;num&gt;")
-</send>
   </trigger>
 
   <trigger
@@ -206,11 +188,9 @@ build_table("%&lt;num&gt;")
    match="^You inform (.+) you have completed your quest \'(.+)\'\.$"
    omit_from_output="y"
    regexp="y"
-   send_to="14"
    sequence="100"
+   script="set_current_quest_num"
   >
-  <send>set_current_quest_num(nil)
-</send>
   </trigger>
 
 </triggers>
@@ -258,13 +238,13 @@ end
 -- redrawing stuff
 --------------------
 
-function show_line()
+function show_line(styles)
   ColourTell(buttoncol, "black", "[" .. #tquests + 1 .. "] ")
 
-  for i = 1, #trigger_style_runs do
-    ColourTell(RGBColourToName(trigger_style_runs[i].textcolour),
-               RGBColourToName(trigger_style_runs[i].backcolour),
-               trigger_style_runs[i].text)
+  for _, v in ipairs(styles) do
+    ColourTell(RGBColourToName(v.textcolour), 
+               RGBColourToName(v.backcolour),
+               v.text)
   end
 
   Note("")
@@ -283,6 +263,14 @@ function build_table_start()
 end
 
 
+function on_quest_line(name, line, wildcards, styles)
+  local num = wildcards.num
+
+  show_line(styles)
+  build_table(num)
+end
+
+
 function build_table(num)
   tquests[#tquests + 1] = tonumber(num)
 end
@@ -298,7 +286,9 @@ end
 -- quests stuff
 -----------------
 
-function quest_status(num)
+function quest_status(name, line, wildcards)
+  local num = wildcards.num
+
   if (num) and (num ~= "") then
     num = tonumber(num)
 
@@ -316,8 +306,9 @@ function quest_status(num)
 end
 
 
-function quest_complete(num)
-  num = tonumber(num)
+function quest_complete(name, line, wildcards)
+  local num = tonumber(wildcards.num)
+  
   local cmd
   if (tquests[num]) then
     cmd = "q complete " .. tquests[num]
@@ -334,8 +325,9 @@ function quest_complete(num)
 end
 
 
-function quest_cancel(num)
-  num = tonumber(num)
+function quest_cancel(name, line, wildcards)
+  local num = tonumber(wildcards.num)
+
   local cmd
   if (tquests[num]) then
     cmd = "quest complete " .. tquests[num]
@@ -359,8 +351,10 @@ end
 -- current quest stuff
 ------------------------
 
-function set_current_quest_num(num)
-  quest_num = tonumber(num)
+function set_current_quest_num(name, line, wildcards)
+  local num = tonumber(wildcards.num)
+  
+  quest_num = num
 end
 
 
