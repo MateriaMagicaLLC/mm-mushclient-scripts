@@ -15,7 +15,7 @@
    purpose="keeps track of scribed spells and helps mem them"
    save_state="y"
    date_written="2013-11-08 08:33:43"
-   date_modified="2015-04-19 07:56:16"
+   date_modified="2020-09-28 09:12:34"
    requires="4.71"
    version="1.0"
    >
@@ -458,7 +458,7 @@ end
   <trigger
    group="detect_spells"
    keep_evaluating="y"
-   match="^Item \'(?P&lt;name&gt;.+)\' is type spellbook\, alignment (.+)\, made of (.+) \(in \((.+)\) condition\)\,$"
+   match="^Item \'(?P&lt;name&gt;.+)\' is type spellbook\, alignment (.+)\, made of (.+) \(in \((.+)\) condition\)\,\[Study\]$"
    regexp="y"
    send_to="12"
    sequence="100"
