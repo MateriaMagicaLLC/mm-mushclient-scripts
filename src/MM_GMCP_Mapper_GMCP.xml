@@ -13,7 +13,7 @@
 <muclient>
 
 <plugin
-  name="MM_GMCP_Mapper"
+  name="MM_GMCP_Mapper_GMCP"
   author="Nick Gammon, Ruthgul"
   id="f973af093e715dece34dc25f"
   language="Lua"
