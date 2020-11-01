@@ -811,13 +811,13 @@ end
 
 
 local function is_room_tagged_as(uid, tag)
-  local tags = rooms[uid].tags or ""
+  local tags = get_room(uid).tags or ""
   return string.find(tags or "", tag)
 end
 
 
 local function is_room_flagged_as(uid, flag)
-  local flags = rooms[uid].flags or ""
+  local flags = get_room(uid).flags or ""
   return string.find(flags or "", flag)
 end
 
