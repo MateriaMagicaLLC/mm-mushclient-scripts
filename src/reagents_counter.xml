@@ -15,7 +15,7 @@
    purpose="keeps track of reagent usage"
    save_state="y"
    date_written="2012-02-29 11:36:38"
-   date_modified="2015-04-19 08:36:15"
+   date_modified="2020-11-02 10:23:06"
    requires="4.71"
    version="1.0"
    >
@@ -85,6 +85,8 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
   <variable name="astralreags">a beautiful crystal prism|a budding twig|a buleva crystal|a carefully polished burl|a cold flame|a crystal figurine|a crystallized lava rock|a diamond stud|a dilated\, blue eyeball|a dozen roses|a dracolich eye|a gem of death|a gem of dira|a gem of gath|a gem of ithrilis|a gem of life|a gem of maradas|a gem of vandyne|a glowing crystal shard|a large black pearl|a large quartz crystal|a meteorite|a miniature ankh of gath|a miniature ankh of maradas|a pegakorn tear|a set of star charts|a shimmering serpent\'s scale|a small crystal skull|a small golden feather|a small indicolite|a small meteorite|a small pouch of lich bone dust|a turkey\'s wishbone|a white feverfew blossom|an astral bauble|an extradimensional sludge|an ivory marble|kessler\'s lost astral reagent|the blackened skull of a yuan\-ti|the head of (.+) encased in ice|vyst\'s heart</variable>
 
   <variable name="focusingreags">a clear focusing crystal</variable>
+  
+  <variable name="largefocusingreags">a large focusing crystal</variable>
 
   <variable name="summoningreags">a summoning stone</variable>
 
@@ -358,6 +360,20 @@ end
    ignore_case="y"
    keep_evaluating="y"
    expand_variables="y"
+   match="^(|\([ ]*(?P&lt;num&gt;[0-9]+)\))[ ]+(@!largefocusingreags)$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>count_line("%&lt;num&gt;", "large_focusing")
+</send>
+  </trigger>
+
+  <trigger
+   group="script-count_reags"
+   ignore_case="y"
+   keep_evaluating="y"
+   expand_variables="y"
    match="^(|\([ ]*(?P&lt;num&gt;[0-9]+)\))[ ]+(@!summoningreags)(| \((.+)\))$"
    regexp="y"
    send_to="12"
@@ -494,7 +510,7 @@ function init_tables()
 
   local aux
   for i = 1, #reag_types do
-    aux = GetVariable(reag_types[i] .. "reags")
+    aux = GetVariable(reag_types[i] .. "reags") or ""
     aux = string.gsub(aux, "%" .. string.char(92), "")
     aux = string.gsub(aux, "%(.+%)", "x")
     reag_tables[i] = utils.split(aux, "|")
@@ -565,9 +581,9 @@ end
 -- count
 ----------
 
-reag_types = {"fire", "water", "air", "earth", "eth", "gem", "astral", "focusing", "summoning", "hematite"}
+reag_types = {"fire", "water", "air", "earth", "eth", "gem", "astral", "focusing", "large_focusing", "summoning", "hematite"}
 
-reag_tables = {fire_reags, water_reags, air_reags, earth_reags, eth_reags, gem_reags, astral_reags, focusing_reags, summoning_reags, hematite_reags}
+reag_tables = {fire_reags, water_reags, air_reags, earth_reags, eth_reags, gem_reags, astral_reags, focusing_reags, large_focusing_reags, summoning_reags, hematite_reags}
 
 
 function count_reags(used_reags, reags_list)
@@ -764,8 +780,9 @@ function retrieve_count()
 --   tonumber(t[6]) will be the total of gem reags, or nil (if not initialized)
 --   tonumber(t[7]) will be the total of astral reags, or nil (if not initialized)
 --   tonumber(t[8]) will be the total of focusing crystals, or nil (if not initialized)
---   tonumber(t[9]) will be the total of summoning stones, or nil (if not initialized)
---   tonumber(t[10]) will be the total of hematites, or nil (if not initialized)
+--   tonumber(t[9]) will be the total of large focusing crystals, or nil (if not initialized)
+--   tonumber(t[10]) will be the total of summoning stones, or nil (if not initialized)
+--   tonumber(t[11]) will be the total of hematites, or nil (if not initialized)
   local aux = {}
   for i = 1, #reag_types do
     aux[i] = counters[reag_types[i]]
@@ -784,7 +801,7 @@ function mini_start()
 end
 
 
-reag_types_show = {"fire", "water", "air", "earth", "ethereal", "gem", "astral", "focusing", "summoning", "hematite"}
+reag_types_show = {"fire", "water", "air", "earth", "ethereal", "gem", "astral", "focusing", "lrg_focus", "summoning", "hematite"}
 
 
 function update_mini()
