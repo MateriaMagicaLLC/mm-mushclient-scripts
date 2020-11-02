@@ -15,7 +15,7 @@
    purpose="keeps track of reagent usage"
    save_state="y"
    date_written="2012-02-29 11:36:38"
-   date_modified="2020-11-02 10:23:06"
+   date_modified="2020-11-02 14:15:31"
    requires="4.71"
    version="1.0"
    >
@@ -365,7 +365,7 @@ end
    send_to="12"
    sequence="100"
   >
-  <send>count_line("%&lt;num&gt;", "large_focusing")
+  <send>count_line("%&lt;num&gt;", "largefocusing")
 </send>
   </trigger>
 
@@ -581,9 +581,9 @@ end
 -- count
 ----------
 
-reag_types = {"fire", "water", "air", "earth", "eth", "gem", "astral", "focusing", "large_focusing", "summoning", "hematite"}
+reag_types = {"fire", "water", "air", "earth", "eth", "gem", "astral", "focusing", "largefocusing", "summoning", "hematite"}
 
-reag_tables = {fire_reags, water_reags, air_reags, earth_reags, eth_reags, gem_reags, astral_reags, focusing_reags, large_focusing_reags, summoning_reags, hematite_reags}
+reag_tables = {fire_reags, water_reags, air_reags, earth_reags, eth_reags, gem_reags, astral_reags, focusing_reags, largefocusing_reags, summoning_reags, hematite_reags}
 
 
 function count_reags(used_reags, reags_list)
