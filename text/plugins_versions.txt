@@ -1,6 +1,6 @@
 id = 233091f6c00f9afb14a2af62  hash = 91DAE348474D47648644945A2C3C92BF  aux_files = {   [1] = {     name = "generic_miniwindow.lua",     dest = "MUSH/lua",     },   }
 id = f67c4339ed0591a5b010d05b  hash = 19843325EE9DBAA5D4B629228EE0C9E5  aux_files = {   [1] = {     name = "gmcphelper.lua",     dest = "MUSH/lua",     },   [2] = {     name = "sandbox.dune.net.MCL",     dest = "MUSH/worlds",     },   }
-id = f973af093e715dece34dc25f  hash = 83877C4F8D3499235D5C2AD97D544381  aux_files = {   [1] = {     name = "mm_mapper.lua",     dest = "MUSH/lua",     },   }
+id = f973af093e715dece34dc25f  hash = D9F142B5B6F860780E3702A247B76A6C  aux_files = {   [1] = {     name = "mm_mapper.lua",     dest = "MUSH/lua",     },   }
 id = 7daf1d7890d9db73d74a8188  hash = D76B7EE02EE2A3C2F5D23F9B274D94E4
 id = b2772cad800b33a6073d9377  hash = 1A954242DD7D93D4CFB40B0107B2A789  aux_files = {   [1] = {     name = "captures.MCL",     dest = "MUSH/worlds",     },   [2] = {     name = "announce.mp3",     dest = "MUSH/sounds",     },   }
 id = f99134f19ea994a0cc0888d1  hash = 2B8F2A164C0E86DFE98009A06493587E
@@ -90,7 +90,7 @@ name = world_miniwindow.lua  hash = 08868EA01E48C08BD4AA27962F655461
 name = mapper.lua  hash = 4DE33236EBF9C210304B1324A8FDD390
 name = async.lua  hash = B5FED56D5E3DDE4E41DF82260C0879EE
 name = ssl.lua  hash = C67DB2536E8CE898DDA7FA8882196863
-name = mm_mapper.lua  hash = A9569128FAF096CFA9EE47D2BD804F10
+name = mm_mapper.lua  hash = 9603238B266BFD359310989F22F199AC
 name = gmcphelper.lua  hash = 0952EFA28EDFD7CE56E94BEBABA18E85
 name = https.lua  hash = 37D600574074246E36C7AF03C87F9E8D
 name = generic_miniwindow.lua  hash = 5A513042110FA819E28B86E465D82563

@@ -789,8 +789,8 @@ end -- draw_room
 
 local function is_exit_tagged_as(uid, dir, tag)
   local room = get_room(uid)
-  local dir = shorten_direction[dir]
-  local exits_tags = room.exits_tags or {}
+  local dir = shorten_direction[dir] or dir
+  local exits_tags = room.exits_tags
   return string.find(exits_tags[dir] or "", tag) or false
 end
 
