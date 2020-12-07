@@ -20,7 +20,7 @@
   purpose="GMCP Mapper for Materia Magica"
   save_state="y"
   date_written="2012-02-03 20:26:09"
-  date_modified="2020-11-02 09:05:41"
+  date_modified="2020-12-07 18:08:56"
   requires="4.71"
   version="1.0"
 >
@@ -5139,7 +5139,7 @@ end
 
 
 function autotag_signposts(name)
-  if (not is_road_signpost(name)) then
+  if (not name) or (not is_road_signpost(name)) then
     return
   end
 
