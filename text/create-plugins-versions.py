@@ -20,14 +20,14 @@ def create_plugins_versions():
 
 
 def process_plugins(path, pattern):
-  for f in glob.glob(os.path.join(path, pattern)):
+  for f in sorted(glob.glob(os.path.join(path, pattern)), key=os.path.basename):
     details = find_plugin_details(f)
     details['hash'] = calc_hash(f)
     show_plugin_info(details)
 
 
 def process_other(path, pattern):
-  for f in glob.glob(os.path.join(path, pattern)):
+  for f in sorted(glob.glob(os.path.join(path, pattern)), key=os.path.basename):
     details = {
       'name': os.path.basename(f),
       'hash': calc_hash(f),
