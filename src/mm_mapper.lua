@@ -4,6 +4,9 @@
 
 Mods: Ruthgul, for Materia Magica
 
+2020-12016
+* Added support for new LPK, NPK, CPK room flags
+
 2020-09-26
 * Added support for grapple-required rooms (to be excluded by the pathfinder if grappling mode is off)
 * Added grappling mode (use / avoid grapple-required rooms)
@@ -804,7 +807,8 @@ end
 local function is_safewalk_check_ok(uid)
   return (not safewalk_mode)
     or (
-      (not is_room_flagged_as(uid, "player%-kill%-"))
+      (not is_room_flagged_as(uid, "PK"))
+      and (not is_room_flagged_as(uid, "player%-kill%-"))
       and (not is_room_tagged_as(uid, "dt"))
     )
 end
