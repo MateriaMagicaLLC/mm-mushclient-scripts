@@ -20,7 +20,7 @@
   purpose="GMCP Mapper for Materia Magica"
   save_state="y"
   date_written="2012-02-03 20:26:09"
-  date_modified="2020-12-16 18:23:42"
+  date_modified="2020-12-16 20:09:31"
   requires="4.71"
   version="1.0"
 >
@@ -2720,7 +2720,8 @@ function process_room()
   zone = gmcpval("zone")
 
   if (uid ~= "") then
---    Note(uid)
+  -- and (not is_maze(uid))
+--    print(uid)
 
     if (uid) then
       roomname = gmcpval("name")
@@ -2769,10 +2770,12 @@ function process_room()
     first_room = false
   end
 
-  if (uid) -- we're not in a maze
+  if (uid)
+  -- and not is_maze(uid) -- we're not in a maze
   and ((config2.do_map_wilds) -- we're mapping the wilds
     or ((not is_vmap(zone) or (is_road(terrain) and not is_cave(roomname))))) then
   -- or we're in a part of the wilds that we always wanna map
+--    print(uid)
     mapper_redraw() -- call mapper to draw this rom
   end
 end
@@ -3538,6 +3541,10 @@ end
 --------------
 
 function save_exits_to_database(uid, exits_str)
+  if (is_maze(uid)) then
+    return
+  end
+  
   room = load_room_from_database(uid)
   db:exec("BEGIN TRANSACTION;")
   for dir in string.gmatch(exits_str, "%a+") do
