@@ -20,7 +20,7 @@
   purpose="GMCP Mapper for Materia Magica"
   save_state="y"
   date_written="2012-02-03 20:26:09"
-  date_modified="2020-12-16 20:09:31"
+  date_modified="2020-12-16 21:28:01"
   requires="4.71"
   version="1.0"
 >
@@ -108,6 +108,9 @@ Syntax:
 * mapper stop  - cancel any current speedwalk
 * mapper resume  - resume last speedwalk or hyperlinked speedwalk
 * mapper speedwalk next  - show (or SAPI say) next direction of the speedwalk (to flee, etc.)
+
+* mapper distance <room#>  - show the distance to a room, by its room number
+* mapper distance <room1#> <room2#> - show the distance from room1 to room2, by room number
 
 > Special areas:
 
@@ -354,7 +357,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
     enabled="y"
-    match="^mapper[ ]+flags[ ]+(?<flags>[a-z \-]+)$"
+    match="^mapper[ ]+flags[ ]+(?<flags>[a-zA-Z \-]+)$"
     regexp="y"
     sequence="100"
     script="map_where_flags"
@@ -363,7 +366,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
     enabled="y"
-    match="^mapper[ ]+notflags[ ]+(?<flags>[a-z \-]+)$"
+    match="^mapper[ ]+notflags[ ]+(?<flags>[a-zA-Z \-]+)$"
     regexp="y"
     sequence="100"
     script="map_where_by_not_flags"
@@ -490,6 +493,23 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
   >
   </alias>
 
+  <alias
+    enabled="y"
+    match="^mapper[ ]+dist(|ance)[ ]+(?<id>[0-9A-F]+)$"
+    regexp="y"
+    sequence="100"
+    script="map_distance"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+dist(|ance)[ ]+(?<id1>[0-9A-F]+)[ ]+(?<id2>[0-9A-F]+)$"
+    regexp="y"
+    sequence="100"
+    script="map_distance_from_to"
+  >
+  </alias>
 
 <!-- special areas -->
 
@@ -1320,6 +1340,7 @@ default_config = {
       "Fixedsys",
       "Courier",
       "Sylfaen",
+      "Monospace",
     },
     size = 8.
   },
@@ -2201,7 +2222,6 @@ function map_where_by_flags(flags)
     end
     rflags = string.gsub(use_field or "", " ", "")
     rflags = utils.split(rflags, ",")
-
     if (has_all(sflags, rflags)) then
       t[#t + 1] = row.uid
     end
@@ -2221,12 +2241,13 @@ function has_all(sflags, rflags)
   local tres = {}
 
   for i = 1, #sflags do
---    Note(sflags[i])
+--    print(sflags[i])
     tres[i] = false
 
     for j = 1, #rflags do
---    Note(rflags[j])
-      if (sflags[i] == rflags[j]) then
+--    print(rflags[j])
+      if (string.lower(sflags[i]) == string.lower(rflags[j]))
+      or (get_alt_flag_name(sflags[i]) == string.lower(rflags[j])) then
         tres[i] = true
       end
     end
@@ -2246,12 +2267,13 @@ function has_none(sflags, rflags)
   local tres = {}
 
   for i = 1, #sflags do
---    Note(sflags[i])
+--    print(sflags[i])
     tres[i] = false
 
     for j = 1, #rflags do
---    Note(rflags[j])
-      if (sflags[i] == rflags[j]) then
+--    print(rflags[j])
+      if (string.lower(sflags[i]) == string.lower(rflags[j]))
+      or (get_alt_flag_name(sflags[i]) == string.lower(rflags[j])) then
         tres[i] = true
       end
     end
@@ -2263,6 +2285,19 @@ function has_none(sflags, rflags)
   end
 
   return res
+end
+
+
+function get_alt_flag_name(flag)
+  local alt_flag_names = {
+    ['lpk'] = 'player-kill-lawful',
+    ['npk'] = 'player-kill-neutral',
+    ['cpk'] = 'player-kill-chaotic',
+    ['player-kill-lawful'] = 'lpk',
+    ['player-kill-neutral'] = 'npk',
+    ['player-kill-chaotic'] = 'cpk',
+  }
+  return alt_flag_names[string.lower(flag)]  
 end
 
 
@@ -2428,7 +2463,7 @@ function map_cpk()
     return
   end
 
-  map_where_by_flags("player-kill-chaotic CPK")
+  map_where_by_flags("CPK")
 end
 
 
@@ -2572,6 +2607,32 @@ end
 -- movement
 -------------
 
+function map_distance(name, line, wildcards)
+  local id = wildcards.id
+  calc_map_distance(current_room, id)
+end
+
+
+function map_distance_from_to(name, line, wildcards)
+  local id1 = wildcards.id1
+  local id2 = wildcards.id2
+  calc_map_distance(id1, id2)
+end
+
+
+function calc_map_distance(fromuid, touid, dont_show)
+  local res = map_path2(fromuid, touid, true)
+  if (not res) then
+    return
+  end
+  local dist = #utils.split(EvaluateSpeedwalk(res), '\n') - 1
+  if (not dont_show) then
+    Note('distance from ' .. fromuid .. ' to ' .. touid .. ': ' .. dist)
+  end
+  return dist
+end
+
+
 function map_path(name, line, wildcards)
   local id = wildcards.id
   map_path2(current_room, id)
@@ -2585,8 +2646,8 @@ function map_path_from_to(name, line, wildcards)
 end
 
 
-function map_path2(fromuid, touid)
-  if not mapper.check_we_can_find() then
+function map_path2(fromuid, touid, dont_show)
+  if (fromuid == current_room) and (not mapper.check_we_can_find()) then
     return
   end
 
@@ -2621,7 +2682,9 @@ function map_path2(fromuid, touid)
   path = string.gsub(path, "tprt", "teleport")
   path = string.gsub(path, "prtl", "portal")
 
-  mapper.mapprint(string.format("Path from %s to %s is: %s", fromuid, touid, path))
+  if (not dont_show) then
+    mapper.mapprint(string.format("Path from %s to %s is: %s", fromuid, touid, path))
+  end
 
   return path
 end
