@@ -109,6 +109,9 @@ Syntax:
 * mapper resume  - resume last speedwalk or hyperlinked speedwalk
 * mapper speedwalk next  - show (or SAPI say) next direction of the speedwalk (to flee, etc.)
 
+* mapper distance <room#>  - show the distance to a room, by its room number
+* mapper distance <room1#> <room2#> - show the distance from room1 to room2, by room number
+
 > Special areas:
 
 * mapper map wilds [on|off] - toggle mapping the wilds on/off (off by default)
@@ -490,6 +493,23 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
   >
   </alias>
 
+  <alias
+    enabled="y"
+    match="^mapper[ ]+dist(|ance)[ ]+(?<id>[0-9A-F]+)$"
+    regexp="y"
+    sequence="100"
+    script="map_distance"
+  >
+  </alias>
+
+  <alias
+    enabled="y"
+    match="^mapper[ ]+dist(|ance)[ ]+(?<id1>[0-9A-F]+)[ ]+(?<id2>[0-9A-F]+)$"
+    regexp="y"
+    sequence="100"
+    script="map_distance_from_to"
+  >
+  </alias>
 
 <!-- special areas -->
 
@@ -1320,6 +1340,7 @@ default_config = {
       "Fixedsys",
       "Courier",
       "Sylfaen",
+      "Monospace",
     },
     size = 8.
   },
@@ -2586,6 +2607,32 @@ end
 -- movement
 -------------
 
+function map_distance(name, line, wildcards)
+  local id = wildcards.id
+  calc_map_distance(current_room, id)
+end
+
+
+function map_distance_from_to(name, line, wildcards)
+  local id1 = wildcards.id1
+  local id2 = wildcards.id2
+  calc_map_distance(id1, id2)
+end
+
+
+function calc_map_distance(fromuid, touid, dont_show)
+  local res = map_path2(fromuid, touid, true)
+  if (not res) then
+    return
+  end
+  local dist = #utils.split(EvaluateSpeedwalk(res), '\n') - 1
+  if (not dont_show) then
+    Note('distance from ' .. fromuid .. ' to ' .. touid .. ': ' .. dist)
+  end
+  return dist
+end
+
+
 function map_path(name, line, wildcards)
   local id = wildcards.id
   map_path2(current_room, id)
@@ -2599,8 +2646,8 @@ function map_path_from_to(name, line, wildcards)
 end
 
 
-function map_path2(fromuid, touid)
-  if not mapper.check_we_can_find() then
+function map_path2(fromuid, touid, dont_show)
+  if (fromuid == current_room) and (not mapper.check_we_can_find()) then
     return
   end
 
@@ -2635,7 +2682,9 @@ function map_path2(fromuid, touid)
   path = string.gsub(path, "tprt", "teleport")
   path = string.gsub(path, "prtl", "portal")
 
-  mapper.mapprint(string.format("Path from %s to %s is: %s", fromuid, touid, path))
+  if (not dont_show) then
+    mapper.mapprint(string.format("Path from %s to %s is: %s", fromuid, touid, path))
+  end
 
   return path
 end
