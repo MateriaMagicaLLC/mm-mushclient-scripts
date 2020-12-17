@@ -20,7 +20,7 @@
   purpose="GMCP Mapper for Materia Magica"
   save_state="y"
   date_written="2012-02-03 20:26:09"
-  date_modified="2020-12-16 20:09:31"
+  date_modified="2020-12-16 21:28:01"
   requires="4.71"
   version="1.0"
 >
@@ -354,7 +354,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
     enabled="y"
-    match="^mapper[ ]+flags[ ]+(?<flags>[a-z \-]+)$"
+    match="^mapper[ ]+flags[ ]+(?<flags>[a-zA-Z \-]+)$"
     regexp="y"
     sequence="100"
     script="map_where_flags"
@@ -363,7 +363,7 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
     enabled="y"
-    match="^mapper[ ]+notflags[ ]+(?<flags>[a-z \-]+)$"
+    match="^mapper[ ]+notflags[ ]+(?<flags>[a-zA-Z \-]+)$"
     regexp="y"
     sequence="100"
     script="map_where_by_not_flags"
@@ -2201,7 +2201,6 @@ function map_where_by_flags(flags)
     end
     rflags = string.gsub(use_field or "", " ", "")
     rflags = utils.split(rflags, ",")
-
     if (has_all(sflags, rflags)) then
       t[#t + 1] = row.uid
     end
@@ -2221,12 +2220,13 @@ function has_all(sflags, rflags)
   local tres = {}
 
   for i = 1, #sflags do
---    Note(sflags[i])
+--    print(sflags[i])
     tres[i] = false
 
     for j = 1, #rflags do
---    Note(rflags[j])
-      if (sflags[i] == rflags[j]) then
+--    print(rflags[j])
+      if (string.lower(sflags[i]) == string.lower(rflags[j]))
+      or (get_alt_flag_name(sflags[i]) == string.lower(rflags[j])) then
         tres[i] = true
       end
     end
@@ -2246,12 +2246,13 @@ function has_none(sflags, rflags)
   local tres = {}
 
   for i = 1, #sflags do
---    Note(sflags[i])
+--    print(sflags[i])
     tres[i] = false
 
     for j = 1, #rflags do
---    Note(rflags[j])
-      if (sflags[i] == rflags[j]) then
+--    print(rflags[j])
+      if (string.lower(sflags[i]) == string.lower(rflags[j]))
+      or (get_alt_flag_name(sflags[i]) == string.lower(rflags[j])) then
         tres[i] = true
       end
     end
@@ -2263,6 +2264,19 @@ function has_none(sflags, rflags)
   end
 
   return res
+end
+
+
+function get_alt_flag_name(flag)
+  local alt_flag_names = {
+    ['lpk'] = 'player-kill-lawful',
+    ['npk'] = 'player-kill-neutral',
+    ['cpk'] = 'player-kill-chaotic',
+    ['player-kill-lawful'] = 'lpk',
+    ['player-kill-neutral'] = 'npk',
+    ['player-kill-chaotic'] = 'cpk',
+  }
+  return alt_flag_names[string.lower(flag)]  
 end
 
 
@@ -2428,7 +2442,7 @@ function map_cpk()
     return
   end
 
-  map_where_by_flags("player-kill-chaotic CPK")
+  map_where_by_flags("CPK")
 end
 
 
