@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------
--- LuaSec 0.5
--- Copyright (C) 2009-2014 PUC-Rio
+-- LuaSec 0.7alpha
+-- Copyright (C) 2009-2017 PUC-Rio
 --
 -- Author: Pablo Musa
 -- Author: Tomas Guisasola
@@ -12,26 +12,22 @@ local ltn12  = require("ltn12")
 local http   = require("socket.http")
 local url    = require("socket.url")
 
-local table  = require("table")
-local string = require("string")
+local try    = socket.try
 
-local try          = socket.try
-local type         = type
-local pairs        = pairs
-local getmetatable = getmetatable
+--
+-- Module
+--
+local _M = {
+  _VERSION   = "0.7",
+  _COPYRIGHT = "LuaSec 0.7alpha - Copyright (C) 2009-2017 PUC-Rio",
+  PORT       = 443,
+}
 
-module("ssl.https")
-
-_VERSION   = "0.5"
-_COPYRIGHT = "LuaSec 0.5 - Copyright (C) 2009-2014 PUC-Rio"
-
--- Default settings
-PORT = 443
-
+-- TLS configuration
 local cfg = {
-  protocol = "tlsv1",
-  options  = "all",
+  options  = {"all", "no_sslv2", "no_sslv3", "no_tlsv1"},
   verify   = "none",
+  ciphers = "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256"
 }
 
 --------------------------------------------------------------------
@@ -40,7 +36,7 @@ local cfg = {
 
 -- Insert default HTTPS port.
 local function default_https_port(u)
-   return url.build(url.parse(u, {port = PORT}))
+   return url.build(url.parse(u, {port = _M.PORT}))
 end
 
 -- Convert an URL to a table according to Luasocket needs.
@@ -76,7 +72,7 @@ end
 local function tcp(params)
    params = params or {}
    -- Default settings
-   for k, v in pairs(cfg) do 
+   for k, v in pairs(cfg) do
       params[k] = params[k] or v
    end
    -- Force client mode
@@ -93,6 +89,7 @@ local function tcp(params)
       function conn:connect(host, port)
          try(self.sock:connect(host, port))
          self.sock = try(ssl.wrap(self.sock, params))
+         self.sock:sni(host)
          try(self.sock:dohandshake())
          reg(self, getmetatable(self.sock))
          return 1
@@ -113,7 +110,7 @@ end
 -- @param body optional (string)
 -- @return (string if url == string or 1), code, headers, status
 --
-function request(url, body)
+local function request(url, body)
   local result_table = {}
   local stringrequest = type(url) == "string"
   if stringrequest then
@@ -136,3 +133,11 @@ function request(url, body)
   end
   return res, code, headers, status
 end
+
+--------------------------------------------------------------------------------
+-- Export module
+--
+
+_M.request = request
+
+return _M

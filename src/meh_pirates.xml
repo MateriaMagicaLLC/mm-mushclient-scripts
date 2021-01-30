@@ -15,7 +15,7 @@
    purpose="Stuff for beginner pirates"
    save_state="y"
    date_written="2011-11-05 08:55:47"
-   date_modified="2014-11-06 09:47:05"
+   date_modified="2021-01-19 13:30:37"
    requires="4.71"
    version="1.0"
    >
@@ -486,7 +486,7 @@ capture_hull_n_shield("%&lt;hull&gt;", "%&lt;shield&gt;")
   <trigger
    group="ph_shipyard"
    keep_evaluating="y"
-   match="^A total of (.+) unit(|s) of (.+) resource(|s)\, weighing (?P&lt;cweight&gt;.+) st(|s) (.+) pb(|s)/(?P&lt;tweight&gt;.+) st(|s) 0 pb(|s).$"
+   match="^A total of (.+) unit(|s) of (.+) resource(|s)\, weighing (?P&lt;cweight&gt;.+)st(|s)(| (.+) pb(|s))/(?P&lt;tweight&gt;.+)st(|s)(| 0 pb(|s)).$"
    regexp="y"
    send_to="12"
    sequence="100"

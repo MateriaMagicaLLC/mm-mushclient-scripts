@@ -15,7 +15,7 @@
    purpose="lessens combat spam"
    save_state="y"
    date_written="2012-04-27 18:46:16"
-   date_modified="2014-01-20 11:40:45"
+   date_modified="2021-01-29 15:51:46"
    requires="4.71"
    version="1.0"
    >
@@ -886,10 +886,10 @@ end
 
 
 function save_config()
-  SetVariable("short_names", config.short_names)
+  SetVariable("short_names", tostring(config.short_names))
 
-  SetVariable("show_bparts", config.show_bparts)
-  SetVariable("show_avg_dmg", config.show_avg_dmg)
+  SetVariable("show_bparts", tostring(config.show_bparts))
+  SetVariable("show_avg_dmg", tostring(config.show_avg_dmg))
 
   SaveState()
 end

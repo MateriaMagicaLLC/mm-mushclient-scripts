@@ -8,17 +8,17 @@
 <muclient>
 
 <plugin
-   name="capture2dworld"
-   author="Ruthgul"
-   id="b2772cad800b33a6073d9377"
-   language="Lua"
-   purpose="capture channels to a single dummy world"
-   save_state="y"
-   date_written="2012-05-13 16:42:17"
-   date_modified="2015-04-17 07:01:31"
-   requires="4.71"
-   version="1.0"
-   >
+  name="capture2dworld"
+  author="Ruthgul"
+  id="b2772cad800b33a6073d9377"
+  language="Lua"
+  purpose="capture channels to a single dummy world"
+  save_state="y"
+  date_written="2012-05-13 16:42:17"
+  date_modified="2021-01-26 09:52:34"
+  requires="4.71"
+  version="1.0"
+>
 
 
 <description trim="y">
@@ -369,20 +369,6 @@ capture_stuff("%&lt;who&gt;", "tell", "%0", true)
 </send>
   </trigger>
 
-    <trigger
-   enabled="y"
-   keep_evaluating="y"
-   expand_variables="y"
-   match="^(?P&lt;who&gt;(@!char_name)) impresses upon you \'(.+)\'$"
-   regexp="y"
-   send_to="14"
-   sequence="100"
-  >
-  <send>trigger_style_runs = TriggerStyleRuns
-capture_stuff("%&lt;who&gt;", "tell", "%0", true)
- </send>
-   </trigger>
-
   <trigger
    enabled="y"
    keep_evaluating="y"
@@ -399,6 +385,20 @@ capture_stuff("you", "tell", "%0", true)
   <trigger
    enabled="y"
    keep_evaluating="y"
+   expand_variables="y"
+   match="^(?P&lt;who&gt;(@!char_name)) impresses upon you \'(.+)\'$"
+   regexp="y"
+   send_to="14"
+   sequence="100"
+  >
+  <send>trigger_style_runs = TriggerStyleRuns
+capture_stuff("%&lt;who&gt;", "tell", "%0", true)
+ </send>
+   </trigger>
+
+  <trigger
+   enabled="y"
+   keep_evaluating="y"
    match="^You impress upon [^ ]+ \'(.+)\'$"
    regexp="y"
    send_to="14"
@@ -408,8 +408,6 @@ capture_stuff("you", "tell", "%0", true)
 capture_stuff("you", "tell", "%0", true)
 </send>
   </trigger>
-
-
 
   <trigger
    enabled="y"
@@ -1277,7 +1275,8 @@ function OnPluginBroadcast(msg, id, pname, text)
       handle_gmcp_gecho()
     end
 
-  elseif (id == "fbd5b7cc1ef6acf827a3f4a1") then -- plugins_updater_v2
+  elseif (id == "fbd5b7cc1ef6acf827a3f4a1") -- plugins_updater_v2
+  or (id == "5945aedf1aacc09e42c48cef") then -- plugins_updater_v3
     if (msg == 1) then
       Note(text)
       handle_gmcp_gecho(text)
@@ -1774,7 +1773,7 @@ function capture_announce(who, line)
     "has been slain by",
     "has reduced my integrity by",
     "Feel my demise in your heart",
-	"An election official for the Towne of Rune announces",
+    "An election official for the Towne of Rune announces",
   }
 
   for i = 1, #omit_from_announce do
