@@ -5,7 +5,7 @@ To install plugins_updater_v3, and enable it to work with this github repo:
 2. make a backup copy of your current MUSHclient directory, in case the following process fails
 
 3. download the file:
-https://github.com/mu3r73/mm-mushclient-scripts/raw/master/updater/plugins_updater_v3.zip
+https://github.com/MateriaMagicaLLC/mm-mushclient-scripts/raw/master/updater/plugins_updater_v3.zip
 
 4. extract plugins_updater_v3.zip (downloaded in step 3), to your MUSHclient directory - when asked about replacing/overwriting old files, answer yes to all
 
