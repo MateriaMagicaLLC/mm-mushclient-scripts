@@ -15,7 +15,7 @@
    purpose="Shows your position in the vmap, to help you travel."
    save_state="y"
    date_written="2012-02-04 11:36:44"
-   date_modified="2015-03-23 08:22:41"
+   date_modified="2020-12-20 21:38:56"
    version="1.0"
    >
 
@@ -418,7 +418,7 @@ function plugin_update_aux_url()
     "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/res/fp.png",
     "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/res/lasler.png",
     "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/res/social.png",
-    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/res/sugx.png",
+    "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/res/sugxpanded.png",
     "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/res/ug.png",
     "https://raw.githubusercontent.com/MateriaMagicaLLC/mm-mushclient-scripts/master/res/verity.png",
   }
@@ -845,11 +845,11 @@ function imap_setplane(plane)
     -- Sigil Underground is a zoom-in of the south part (shrines, villages, caldera, etc.)
     ["sug"] = {
       name = "sug",
-      maxx = 889,
-      maxy = 580,
-      startx = -183,
-      starty = -922 + (34 / 2),
-      filename = "sugx.png",
+      maxx = 2299,
+      maxy = 1499,
+      startx = 0,
+      starty = 0,
+      filename = "sugxpanded.png",
     },
 
     ["fp"] = {
