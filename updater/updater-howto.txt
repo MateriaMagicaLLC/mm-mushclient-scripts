@@ -1,0 +1,30 @@
+To install plugins_updater_v3, and enable it to work with this github repo:
+
+1. close MUSHclient
+
+2. make a backup copy of your current MUSHclient directory, in case the following process fails
+
+3. download the file:
+https://github.com/mu3r73/mm-mushclient-scripts/raw/master/updater/plugins_updater_v3.zip
+
+4. extract plugins_updater_v3.zip (downloaded in step 3), to your MUSHclient directory - when asked about replacing/overwriting old files, answer yes to all
+
+5. in MUSHclient:
+
+   a) open the plugins window (by pressing ctrl + shift + p)
+   
+   b) remove the previous updater (plugins_updater_v2)
+   
+   c) install the new updater (plugins_updater_v3 - it should be located in the MUSHclient/worlds/plugins/MM directory)
+
+Once you've done this, it should auto-scan your local MUSHclient plugins, and offer you the option to update them.
+
+To do so, after it's done scanning, type:
+update plugins lastlist
+(or click the hyperlink/s provided by the plugin)
+
+
+Notice:
+- the new plugins_updater_v3 uses lua-openssl (instead of LuaSec), and lua-llthreads2
+- we're also replacing standard Lua with LuaJIT
+  (see reasons/details in this thread: https://www.mushclient.com/forum/?id=12520&reply=1#reply1)
