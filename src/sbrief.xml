@@ -15,7 +15,7 @@
    purpose="lessens combat spam"
    save_state="y"
    date_written="2012-04-27 18:46:16"
-   date_modified="2021-01-29 15:51:46"
+   date_modified="2021-02-01 13:53:40"
    requires="4.71"
    version="1.0"
    >
@@ -46,9 +46,8 @@ Syntax:
 * sbrief show_bparts [on|off]  - toggles show_bparts on/off (OFF by default)
   (when 'on', it will show totals for body parts hit during every round)
 
-* sbrief show_avg_dmg [on|off]  - toggles show_avg_dmg on/off (OFF by default)
-  (when 'on', you'll see a number that can be used to compare damage output,
-   where 0 = no damage ... 28 = lethal)
+* sbrief show_dmg_prcnt [on|off]  - toggles show_dmg_prcnt on/off (OFF by default)
+  (when 'on', you'll see the max damage dealt, as a % of the target's remaining hp)
 
 
 Author: Ruthgul
@@ -115,12 +114,12 @@ http://github.com/MateriaMagicaLLC/mm-mushclient-scripts
 
   <alias
    enabled="y"
-   match="^sbrief[ ]+show\_avg\_dmg(|[ ]+(?P&lt;state&gt;(on|off)))$"
+   match="^sbrief[ ]+show\_dmg\_prcnt(|[ ]+(?P&lt;state&gt;(on|off)))$"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>toggle_show_avg_dmg("%&lt;state&gt;")
+  <send>toggle_show_dmg_prcnt("%&lt;state&gt;")
 </send>
   </alias>
 
@@ -761,38 +760,44 @@ end
 -- general
 ------------
 
--- percentages are from aodojo.com, and they seem to be wrong
--- so I replaced them with an ingeter (0 = no dmg, higher numbers = higher dmg)
+-- percentages are from help combat adjectives
 damage_dealt = {
   ["no"] = 0,             -- this never happens - I use it for invuln
-  ["unnoticeable"] = 1,
-  ["no obvious"] = 2,     -- 0-1%
-  ["infinitesimal"] = 3,
-  ["insignificant"] = 4,
-  ["superficial"] = 5,    -- 1-6%
-  ["trivial"] = 6,
-  ["trifling"] = 7,       -- 6-8%
-  ["slight"] = 8,         -- 8-10%
-  ["paltry"] = 9,         -- 10-13%
-  ["minimal"] = 10,       -- 13-18%
-  ["mild"] = 11,          -- 18-27%
-  ["modest"] = 12,        -- 27-36%
-  ["middling"] = 13,      -- 36-41%
-  ["moderate"] = 14,      -- 41-52%
-  ["heavy"] = 15,         -- 52-59%
-  ["great"] = 16,         -- 59-61%
-  ["enormous"] = 17,      -- 61-65%
-  ["giant"] = 18,         -- 65-69%
-  ["huge"] = 19,          -- 69-71%
-  ["extensive"] = 20,     -- 71-73%
-  ["tremendous"] = 21,    -- 73-77%
-  ["massive"] = 22,       -- 77-88%
-  ["incredible"] = 23,    -- 88-92%
-  ["shocking"] = 24,      -- 92-96%
-  ["unbelievable"] = 25,  -- 96-98%
-  ["intolerable"] = 26,
-  ["unbearable"] = 27,    -- 98-100%
-  ["lethal"] = 28,        -- 100%
+  ["undetectable"] = .001,
+  ["ephemeral"] = .002,
+  ["intangible"] = .005,
+  ["imperceptible"] = .010,
+  ["no observable"] = .015,
+  ["no apparent"] = .020,
+  ["no evident"] = .033,
+  ["no obvious"] = .05,
+  ["unnoticeable"] = .10,
+  ["infinitesimal"] = .15,
+  ["insignificant"] = .25,
+  ["superficial"] = .35,
+  ["trivial"] = .50,
+  ["trifling"] = .65,
+  ["slight"] = .80,
+  ["paltry"] = 1,
+  ["minimal"] = 2,
+  ["mild"] = 3,
+  ["modest"] = 5,
+  ["middling"] = 6,      -- guess (not listed in help 2394)
+  ["moderate"] = 7,      -- guess (not listed in help 2394)
+  ["heavy"] = 8,
+  ["great"] = 12,
+  ["enormous"] = 15,
+  ["giant"] = 20,
+  ["huge"] = 25,
+  ["extensive"] = 35,
+  ["tremendous"] = 45,
+  ["massive"] = 55,
+  ["incredible"] = 65,
+  ["shocking"] = 75,
+  ["unbelievable"] = 86,
+  ["unbearable"] = 97,
+  ["intolerable"] = 98,
+  ["lethal"] = 99,
 }
 
 
@@ -844,16 +849,16 @@ function toggle_show_bparts(state)
 end
 
 
-function toggle_show_avg_dmg(state)
-  config.show_avg_dmg = toggle_state(config.show_avg_dmg, state)
+function toggle_show_dmg_prcnt(state)
+  config.show_dmg_prcnt = toggle_state(config.show_dmg_prcnt, state)
 
   save_config()
 
-  if (config.show_avg_dmg) then
-    Note("-- sbrief: show_avg_dmg ON --")
+  if (config.show_dmg_prcnt) then
+    Note("-- sbrief: show_dmg_prcnt ON --")
 
   else
-    Note("-- sbrief: show_avg_dmg OFF --")
+    Note("-- sbrief: show_dmg_prcnt OFF --")
   end
 end
 
@@ -880,7 +885,7 @@ function load_config()
     short_names = ((GetVariable("short_names") or "true") == "true"),
 
     show_bparts = ((GetVariable("show_bparts") or "false") == "true"),
-    show_avg_dmg = ((GetVariable("show_avg_dmg") or "false") == "true"),
+    show_dmg_prcnt = ((GetVariable("show_dmg_prcnt") or "false") == "true"),
   }
 end
 
@@ -889,7 +894,7 @@ function save_config()
   SetVariable("short_names", tostring(config.short_names))
 
   SetVariable("show_bparts", tostring(config.show_bparts))
-  SetVariable("show_avg_dmg", tostring(config.show_avg_dmg))
+  SetVariable("show_dmg_prcnt", tostring(config.show_dmg_prcnt))
 
   SaveState()
 end
@@ -908,9 +913,9 @@ function init_stuff()
   vs_me_bpart = {}
   other_bpart = {}
 
-  my_dmg_avg = {}
-  vs_me_dmg_avg = {}
-  other_dmg_avg = {}
+  my_dmg_prcnt = {}
+  vs_me_dmg_prcnt = {}
+  other_dmg_prcnt = {}
 
   total_count = 0
 
@@ -1032,7 +1037,7 @@ function inc_other_dmg(who, tgt, type, bpart, dmg)
 
   if (not other_dmg[who .. " vs " .. tgt]) then
     other_dmg[who .. " vs " .. tgt] = {}
-    other_dmg_avg[who .. " vs " .. tgt] = {}
+    other_dmg_prcnt[who .. " vs " .. tgt] = {}
     other_bpart[who .. " vs " .. tgt] = {}
   end
 
@@ -1043,7 +1048,7 @@ function inc_other_dmg(who, tgt, type, bpart, dmg)
   end
 
   if (damage_dealt[dmg]) then
-    table.insert(other_dmg_avg[who .. " vs " .. tgt], damage_dealt[dmg])
+    table.insert(other_dmg_prcnt[who .. " vs " .. tgt], damage_dealt[dmg])
   else
     Note("-- sbrief - unknown damage value: " .. dmg .. " --")
     add_to_events("silver", "unknown dmg value: " .. dmg)
@@ -1056,7 +1061,7 @@ function inc_vs_me_dmg(who, type, bpart, dmg)
 
   if (not vs_me_dmg[who .. " vs me"]) then
     vs_me_dmg[who .. " vs me"] = {}
-    vs_me_dmg_avg[who .. " vs me"] = {}
+    vs_me_dmg_prcnt[who .. " vs me"] = {}
     vs_me_bpart[who .. " vs me"] = {}
   end
 
@@ -1067,7 +1072,7 @@ function inc_vs_me_dmg(who, type, bpart, dmg)
   end
 
   if (damage_dealt[dmg]) then
-    table.insert(vs_me_dmg_avg[who .. " vs me"], damage_dealt[dmg])
+    table.insert(vs_me_dmg_prcnt[who .. " vs me"], damage_dealt[dmg])
   else
     Note("-- sbrief - unknown damage value: " .. dmg .. " --")
   end
@@ -1127,7 +1132,7 @@ function inc_my_dmg(tgt, type, bpart, dmg)
 
   if (not my_dmg["me vs " .. tgt]) then
     my_dmg["me vs " .. tgt] = {}
-    my_dmg_avg["me vs " .. tgt] = {}
+    my_dmg_prcnt["me vs " .. tgt] = {}
     my_bpart["me vs " .. tgt] = {}
   end
 
@@ -1138,7 +1143,7 @@ function inc_my_dmg(tgt, type, bpart, dmg)
   end
 
   if (damage_dealt[dmg]) then
-    table.insert(my_dmg_avg["me vs " .. tgt], damage_dealt[dmg])
+    table.insert(my_dmg_prcnt["me vs " .. tgt], damage_dealt[dmg])
   else
     Note("-- sbrief - unknown damage value: " .. dmg .. " --")
   end
@@ -1168,28 +1173,20 @@ end
 bgcol = "black"
 
 
-function calc_avg_dmg(t)
-  local count = 0
-  local total = 0
+function calc_dmg_prcnt(t)
+  -- find the max damage %
+  local max = 0
   for i = 1, #t do
-    if (t[i] ~= 0) then
-      total = total + t[i]
-      count = count + 1
+    if (t[i] > max) then
+      max = t[i]
     end
   end
 
-  local avg
-  if (count > 0) then
-    avg = total / count
-  else
-    avg = 0
-  end
-
-  return string.format("%.1f", avg)
+  return max
 end
 
 
-function show_table(tdd, who, shortened, tbpts, avg, hicol, dimcol)
+function show_table(tdd, who, shortened, tbpts, prcnt, hicol, dimcol)
   if (count_items(tdd) > 0) then
     local what = ""
     for dtype, num in pairs(tdd) do
@@ -1226,10 +1223,10 @@ function show_table(tdd, who, shortened, tbpts, avg, hicol, dimcol)
       ColourTell(dimcol, bgcol, what .. "}")
     end
 
-    if (config.show_avg_dmg) and (avg ~= "") then
-      ColourTell(dimcol, bgcol, " [avg dmg: ")
-      ColourTell(dimcol, bgcol, avg)
-      ColourTell(dimcol, bgcol, "]")
+    if (config.show_dmg_prcnt) and (prcnt ~= "") then
+      ColourTell(dimcol, bgcol, " [dmg: ")
+      ColourTell(dimcol, bgcol, prcnt)
+      ColourTell(dimcol, bgcol, "%]")
     end
 
     Note("") -- line break
@@ -1243,7 +1240,7 @@ function show_round_totals()
   end
 
   for vs, dmg in pairs(other_dmg) do
-    show_table(dmg, vs, "", other_bpart[vs], calc_avg_dmg(other_dmg_avg[vs]), "silver", "gray")
+    show_table(dmg, vs, "", other_bpart[vs], calc_dmg_prcnt(other_dmg_prcnt[vs]), "silver", "gray")
   end
 
   for vs, def in pairs(vs_me_def) do
@@ -1251,7 +1248,7 @@ function show_round_totals()
   end
 
   for vs, dmg in pairs(vs_me_dmg) do
-    show_table(dmg, vs, "they", vs_me_bpart[vs], calc_avg_dmg(vs_me_dmg_avg[vs]), "yellow", "olive")
+    show_table(dmg, vs, "they", vs_me_bpart[vs], calc_dmg_prcnt(vs_me_dmg_prcnt[vs]), "yellow", "olive")
   end
 
   for vs, def in pairs(my_def) do
@@ -1259,7 +1256,7 @@ function show_round_totals()
   end
 
   for vs, dmg in pairs(my_dmg) do
-    show_table(dmg, vs, "me", my_bpart[vs], calc_avg_dmg(my_dmg_avg[vs]), "lime", "green")
+    show_table(dmg, vs, "me", my_bpart[vs], calc_dmg_prcnt(my_dmg_prcnt[vs]), "lime", "green")
   end
 
   if (total_count > 2) then
