@@ -804,16 +804,6 @@ local function can_exit_be_used_on_speedwalks(uid, dir)
 end
 
 
-local function is_safewalk_check_ok(uid)
-  return (not safewalk_mode)
-    or (
-      (not is_room_flagged_as(uid, "PK"))
-      and (not is_room_flagged_as(uid, "player%-kill%-"))
-      and (not is_room_tagged_as(uid, "dt"))
-    )
-end
-
-
 local function is_room_tagged_as(uid, tag)
   local tags = (get_room(uid) or {}).tags
   return string.find(tags or "", tag)
@@ -823,6 +813,16 @@ end
 local function is_room_flagged_as(uid, flag)
   local flags = (get_room(uid) or {}).flags
   return string.find(flags or "", flag)
+end
+
+
+local function is_safewalk_check_ok(uid)
+  return (not safewalk_mode)
+    or (
+      (not is_room_flagged_as(uid, "PK"))
+      and (not is_room_flagged_as(uid, "player%-kill%-"))
+      and (not is_room_tagged_as(uid, "dt"))
+    )
 end
 
 
