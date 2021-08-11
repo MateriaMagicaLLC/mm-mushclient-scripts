@@ -684,7 +684,7 @@ capture_stuff("you", "talk", "%0", false)
   <trigger
    enabled="y"
    keep_evaluating="y"
-   match="^(?P&lt;who&gt;[a-zA-Z]+)\@\#(?P&lt;chan&gt;[^ ]+)\: (.+)$"
+   match="^(?P&lt;who&gt;[a-zA-Z\[\]]+)\@\#(?P&lt;chan&gt;[^ ]+)\: (.+)$"
    regexp="y"
    send_to="14"
    sequence="100"
@@ -1353,8 +1353,8 @@ function handle_gmcp_gecho_v1_nocolors(msg)
     msg = strip_colors(msg)
     msg = strip_crlfs(msg)
 
-    for line in string.gmatch(msg, "[^ง]*ง") do
-      line = string.match(line, "(.+)ง")
+    for line in string.gmatch(msg, "[^ยง]*ยง") do
+      line = string.match(line, "(.+)ยง")
       line = Trim(line or "")
 
       if (line ~= "") then
@@ -1416,9 +1416,9 @@ function handle_gmcp_gecho_v2_colors(msg)
       end
 
       if (txt) then
-        if (string.find(txt, "ง")) then
-          for line in string.gmatch(txt, "[^ง]*ง") do
-            line = string.match(line, "(.+)ง")
+        if (string.find(txt, "ยง")) then
+          for line in string.gmatch(txt, "[^ยง]*ยง") do
+            line = string.match(line, "(.+)ยง")
             line = Trim(line or "")
 
             if (line ~= "") then
@@ -1457,12 +1457,12 @@ end
 
 
 function strip_crlfs(msg)
-  msg = string.gsub(msg, "\r", "ง")
-  msg = string.gsub(msg, "\n", "ง")
-  msg = msg .. "ง"
+  msg = string.gsub(msg, "\r", "ยง")
+  msg = string.gsub(msg, "\n", "ยง")
+  msg = msg .. "ยง"
 
-  while (string.find(msg, "งง")) do
-    msg = string.gsub(msg, "งง", "ง")
+  while (string.find(msg, "ยงยง")) do
+    msg = string.gsub(msg, "ยงยง", "ยง")
   end
 
   return msg
@@ -1594,7 +1594,7 @@ function handle_irc_msg(text)
 --    Note("extuser: " .. (extuser or "nil"))
 --    Note("msg: " .. (msg or "nil"))
 
-    if (not string.match(msg, "^ง.+"))
+    if (not string.match(msg, "^ยง.+"))
     or (is_listed("captures", "ircverb")) then
       captures = GetWorld("captures") -- gotta check every time in case they close it
 --      Note("trying to show it")
@@ -1652,7 +1652,7 @@ function broadcast_txt_line(type, line, who)
     [2] = line,
     [3] = who,
   }
-  BroadcastPlugin(2, table.concat(t, "ุ"))
+  BroadcastPlugin(2, table.concat(t, "ร"))
 end
 
 
@@ -1719,7 +1719,7 @@ function show_txt(fgcol, bgcol, txt)
     [2] = bgcol,
     [3] = txt,
   }
-  BroadcastPlugin(1, table.concat(t, "ุ"))
+  BroadcastPlugin(1, table.concat(t, "ร"))
 end
 
 
